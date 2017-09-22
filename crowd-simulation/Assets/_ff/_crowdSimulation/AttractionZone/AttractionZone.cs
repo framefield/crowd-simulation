@@ -5,45 +5,38 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class AttractionZone : MonoBehaviour
 {
-    [SerializeField] AttractionCategory Category;
+    public AttractionCategory Category;
     [SerializeField] float Radius;
+    [SerializeField] float IconHeight;
     [SerializeField] float AttractionStrength;
     [SerializeField] AnimationCurve AttractionDistribution;
+    [SerializeField] TMPro.TextMeshPro Label;
+    [SerializeField] int NumberOfCircles;
 
-    public int NumberOfCircles;
-
-    public enum AttractionCategory
+    public float GetGeneralAttractivenessAtGlobalPosition(Vector3 spectator)
     {
-        Food,
-        Wine,
-        Textiles,
-        Pottery,
-        Philosophy
+        var distance = Vector3.Distance(spectator, this.transform.position);
+        var distanceNormalized = distance / Radius;
+        var attractiveness = AttractionDistribution.Evaluate(distanceNormalized);
+        return attractiveness;
     }
 
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
 
     void OnDrawGizmos()
     {
 
         for (int i = 0; i < NumberOfCircles; i++)
         {
+            Gizmos.color = Category.Color * new Color(1, 1, 1, 0) + new Color(0, 0, 0, AttractionDistribution.Evaluate((i + 1f) / NumberOfCircles));
+
             var radiusFraction = Radius * (i + 1) / NumberOfCircles;
-            // var thickness = AttractionDistribution.Evaluate((i + 1) / nCircles);
-            // AttractionDistribution.
-            Gizmos.color = new Color(1, 1, 1, AttractionDistribution.Evaluate((i + 1f) / NumberOfCircles));
             var positions = GetCirclePositions(radiusFraction);
+
             ConnectPositions(positions);
         }
 
+        Label.text = Category.ToString().Split('(')[0];
+        Label.color = Category.Color;
     }
 
     private Vector3[] GetCirclePositions(float radius)
@@ -56,7 +49,6 @@ public class AttractionZone : MonoBehaviour
         {
             var circlePosition = Quaternion.Euler(0, i * 360 / resolution, 0) * pos;
             allPositions.Add(transform.position + circlePosition);
-
         }
 
         return allPositions.ToArray();
@@ -68,13 +60,7 @@ public class AttractionZone : MonoBehaviour
             Gizmos.DrawLine(positions[i], positions[(i + 1) % positions.Length]);
     }
 
-    public float GetAttractivenessAtGlobalPosition(Vector3 spectator)
-    {
-        var distance = Vector3.Distance(spectator, this.transform.position);
-        var distanceNormalized = distance / Radius;
-        var attractiveness = AttractionDistribution.Evaluate(distanceNormalized);
-        return attractiveness;
-    }
+
 
 
 }

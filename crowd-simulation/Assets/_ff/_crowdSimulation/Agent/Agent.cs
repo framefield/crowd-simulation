@@ -19,7 +19,6 @@ public class Agent : MonoBehaviour
         }
     }
 
-
     void Start()
     {
         _agent = GetComponent<NavMeshAgent>();
@@ -28,41 +27,46 @@ public class Agent : MonoBehaviour
 
         _currentRandomDestination = GetRandomDestination();
         _agent.SetDestination(_currentRandomDestination);
+        WalkRandomly();
     }
 
     void Update()
     {
-        AttractionZone closestAttractionZone = null;
-        var highestAttraction = 0f;
+        AttractionZone mostAttractiveZone = null;
+        var maxAttraction = 0f;
 
         foreach (var attractionZone in Simulation.Instance.AllAttractionZones)
         {
-            var perceivedAttraction = attractionZone.GetAttractivenessAtGlobalPosition(this.transform.position);
+            var generalAttraction = attractionZone.GetGeneralAttractivenessAtGlobalPosition(this.transform.position);
+            var personalAttraction = generalAttraction * Category.GetAttractionInterest(attractionZone.Category);
 
-            if (perceivedAttraction > highestAttraction)
+            if (personalAttraction > maxAttraction)
             {
-                closestAttractionZone = attractionZone;
-                highestAttraction = perceivedAttraction;
+                mostAttractiveZone = attractionZone;
+                maxAttraction = personalAttraction;
             }
         }
-        if (closestAttractionZone == _lockedAttractionZone && closestAttractionZone != null)
-            return;
 
-        if (closestAttractionZone != null)
+        var foundAttractiveZone = mostAttractiveZone != null;
+        if (!foundAttractiveZone)
         {
-            _agent.SetDestination(closestAttractionZone.transform.position);
-            _lockedAttractionZone = closestAttractionZone;
+            WalkRandomly();
             return;
         }
-        MakeRandomWalk();
+
+        if (mostAttractiveZone == _lockedAttractionZone)
+            return;
+
+        _agent.SetDestination(mostAttractiveZone.transform.position);
+        _lockedAttractionZone = mostAttractiveZone;
     }
 
-    private void MakeRandomWalk()
+    private void WalkRandomly()
     {
         var distanceToRandomDestination = Vector3.Distance(this.transform.position, _currentRandomDestination);
-        var reachedDestination = distanceToRandomDestination < MaxRandomDestinationDistance / 10f;
+        var hasReachedDestination = distanceToRandomDestination < MaxRandomDestinationDistance / 10f;
 
-        if (reachedDestination)
+        if (hasReachedDestination)
         {
             _currentRandomDestination = GetRandomDestination();
             _agent.SetDestination(_currentRandomDestination);
