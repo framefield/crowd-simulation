@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8af57c7bab01b49468d9d3629df4a925, type: 3}
+  m_Name: Philosopher
+  m_EditorClassIdentifier: 
+  AgentColor: {r: 0.48853803, g: 0.36764705, b: 1, a: 1}
+  Interests:
+  - Attraction: 0
+    Interest: 3.47
+  - Attraction: 1
+    Interest: 11.63
+  - Attraction: 2
+    Interest: 7.38
+  - Attraction: 3
+    Interest: 0.51
+  - Attraction: 4
+    Interest: 10.81
