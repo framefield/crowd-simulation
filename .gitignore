@@ -1,9 +1,9 @@
-/[Ll]ibrary/
-/[Tt]emp/
-/[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
-/Assets/AssetStoreTools*
+/crowd-simulation/[Ll]ibrary/
+/crowd-simulation/[Tt]emp/
+/crowd-simulation/[Oo]bj/
+/crowd-simulation/[Bb]uild/
+/crowd-simulation/[Bb]uilds/
+/crowd-simulation/Assets/AssetStoreTools*
 
 # Visual Studio 2015 cache directory
 /.vs/
