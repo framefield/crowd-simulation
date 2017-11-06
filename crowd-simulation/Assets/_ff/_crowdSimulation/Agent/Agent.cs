@@ -22,7 +22,9 @@ public class Agent : MonoBehaviour
 
     void Start()
     {
-        _interestsForAttractionInstance = Interest.Duplicate(AgentCategory.Interests);
+        _interestsForAttractionInstance = new Attractedness();
+        _interestsForAttractionInstance.CopyFrom(AgentCategory.Attractedness);
+
         _agent = GetComponent<NavMeshAgent>();
         GetComponent<Renderer>().material.SetColor("_Color", AgentCategory.AgentColor);
 
@@ -80,10 +82,10 @@ public class Agent : MonoBehaviour
 
     private float GetCurrentInterest(AttractionCategory attractionCategory)
     {
-        foreach (var interest in _interestsForAttractionInstance)
-            if (interest.AttractionCategory == attractionCategory)
-                return interest.Attractiveness;
-        return 0f;
+        if (_interestsForAttractionInstance.ContainsKey(attractionCategory))
+            return _interestsForAttractionInstance[attractionCategory];
+        else
+            return 0f;
     }
 
     private bool CheckIfReachedRandomDestination()
@@ -122,6 +124,6 @@ public class Agent : MonoBehaviour
     private NavMeshAgent _agent;
     private Vector3 _currentRandomDestination;
     private Attraction _lockedAttraction;
-    private List<Interest> _interestsForAttractionInstance;
+    public Attractedness _interestsForAttractionInstance;
 
 }

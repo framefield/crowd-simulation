@@ -8,16 +8,8 @@ using System.Collections.Generic;
 public class AgentCategory : ScriptableObject
 {
     public Color AgentColor = Color.white;
-    public List<Interest> Interests;
-    public SerializableDictionary<AttractionCategory, float> InterestDict;
+    [SerializeField]
+    public Attractedness Attractedness;
 
-    //todo: use dictionary with custom inspector 
-    public float GetInterest(AttractionCategory attractionCategory)
-    {
-        foreach (var interest in Interests)
-            if (interest.AttractionCategory == attractionCategory)
-                return interest.Attractiveness;
-        return 0f;
-    }
 }
 

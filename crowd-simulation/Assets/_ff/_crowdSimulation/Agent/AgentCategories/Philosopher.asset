@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Name: Philosopher
   m_EditorClassIdentifier: 
   AgentColor: {r: 0.48853803, g: 0.36764705, b: 1, a: 1}
-  Interests:
-  - AttractionCategory: {fileID: 11400000, guid: 4d09bde4c6058284da73c07e7e900904,
-      type: 2}
-    Attractiveness: 0.98
-  - AttractionCategory: {fileID: 0}
-    Attractiveness: 0
+  Attractedness:
+    m_keys:
+    - {fileID: 11400000, guid: 24b7be9908d768f4e8fe77703ab9360f, type: 2}
+    - {fileID: 11400000, guid: 4d09bde4c6058284da73c07e7e900904, type: 2}
+    m_values:
+    - 1.6
+    - 1.6
