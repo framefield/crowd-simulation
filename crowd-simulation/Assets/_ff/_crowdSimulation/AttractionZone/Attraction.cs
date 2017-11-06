@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class AttractionZone : MonoBehaviour
+public class Attraction : MonoBehaviour
 {
-    public AttractionCategory Category;
+    public AttractionCategory AttractionCategory;
     [SerializeField] float Radius;
     [SerializeField] float IconHeight;
     [SerializeField] float AttractionStrength;
     [SerializeField] AnimationCurve AttractionDistribution;
     [SerializeField] TMPro.TextMeshPro Label;
-    [SerializeField] int NumberOfCircles;
+    // [SerializeField] int NumberOfCircles;
+
+    [SerializeField] float GizmoCirclesPerMeter;
 
     public float GetGeneralAttractivenessAtGlobalPosition(Vector3 spectator)
     {
@@ -24,22 +26,23 @@ public class AttractionZone : MonoBehaviour
 
     void OnDrawGizmos()
     {
+        var numberOfCircles = GizmoCirclesPerMeter * Radius;
 
-        for (int i = 0; i < NumberOfCircles; i++)
+        for (int i = 0; i < numberOfCircles; i++)
         {
-            Gizmos.color = Category.Color * new Color(1, 1, 1, 0) + new Color(0, 0, 0, AttractionDistribution.Evaluate((i + 1f) / NumberOfCircles));
+            var alphaFromAttraction = AttractionDistribution.Evaluate((i + 1f) / numberOfCircles);
+            Gizmos.color = AttractionCategory.Color * new Color(1, 1, 1, 0) + new Color(0, 0, 0, alphaFromAttraction);
 
-            var radiusFraction = Radius * (i + 1) / NumberOfCircles;
-            var positions = GetCirclePositions(radiusFraction);
-
-            ConnectPositions(positions);
+            var radiusFraction = Radius * (i + 1) / numberOfCircles;
+            var circleVertices = GenerateCircleVertices(radiusFraction);
+            DrawLine(circleVertices);
         }
 
-        Label.text = Category.ToString().Split('(')[0];
-        Label.color = Category.Color;
+        Label.text = AttractionCategory.ToString().Split('(')[0];
+        Label.color = AttractionCategory.Color;
     }
 
-    private Vector3[] GetCirclePositions(float radius)
+    private Vector3[] GenerateCircleVertices(float radius)
     {
         var resolution = 32;
         List<Vector3> allPositions = new List<Vector3>();
@@ -54,7 +57,7 @@ public class AttractionZone : MonoBehaviour
         return allPositions.ToArray();
     }
 
-    private void ConnectPositions(Vector3[] positions)
+    private void DrawLine(Vector3[] positions)
     {
         for (int i = 0; i < positions.Length; i++)
             Gizmos.DrawLine(positions[i], positions[(i + 1) % positions.Length]);

@@ -5,75 +5,102 @@ using UnityEngine.AI;
 
 public class Agent : MonoBehaviour
 {
-    [SerializeField] AgentCategory Category;
+    [SerializeField] AgentCategory AgentCategory;
     [SerializeField] Color GizmoColor;
     [SerializeField] float MaxRandomDestinationDistance;
+    [SerializeField] float Stamina;
 
     public Vector3 CurrentDestination
     {
         get
         {
-            if (_lockedAttractionZone != null)
-                return _lockedAttractionZone.transform.position;
+            if (_lockedAttraction != null)
+                return _lockedAttraction.transform.position;
             return _currentRandomDestination;
         }
     }
 
     void Start()
     {
+        _interestsForAttractionInstance = Interest.Duplicate(AgentCategory.Interests);
         _agent = GetComponent<NavMeshAgent>();
+        GetComponent<Renderer>().material.SetColor("_Color", AgentCategory.AgentColor);
 
-        GetComponent<Renderer>().material.SetColor("_Color", Category.AgentColor);
-
-        _currentRandomDestination = GetRandomDestination();
-        _agent.SetDestination(_currentRandomDestination);
-        WalkRandomly();
+        SetNewRandomDestination();
     }
 
     void Update()
     {
-        AttractionZone mostAttractiveZone = null;
-        var maxAttraction = 0f;
 
-        foreach (var attractionZone in Simulation.Instance.AllAttractionZones)
+
+        var mostAttractiveAttraction = DetermineMostAttractiveAttraction();
+
+        var foundAttraction = mostAttractiveAttraction != null;
+        if (!foundAttraction)
         {
-            var generalAttraction = attractionZone.GetGeneralAttractivenessAtGlobalPosition(this.transform.position);
-            var personalAttraction = generalAttraction * Category.GetAttractionInterest(attractionZone.Category);
-
-            if (personalAttraction > maxAttraction)
-            {
-                mostAttractiveZone = attractionZone;
-                maxAttraction = personalAttraction;
-            }
-        }
-
-        var foundAttractiveZone = mostAttractiveZone != null;
-        if (!foundAttractiveZone)
-        {
-            WalkRandomly();
+            if (CheckIfReachedRandomDestination())
+                SetNewRandomDestination();
             return;
         }
 
-        if (mostAttractiveZone == _lockedAttractionZone)
+        if (mostAttractiveAttraction == _lockedAttraction)
             return;
 
-        _agent.SetDestination(mostAttractiveZone.transform.position);
-        _lockedAttractionZone = mostAttractiveZone;
+        _agent.SetDestination(mostAttractiveAttraction.transform.position);
+        _lockedAttraction = mostAttractiveAttraction;
     }
 
-    private void WalkRandomly()
+    // private void MakeInterestSimulationStep()
+    // {
+    //     // foreach (var i in _interestsForAttractionInstance)
+    //     // {
+    //     //     if (i.AttractionCategory == _lockedAttraction.AttractionCategory)
+    //     //         i.Attractiveness += Stamina;
+    // }
+
+
+    private Attraction DetermineMostAttractiveAttraction()
+    {
+        Attraction mostAttractiveAttraction = null;
+        var maxFoundAttraction = 0f;
+
+        foreach (var attraction in Simulation.Instance.Attractions)
+        {
+            var generalAttraction = attraction.GetGeneralAttractivenessAtGlobalPosition(this.transform.position);
+            var personalAttraction = generalAttraction * GetCurrentInterest(attraction.AttractionCategory);
+
+            if (personalAttraction > maxFoundAttraction)
+            {
+                mostAttractiveAttraction = attraction;
+                maxFoundAttraction = personalAttraction;
+            }
+        }
+        return mostAttractiveAttraction;
+    }
+
+    private float GetCurrentInterest(AttractionCategory attractionCategory)
+    {
+        foreach (var interest in _interestsForAttractionInstance)
+            if (interest.AttractionCategory == attractionCategory)
+                return interest.Attractiveness;
+        return 0f;
+    }
+
+    private bool CheckIfReachedRandomDestination()
     {
         var distanceToRandomDestination = Vector3.Distance(this.transform.position, _currentRandomDestination);
         var hasReachedDestination = distanceToRandomDestination < MaxRandomDestinationDistance / 10f;
 
-        if (hasReachedDestination)
-        {
-            _currentRandomDestination = GetRandomDestination();
-            _agent.SetDestination(_currentRandomDestination);
-        }
+        return hasReachedDestination;
     }
 
-    private Vector3 GetRandomDestination()
+    private void SetNewRandomDestination()
+    {
+        _currentRandomDestination = GenerateRandomDestination();
+        _agent.SetDestination(_currentRandomDestination);
+    }
+
+    private Vector3 GenerateRandomDestination()
     {
         var vectorToRandomPosition = Random.insideUnitSphere * MaxRandomDestinationDistance;
         vectorToRandomPosition.Scale(new Vector3(1, 0, 1));
@@ -94,6 +121,7 @@ public class Agent : MonoBehaviour
 
     private NavMeshAgent _agent;
     private Vector3 _currentRandomDestination;
-    private AttractionZone _lockedAttractionZone;
+    private Attraction _lockedAttraction;
+    private List<Interest> _interestsForAttractionInstance;
 
 }

@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class Simulation : Singleton<Simulation>
 {
-    public AttractionZone[] AllAttractionZones;
+    public Attraction[] Attractions;
 
     [SerializeField] GameObject AgentPrefab;
 
@@ -19,7 +19,7 @@ public class Simulation : Singleton<Simulation>
 
     void Start()
     {
-        AllAttractionZones = FindObjectsOfType<AttractionZone>();
+        Attractions = FindObjectsOfType<Attraction>();
     }
 
     void Update()

@@ -13,9 +13,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AgentColor: {r: 0.48853803, g: 0.36764705, b: 1, a: 1}
   Interests:
-  - AttractionCategory: {fileID: 11400000, guid: 67536b4f0df653149bb59a48a4a37aee,
-      type: 2}
-    InterestValue: 2.91
   - AttractionCategory: {fileID: 11400000, guid: 4d09bde4c6058284da73c07e7e900904,
       type: 2}
-    InterestValue: 1.25
+    Attractiveness: 0.98
+  - AttractionCategory: {fileID: 0}
+    Attractiveness: 0

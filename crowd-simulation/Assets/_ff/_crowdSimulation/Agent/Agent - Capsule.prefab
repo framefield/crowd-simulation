@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c83b2b7717c7af340a948568209d1480, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Category: {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
+  AgentCategory: {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
   GizmoColor: {r: 1, g: 1, b: 1, a: 0.053}
   MaxRandomDestinationDistance: 100
 --- !u!136 &136841960635931188
