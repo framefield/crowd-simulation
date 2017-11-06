@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class Simulation : Singleton<Simulation>
 {
-    public Attraction[] Attractions;
+    public Dictionary<AttractionCategory, List<Attraction>> Attractions = new Dictionary<AttractionCategory, List<Attraction>>();
 
     [SerializeField] GameObject AgentPrefab;
 
@@ -19,7 +19,13 @@ public class Simulation : Singleton<Simulation>
 
     void Start()
     {
-        Attractions = FindObjectsOfType<Attraction>();
+        var attractionsInScene = FindObjectsOfType<Attraction>();
+        foreach (var a in attractionsInScene)
+        {
+            if (!Attractions.ContainsKey(a.AttractionCategory))
+                Attractions.Add(a.AttractionCategory, new List<Attraction>());
+            Attractions[a.AttractionCategory].Add(a);
+        }
     }
 
     void Update()

@@ -8,7 +8,6 @@ public class Agent : MonoBehaviour
     [SerializeField] AgentCategory AgentCategory;
     [SerializeField] Color GizmoColor;
     [SerializeField] float MaxRandomDestinationDistance;
-    [SerializeField] float Stamina;
 
     public Vector3 CurrentDestination
     {
@@ -22,11 +21,11 @@ public class Agent : MonoBehaviour
 
     void Start()
     {
-        _interestsForAttractionInstance = new Attractedness();
-        _interestsForAttractionInstance.CopyFrom(AgentCategory.Attractedness);
+        _currentAttractedness = new Attractedness();
+        _currentAttractedness.CopyFrom(AgentCategory.Attractedness);
 
         _agent = GetComponent<NavMeshAgent>();
-        GetComponent<Renderer>().material.SetColor("_Color", AgentCategory.AgentColor);
+        RenderAttractedness();
 
         SetNewRandomDestination();
     }
@@ -34,43 +33,83 @@ public class Agent : MonoBehaviour
     void Update()
     {
 
-
         var mostAttractiveAttraction = DetermineMostAttractiveAttraction();
 
         var foundAttraction = mostAttractiveAttraction != null;
+        var wasLockedToAttraction = _lockedAttraction != null;
         if (!foundAttraction)
         {
-            if (CheckIfReachedRandomDestination())
+            if (wasLockedToAttraction)
+            {
+                _lockedAttraction = null;
                 SetNewRandomDestination();
-            return;
+                return;
+            }
+            else
+            {
+                if (CheckIfReachedRandomDestination())
+                    SetNewRandomDestination();
+                return;
+            }
         }
 
         if (mostAttractiveAttraction == _lockedAttraction)
+        {
+            MakeInterestSimulationStep();
+            RenderAttractedness();
             return;
+        }
 
         _agent.SetDestination(mostAttractiveAttraction.transform.position);
         _lockedAttraction = mostAttractiveAttraction;
+
+
+
     }
 
-    // private void MakeInterestSimulationStep()
-    // {
-    //     // foreach (var i in _interestsForAttractionInstance)
-    //     // {
-    //     //     if (i.AttractionCategory == _lockedAttraction.AttractionCategory)
-    //     //         i.Attractiveness += Stamina;
-    // }
+    private void MakeInterestSimulationStep()
+    {
+        var key = _lockedAttraction.AttractionCategory;
+        var value = _currentAttractedness[key];
+        value = Mathf.Max(value + AgentCategory.Stamina, 0f);
+        _currentAttractedness[key] = value;
+    }
 
+    float _attractednessOnStart = -1f;
+    private void RenderAttractedness()
+    {
+        var culminatedAttractedness = 0f;
+        foreach (KeyValuePair<AttractionCategory, float> pair in _currentAttractedness)
+            culminatedAttractedness += pair.Value;
+
+        if (_attractednessOnStart == -1f)
+        {
+            _attractednessOnStart = culminatedAttractedness;
+        }
+
+        var brightness = culminatedAttractedness / _attractednessOnStart;
+        var color = AgentCategory.AgentColor * new Color(brightness, brightness, brightness, 1);
+        GetComponent<Renderer>().material.SetColor("_Color", color);
+    }
 
     private Attraction DetermineMostAttractiveAttraction()
     {
         Attraction mostAttractiveAttraction = null;
         var maxFoundAttraction = 0f;
 
-        foreach (var attraction in Simulation.Instance.Attractions)
+        foreach (KeyValuePair<AttractionCategory, float> pair in _currentAttractedness)
         {
-            var generalAttraction = attraction.GetGeneralAttractivenessAtGlobalPosition(this.transform.position);
-            var personalAttraction = generalAttraction * GetCurrentInterest(attraction.AttractionCategory);
+            var attraction = GetMostAttractiveAttraction(pair.Key);
 
+            float generalAttraction;
+
+            var foundAttraction = attraction != null;
+
+            generalAttraction = foundAttraction
+               ? attraction.GetGeneralAttractivenessAtGlobalPosition(this.transform.position)
+               : 0f;
+
+            var personalAttraction = generalAttraction * GetCurrentInterest(pair.Key);
             if (personalAttraction > maxFoundAttraction)
             {
                 mostAttractiveAttraction = attraction;
@@ -80,10 +119,26 @@ public class Agent : MonoBehaviour
         return mostAttractiveAttraction;
     }
 
-    private float GetCurrentInterest(AttractionCategory attractionCategory)
+    public Attraction GetMostAttractiveAttraction(AttractionCategory attractionCategory)
     {
-        if (_interestsForAttractionInstance.ContainsKey(attractionCategory))
-            return _interestsForAttractionInstance[attractionCategory];
+        Attraction mostAttractiveAttraction = null;
+        var attractionAtAgentsLocation = 0f;
+        foreach (var attraction in Simulation.Instance.Attractions[attractionCategory])
+        {
+            var candidate = attraction.GetGeneralAttractivenessAtGlobalPosition(this.transform.position);
+            if (candidate > attractionAtAgentsLocation)
+            {
+                mostAttractiveAttraction = attraction;
+                attractionAtAgentsLocation = candidate;
+            }
+        }
+        return mostAttractiveAttraction;
+    }
+
+    public float GetCurrentInterest(AttractionCategory attractionCategory)
+    {
+        if (_currentAttractedness.ContainsKey(attractionCategory))
+            return _currentAttractedness[attractionCategory];
         else
             return 0f;
     }
@@ -124,6 +179,8 @@ public class Agent : MonoBehaviour
     private NavMeshAgent _agent;
     private Vector3 _currentRandomDestination;
     private Attraction _lockedAttraction;
-    public Attractedness _interestsForAttractionInstance;
+    public Attractedness _currentAttractedness;
+
+
 
 }

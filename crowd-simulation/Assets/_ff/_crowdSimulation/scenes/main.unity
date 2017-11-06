@@ -1775,7 +1775,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4343c463a2201f4ebdb05aa737bdb25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AllAttractionZones: []
   AgentPrefab: {fileID: 1194816589033452, guid: c4c0a3b36562a5c418bdfe40410a2baf,
     type: 2}
   PathfindingIterationsPerFrame: 100000
@@ -1923,7 +1922,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: Radius
-      value: 19.27
+      value: 61.63
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -1994,6 +1993,17 @@ Prefab:
       propertyPath: m_Name
       value: Philosophy - AttractionZone (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
+        type: 2}
+      propertyPath: GizmoCirclesPerMeter
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
+        type: 2}
+      propertyPath: AttractionCategory
+      value: 
+      objectReference: {fileID: 11400000, guid: 4d09bde4c6058284da73c07e7e900904,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e48467efd6f72284eb37d9847cc8e878, type: 2}
   m_IsPrefabParent: 0
@@ -2735,7 +2745,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: Radius
-      value: 14.71
+      value: 61.63
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -2806,6 +2816,17 @@ Prefab:
       propertyPath: m_Name
       value: Wine - AttractionZone (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
+        type: 2}
+      propertyPath: GizmoCirclesPerMeter
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
+        type: 2}
+      propertyPath: AttractionCategory
+      value: 
+      objectReference: {fileID: 11400000, guid: 24b7be9908d768f4e8fe77703ab9360f,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e48467efd6f72284eb37d9847cc8e878, type: 2}
   m_IsPrefabParent: 0
@@ -6746,6 +6767,17 @@ Prefab:
       propertyPath: m_Name
       value: Philosophy - AttractionZone
       objectReference: {fileID: 0}
+    - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
+        type: 2}
+      propertyPath: GizmoCirclesPerMeter
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
+        type: 2}
+      propertyPath: AttractionCategory
+      value: 
+      objectReference: {fileID: 11400000, guid: 4d09bde4c6058284da73c07e7e900904,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e48467efd6f72284eb37d9847cc8e878, type: 2}
   m_IsPrefabParent: 0
@@ -7323,7 +7355,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: Radius
-      value: 14.71
+      value: 61.63
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -7394,6 +7426,17 @@ Prefab:
       propertyPath: m_Name
       value: Wine - AttractionZone
       objectReference: {fileID: 0}
+    - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
+        type: 2}
+      propertyPath: GizmoCirclesPerMeter
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
+        type: 2}
+      propertyPath: AttractionCategory
+      value: 
+      objectReference: {fileID: 11400000, guid: 24b7be9908d768f4e8fe77703ab9360f,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e48467efd6f72284eb37d9847cc8e878, type: 2}
   m_IsPrefabParent: 0
@@ -7602,6 +7645,17 @@ Prefab:
       propertyPath: m_Name
       value: Food - AttractionZone
       objectReference: {fileID: 0}
+    - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
+        type: 2}
+      propertyPath: GizmoCirclesPerMeter
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
+        type: 2}
+      propertyPath: AttractionCategory
+      value: 
+      objectReference: {fileID: 11400000, guid: 67536b4f0df653149bb59a48a4a37aee,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e48467efd6f72284eb37d9847cc8e878, type: 2}
   m_IsPrefabParent: 0
@@ -7816,7 +7870,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: Radius
-      value: 18.61
+      value: 61.63
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -7892,6 +7946,17 @@ Prefab:
       propertyPath: IconHeight
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
+        type: 2}
+      propertyPath: GizmoCirclesPerMeter
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
+        type: 2}
+      propertyPath: AttractionCategory
+      value: 
+      objectReference: {fileID: 11400000, guid: 67536b4f0df653149bb59a48a4a37aee,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e48467efd6f72284eb37d9847cc8e878, type: 2}
   m_IsPrefabParent: 0
@@ -8603,7 +8668,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: Radius
-      value: 10
+      value: 61.63
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -8674,6 +8739,17 @@ Prefab:
       propertyPath: m_Name
       value: Food - AttractionZone (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
+        type: 2}
+      propertyPath: GizmoCirclesPerMeter
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
+        type: 2}
+      propertyPath: AttractionCategory
+      value: 
+      objectReference: {fileID: 11400000, guid: 67536b4f0df653149bb59a48a4a37aee,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e48467efd6f72284eb37d9847cc8e878, type: 2}
   m_IsPrefabParent: 0
@@ -9825,7 +9901,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: Radius
-      value: 14.71
+      value: 61.63
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -9896,6 +9972,17 @@ Prefab:
       propertyPath: m_Name
       value: Wine - AttractionZone (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
+        type: 2}
+      propertyPath: GizmoCirclesPerMeter
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
+        type: 2}
+      propertyPath: AttractionCategory
+      value: 
+      objectReference: {fileID: 11400000, guid: 24b7be9908d768f4e8fe77703ab9360f,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e48467efd6f72284eb37d9847cc8e878, type: 2}
   m_IsPrefabParent: 0
@@ -12127,7 +12214,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: Radius
-      value: 10
+      value: 61.63
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -12198,6 +12285,17 @@ Prefab:
       propertyPath: m_Name
       value: Food - AttractionZone (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
+        type: 2}
+      propertyPath: GizmoCirclesPerMeter
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
+        type: 2}
+      propertyPath: AttractionCategory
+      value: 
+      objectReference: {fileID: 11400000, guid: 67536b4f0df653149bb59a48a4a37aee,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e48467efd6f72284eb37d9847cc8e878, type: 2}
   m_IsPrefabParent: 0

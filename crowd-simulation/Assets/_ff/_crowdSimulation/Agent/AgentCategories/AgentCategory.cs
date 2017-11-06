@@ -8,8 +8,7 @@ using System.Collections.Generic;
 public class AgentCategory : ScriptableObject
 {
     public Color AgentColor = Color.white;
-    [SerializeField]
     public Attractedness Attractedness;
-
+    public float Stamina;
 }
 

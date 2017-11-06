@@ -11,11 +11,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8af57c7bab01b49468d9d3629df4a925, type: 3}
   m_Name: Philosopher
   m_EditorClassIdentifier: 
-  AgentColor: {r: 0.48853803, g: 0.36764705, b: 1, a: 1}
+  AgentColor: {r: 1, g: 1, b: 1, a: 1}
   Attractedness:
     m_keys:
     - {fileID: 11400000, guid: 24b7be9908d768f4e8fe77703ab9360f, type: 2}
     - {fileID: 11400000, guid: 4d09bde4c6058284da73c07e7e900904, type: 2}
+    - {fileID: 11400000, guid: 67536b4f0df653149bb59a48a4a37aee, type: 2}
     m_values:
-    - 1.6
-    - 1.6
+    - 0.9
+    - 1
+    - 0.8
+  Stamina: -0.001

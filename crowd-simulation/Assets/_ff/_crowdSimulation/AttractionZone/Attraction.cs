@@ -32,7 +32,6 @@ public class Attraction : MonoBehaviour
         {
             var alphaFromAttraction = AttractionDistribution.Evaluate((i + 1f) / numberOfCircles);
             Gizmos.color = AttractionCategory.Color * new Color(1, 1, 1, 0) + new Color(0, 0, 0, alphaFromAttraction);
-
             var radiusFraction = Radius * (i + 1) / numberOfCircles;
             var circleVertices = GenerateCircleVertices(radiusFraction);
             DrawLine(circleVertices);
