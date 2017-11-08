@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4589265210831098}
   - component: {fileID: 114440305609561552}
   m_Layer: 0
-  m_Name: AttractionZone
+  m_Name: PointOfInterest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,13 +51,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7368be736cefeeb42b4ed4437629b91c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Category: 0
+  AttractionCategory: {fileID: 0}
   Radius: 0
+  IconHeight: 0
   AttractionStrength: 0
   AttractionDistribution:
-    serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  NumberOfCircles: 0
+  Label: {fileID: 0}
+  GizmoCirclesPerMeter: 0

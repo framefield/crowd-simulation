@@ -7,9 +7,9 @@ using UnityEngine;
 public class AgentEditor : Editor
 {
     private Material material;
-    private Dictionary<AttractionCategory, float[]> AttractednessBuffer = new Dictionary<AttractionCategory, float[]>();
-    private Dictionary<AttractionCategory, float[]> AttractivenessBuffer = new Dictionary<AttractionCategory, float[]>();
-    private Dictionary<AttractionCategory, float[]> PersonalAttractionBuffer = new Dictionary<AttractionCategory, float[]>();
+    private Dictionary<InterestCategory, float[]> AttractednessBuffer = new Dictionary<InterestCategory, float[]>();
+    private Dictionary<InterestCategory, float[]> AttractivenessBuffer = new Dictionary<InterestCategory, float[]>();
+    private Dictionary<InterestCategory, float[]> PersonalAttractionBuffer = new Dictionary<InterestCategory, float[]>();
     public const int _bufferSize = 100;
     private int _arrayPointer = 0;
     private Agent _agent;
@@ -20,12 +20,12 @@ public class AgentEditor : Editor
         material = new Material(Shader.Find("Hidden/Internal-Colored"));
 
         InitArrays();
-        AddValueToBuffer(_agent._currentAttractedness);
+        AddValueToBuffer(_agent._currentInterests);
     }
 
     void InitArrays()
     {
-        foreach (KeyValuePair<AttractionCategory, float> pair in _agent._currentAttractedness)
+        foreach (KeyValuePair<InterestCategory, float> pair in _agent._currentInterests)
         {
             AttractednessBuffer[pair.Key] = new float[_bufferSize];
             for (int i = 0; i < _bufferSize; i++)
@@ -41,15 +41,15 @@ public class AgentEditor : Editor
         }
     }
 
-    public void AddValueToBuffer(Attractedness attractedness)
+    public void AddValueToBuffer(Interests attractedness)
     {
-        foreach (KeyValuePair<AttractionCategory, float> pair in _agent._currentAttractedness)
+        foreach (KeyValuePair<InterestCategory, float> pair in _agent._currentInterests)
         {
-            var attraction = _agent.GetMostAttractiveAttraction(pair.Key);
+            var attraction = _agent.GetMostVisibilePointOfInterest(pair.Key);
 
             var foundAttraction = attraction != null;
             var generalAttraction = foundAttraction
-            ? attraction.GetGeneralAttractivenessAtGlobalPosition(_agent.transform.position)
+            ? attraction.GetVisibilityAtGlobalPosition(_agent.transform.position)
             : 0f;
 
             var personalAttraction = generalAttraction * _agent.GetCurrentInterest(pair.Key);
@@ -66,7 +66,7 @@ public class AgentEditor : Editor
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
-        AddValueToBuffer(_agent._currentAttractedness);
+        AddValueToBuffer(_agent._currentInterests);
         Rect _layoutRectangle = GUILayoutUtility.GetRect(10, 10000, 200, 200);
         GUILayoutUtility.GetRect(10, 10000, 4, 4);
         Rect _attractivenessRect = GUILayoutUtility.GetRect(10, 10000, 200, 200);
@@ -150,9 +150,9 @@ public class AgentEditor : Editor
         GL.End();
     }
 
-    void RenderBuffer(Rect r, Dictionary<AttractionCategory, float[]> dictionary)
+    void RenderBuffer(Rect r, Dictionary<InterestCategory, float[]> dictionary)
     {
-        foreach (KeyValuePair<AttractionCategory, float[]> pair in dictionary)
+        foreach (KeyValuePair<InterestCategory, float[]> pair in dictionary)
         {
             GL.Begin(GL.LINES);
             GL.Color(pair.Key.Color);

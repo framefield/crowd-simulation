@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomPropertyDrawer(typeof(Attractedness))]
+[CustomPropertyDrawer(typeof(Interests))]
 public class AttractednessPropertyDrawer : SerializableDictionaryPropertyDrawer
 {
 }

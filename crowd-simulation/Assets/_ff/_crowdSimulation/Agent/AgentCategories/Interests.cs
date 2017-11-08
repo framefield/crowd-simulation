@@ -4,6 +4,6 @@ using UnityEngine;
 using System;
 
 [Serializable]
-public class Attractedness : SerializableDictionary<AttractionCategory, float>
+public class Interests : SerializableDictionary<InterestCategory, float>
 {
 }

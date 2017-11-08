@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class AgentCategory : ScriptableObject
 {
     public Color AgentColor = Color.white;
-    public Attractedness Attractedness;
+    public Interests AgentInterests;
     public float Stamina;
 }
 

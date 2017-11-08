@@ -6,62 +6,50 @@ using UnityEngine.AI;
 public class Agent : MonoBehaviour
 {
     [SerializeField] AgentCategory AgentCategory;
-    [SerializeField] Color GizmoColor;
-    [SerializeField] float MaxRandomDestinationDistance;
-
-    public Vector3 CurrentDestination
-    {
-        get
-        {
-            if (_lockedAttraction != null)
-                return _lockedAttraction.transform.position;
-            return _currentRandomDestination;
-        }
-    }
 
     void Start()
     {
-        _currentAttractedness = new Attractedness();
-        _currentAttractedness.CopyFrom(AgentCategory.Attractedness);
+        _currentInterests = new Interests();
+        _currentInterests.CopyFrom(AgentCategory.AgentInterests);
 
-        _agent = GetComponent<NavMeshAgent>();
+        _navMeshAgent = GetComponent<NavMeshAgent>();
+        _agentWalking = GetComponent<AgentWalking>();
+
         RenderAttractedness();
 
-        SetNewRandomDestination();
     }
 
     void Update()
     {
+        var choosenPointOfInterest = ChoosePointOfInterest();
+        var foundAttraction = choosenPointOfInterest != null;
+        var wasLockedToAttraction = _lockedPointOfInterest != null;
 
-        var mostAttractiveAttraction = DetermineMostAttractiveAttraction();
-
-        var foundAttraction = mostAttractiveAttraction != null;
-        var wasLockedToAttraction = _lockedAttraction != null;
         if (!foundAttraction)
         {
             if (wasLockedToAttraction)
             {
-                _lockedAttraction = null;
-                SetNewRandomDestination();
+                _lockedPointOfInterest = null;
+                _agentWalking.SetNewRandomDestination();
                 return;
             }
             else
             {
-                if (CheckIfReachedRandomDestination())
-                    SetNewRandomDestination();
+                if (_agentWalking.CheckIfReachedRandomDestination())
+                    _agentWalking.SetNewRandomDestination();
                 return;
             }
         }
 
-        if (mostAttractiveAttraction == _lockedAttraction)
+        if (choosenPointOfInterest == _lockedPointOfInterest)
         {
             MakeInterestSimulationStep();
             RenderAttractedness();
             return;
         }
 
-        _agent.SetDestination(mostAttractiveAttraction.transform.position);
-        _lockedAttraction = mostAttractiveAttraction;
+        _navMeshAgent.SetDestination(choosenPointOfInterest.transform.position);
+        _lockedPointOfInterest = choosenPointOfInterest;
 
 
 
@@ -69,17 +57,17 @@ public class Agent : MonoBehaviour
 
     private void MakeInterestSimulationStep()
     {
-        var key = _lockedAttraction.AttractionCategory;
-        var value = _currentAttractedness[key];
+        var key = _lockedPointOfInterest.AttractionCategory;
+        var value = _currentInterests[key];
         value = Mathf.Max(value + AgentCategory.Stamina, 0f);
-        _currentAttractedness[key] = value;
+        _currentInterests[key] = value;
     }
 
     float _attractednessOnStart = -1f;
     private void RenderAttractedness()
     {
         var culminatedAttractedness = 0f;
-        foreach (KeyValuePair<AttractionCategory, float> pair in _currentAttractedness)
+        foreach (KeyValuePair<InterestCategory, float> pair in _currentInterests)
             culminatedAttractedness += pair.Value;
 
         if (_attractednessOnStart == -1f)
@@ -92,94 +80,63 @@ public class Agent : MonoBehaviour
         GetComponent<Renderer>().material.SetColor("_Color", color);
     }
 
-    private Attraction DetermineMostAttractiveAttraction()
+    private PointOfInterest ChoosePointOfInterest()
     {
-        Attraction mostAttractiveAttraction = null;
-        var maxFoundAttraction = 0f;
+        PointOfInterest choosenPointOfInterest = null;
+        var maxFoundInterestedness = 0f;
 
-        foreach (KeyValuePair<AttractionCategory, float> pair in _currentAttractedness)
+        foreach (KeyValuePair<InterestCategory, float> interest in _currentInterests)
         {
-            var attraction = GetMostAttractiveAttraction(pair.Key);
+            var attraction = GetMostVisibilePointOfInterest(interest.Key);
 
             float generalAttraction;
 
             var foundAttraction = attraction != null;
 
             generalAttraction = foundAttraction
-               ? attraction.GetGeneralAttractivenessAtGlobalPosition(this.transform.position)
+               ? attraction.GetVisibilityAtGlobalPosition(this.transform.position)
                : 0f;
 
-            var personalAttraction = generalAttraction * GetCurrentInterest(pair.Key);
-            if (personalAttraction > maxFoundAttraction)
+            var personalAttraction = generalAttraction * GetCurrentInterest(interest.Key);
+            if (personalAttraction > maxFoundInterestedness)
             {
-                mostAttractiveAttraction = attraction;
-                maxFoundAttraction = personalAttraction;
+                choosenPointOfInterest = attraction;
+                maxFoundInterestedness = personalAttraction;
             }
         }
-        return mostAttractiveAttraction;
+        return choosenPointOfInterest;
     }
 
-    public Attraction GetMostAttractiveAttraction(AttractionCategory attractionCategory)
+    public PointOfInterest GetMostVisibilePointOfInterest(InterestCategory interestCategory)
     {
-        Attraction mostAttractiveAttraction = null;
-        var attractionAtAgentsLocation = 0f;
-        foreach (var attraction in Simulation.Instance.Attractions[attractionCategory])
+        PointOfInterest mostVisiblePointOfInterest = null;
+        var maxFoundVisibility = 0f;
+        foreach (var poi in Simulation.Instance.PointsOfInterest[interestCategory])
         {
-            var candidate = attraction.GetGeneralAttractivenessAtGlobalPosition(this.transform.position);
-            if (candidate > attractionAtAgentsLocation)
+            var poiVisibility = poi.GetVisibilityAtGlobalPosition(this.transform.position);
+            if (poiVisibility > maxFoundVisibility)
             {
-                mostAttractiveAttraction = attraction;
-                attractionAtAgentsLocation = candidate;
+                mostVisiblePointOfInterest = poi;
+                maxFoundVisibility = poiVisibility;
             }
         }
-        return mostAttractiveAttraction;
+        return mostVisiblePointOfInterest;
     }
 
-    public float GetCurrentInterest(AttractionCategory attractionCategory)
+    public float GetCurrentInterest(InterestCategory interestCategory)
     {
-        if (_currentAttractedness.ContainsKey(attractionCategory))
-            return _currentAttractedness[attractionCategory];
+        if (_currentInterests.ContainsKey(interestCategory))
+            return _currentInterests[interestCategory];
         else
             return 0f;
     }
 
-    private bool CheckIfReachedRandomDestination()
-    {
-        var distanceToRandomDestination = Vector3.Distance(this.transform.position, _currentRandomDestination);
-        var hasReachedDestination = distanceToRandomDestination < MaxRandomDestinationDistance / 10f;
 
-        return hasReachedDestination;
-    }
 
-    private void SetNewRandomDestination()
-    {
-        _currentRandomDestination = GenerateRandomDestination();
-        _agent.SetDestination(_currentRandomDestination);
-    }
-
-    private Vector3 GenerateRandomDestination()
-    {
-        var vectorToRandomPosition = Random.insideUnitSphere * MaxRandomDestinationDistance;
-        vectorToRandomPosition.Scale(new Vector3(1, 0, 1));
-        vectorToRandomPosition += transform.position;
-
-        NavMeshHit hit;
-        NavMesh.SamplePosition(vectorToRandomPosition, out hit, MaxRandomDestinationDistance, 1);
-        Vector3 closestDestinationOnNavMesh = hit.position;
-
-        return closestDestinationOnNavMesh;
-    }
-
-    void OnDrawGizmos()
-    {
-        Gizmos.color = GizmoColor;
-        Gizmos.DrawLine(transform.position, CurrentDestination);
-    }
-
-    private NavMeshAgent _agent;
-    private Vector3 _currentRandomDestination;
-    private Attraction _lockedAttraction;
-    public Attractedness _currentAttractedness;
+    private NavMeshAgent _navMeshAgent;
+    private AgentWalking _agentWalking;
+    private PointOfInterest _lockedPointOfInterest;
+    public Interests _currentInterests;
 
 
 

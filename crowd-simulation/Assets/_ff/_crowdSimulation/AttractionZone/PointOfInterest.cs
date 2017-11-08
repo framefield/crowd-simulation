@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class Attraction : MonoBehaviour
+public class PointOfInterest : MonoBehaviour
 {
-    public AttractionCategory AttractionCategory;
+    public InterestCategory AttractionCategory;
     [SerializeField] float Radius;
     [SerializeField] float IconHeight;
     [SerializeField] float AttractionStrength;
@@ -15,7 +15,7 @@ public class Attraction : MonoBehaviour
 
     [SerializeField] float GizmoCirclesPerMeter;
 
-    public float GetGeneralAttractivenessAtGlobalPosition(Vector3 spectator)
+    public float GetVisibilityAtGlobalPosition(Vector3 spectator)
     {
         var distance = Vector3.Distance(spectator, this.transform.position);
         var distanceNormalized = distance / Radius;
