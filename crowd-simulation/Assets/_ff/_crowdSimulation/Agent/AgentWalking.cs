@@ -5,13 +5,12 @@ using UnityEngine.AI;
 
 public class AgentWalking : MonoBehaviour
 {
-    [SerializeField] float MaxRandomDestinationDistance;
+    [SerializeField] [Range(10, 500)] float MaxRandomDestinationDistance;
     [SerializeField] Color GizmoColor;
-
-
 
     void Start()
     {
+        _navMeshAgent = GetComponent<NavMeshAgent>();
         SetNewRandomDestination();
     }
 
@@ -20,27 +19,38 @@ public class AgentWalking : MonoBehaviour
         Gizmos.color = GizmoColor;
         Gizmos.DrawLine(transform.position, CurrentDestination);
     }
-    public Vector3 CurrentDestination
+
+    private Vector3 CurrentDestination
     {
+        set
+        {
+            _currentDestination = value;
+            _navMeshAgent.SetDestination(value);
+        }
         get
         {
-            if (_lockedPointOfInterest != null)
-                return _lockedPointOfInterest.transform.position;
-            return _currentRandomDestination;
+            return _currentDestination;
         }
     }
-    public bool CheckIfReachedRandomDestination()
-    {
-        var distanceToRandomDestination = Vector3.Distance(this.transform.position, _currentRandomDestination);
-        var hasReachedDestination = distanceToRandomDestination < MaxRandomDestinationDistance / 10f;
 
-        return hasReachedDestination;
+    public void SetDestination(Vector3 destination)
+    {
+        CurrentDestination = destination;
+        // _destinationIsPOI = true;
     }
 
     public void SetNewRandomDestination()
     {
-        _currentRandomDestination = GenerateRandomDestination();
-        _agent.SetDestination(_currentRandomDestination);
+        CurrentDestination = GenerateRandomDestination();
+        // _destinationIsPOI = false;
+    }
+
+    public bool CheckIfReachedRandomDestination()
+    {
+        var distanceToRandomDestination = Vector3.Distance(this.transform.position, CurrentDestination);
+
+        var hasReachedDestination = distanceToRandomDestination < MaxRandomDestinationDistance / 5f;
+        return hasReachedDestination;
     }
 
     private Vector3 GenerateRandomDestination()
@@ -56,12 +66,10 @@ public class AgentWalking : MonoBehaviour
         return closestDestinationOnNavMesh;
     }
 
+    private NavMeshAgent _navMeshAgent;
 
-    private NavMeshAgent _agent;
-    private Vector3 _currentRandomDestination;
-    private PointOfInterest _lockedPointOfInterest;
+    private Vector3 _currentDestination;
+    // private bool _destinationIsPOI;
+
     public Interests _currentInterests;
-
-
-
 }

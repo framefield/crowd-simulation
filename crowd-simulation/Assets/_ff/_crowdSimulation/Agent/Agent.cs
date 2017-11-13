@@ -12,11 +12,9 @@ public class Agent : MonoBehaviour
         _currentInterests = new Interests();
         _currentInterests.CopyFrom(AgentCategory.AgentInterests);
 
-        _navMeshAgent = GetComponent<NavMeshAgent>();
         _agentWalking = GetComponent<AgentWalking>();
 
         RenderAttractedness();
-
     }
 
     void Update()
@@ -36,7 +34,9 @@ public class Agent : MonoBehaviour
             else
             {
                 if (_agentWalking.CheckIfReachedRandomDestination())
+                {
                     _agentWalking.SetNewRandomDestination();
+                }
                 return;
             }
         }
@@ -48,11 +48,8 @@ public class Agent : MonoBehaviour
             return;
         }
 
-        _navMeshAgent.SetDestination(choosenPointOfInterest.transform.position);
+        _agentWalking.SetDestination(choosenPointOfInterest.transform.position);
         _lockedPointOfInterest = choosenPointOfInterest;
-
-
-
     }
 
     private void MakeInterestSimulationStep()
@@ -63,22 +60,6 @@ public class Agent : MonoBehaviour
         _currentInterests[key] = value;
     }
 
-    float _attractednessOnStart = -1f;
-    private void RenderAttractedness()
-    {
-        var culminatedAttractedness = 0f;
-        foreach (KeyValuePair<InterestCategory, float> pair in _currentInterests)
-            culminatedAttractedness += pair.Value;
-
-        if (_attractednessOnStart == -1f)
-        {
-            _attractednessOnStart = culminatedAttractedness;
-        }
-
-        var brightness = culminatedAttractedness / _attractednessOnStart;
-        var color = AgentCategory.AgentColor * new Color(brightness, brightness, brightness, 1);
-        GetComponent<Renderer>().material.SetColor("_Color", color);
-    }
 
     private PointOfInterest ChoosePointOfInterest()
     {
@@ -131,13 +112,26 @@ public class Agent : MonoBehaviour
             return 0f;
     }
 
+    float _attractednessOnStart = -1f;
+    private void RenderAttractedness()
+    {
+        var culminatedAttractedness = 0f;
+        foreach (KeyValuePair<InterestCategory, float> pair in _currentInterests)
+            culminatedAttractedness += pair.Value;
+
+        if (_attractednessOnStart == -1f)
+        {
+            _attractednessOnStart = culminatedAttractedness;
+        }
+
+        var brightness = culminatedAttractedness / _attractednessOnStart;
+        var color = AgentCategory.AgentColor * new Color(brightness, brightness, brightness, 1);
+        GetComponent<Renderer>().material.SetColor("_Color", color);
+    }
 
 
-    private NavMeshAgent _navMeshAgent;
     private AgentWalking _agentWalking;
     private PointOfInterest _lockedPointOfInterest;
     public Interests _currentInterests;
-
-
 
 }

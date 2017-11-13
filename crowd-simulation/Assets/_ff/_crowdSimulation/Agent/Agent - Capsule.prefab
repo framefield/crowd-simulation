@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 23886942261846104}
   - component: {fileID: 195930959904169658}
   - component: {fileID: 114782175463676002}
+  - component: {fileID: 114017006439351040}
   m_Layer: 0
   m_Name: Agent - Capsule
   m_TagString: Untagged
@@ -83,6 +84,22 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1194816589033452}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114017006439351040
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1194816589033452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22a87ba90b7d14d47b6d61f451bcbe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxRandomDestinationDistance: 110
+  GizmoColor: {r: 1, g: 0.7941177, b: 0, a: 0.072}
+  _currentInterests:
+    m_keys: []
+    m_values: []
 --- !u!114 &114782175463676002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -95,8 +112,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AgentCategory: {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
-  GizmoColor: {r: 1, g: 1, b: 1, a: 0.053}
-  MaxRandomDestinationDistance: 100
+  _currentInterests:
+    m_keys: []
+    m_values: []
 --- !u!136 &136841960635931188
 CapsuleCollider:
   m_ObjectHideFlags: 1

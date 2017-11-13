@@ -4,6 +4,6 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomPropertyDrawer(typeof(Interests))]
-public class AttractednessPropertyDrawer : SerializableDictionaryPropertyDrawer
+public class InterestsPropertyDrawer : SerializableDictionaryPropertyDrawer
 {
 }

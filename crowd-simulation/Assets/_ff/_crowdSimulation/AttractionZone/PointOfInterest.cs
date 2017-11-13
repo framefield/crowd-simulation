@@ -6,13 +6,10 @@ using UnityEngine;
 public class PointOfInterest : MonoBehaviour
 {
     public InterestCategory AttractionCategory;
+
     [SerializeField] float Radius;
-    [SerializeField] float IconHeight;
-    [SerializeField] float AttractionStrength;
     [SerializeField] AnimationCurve AttractionDistribution;
     [SerializeField] TMPro.TextMeshPro Label;
-    // [SerializeField] int NumberOfCircles;
-
     [SerializeField] float GizmoCirclesPerMeter;
 
     public float GetVisibilityAtGlobalPosition(Vector3 spectator)
@@ -22,7 +19,6 @@ public class PointOfInterest : MonoBehaviour
         var attractiveness = AttractionDistribution.Evaluate(distanceNormalized);
         return attractiveness;
     }
-
 
     void OnDrawGizmos()
     {
@@ -61,8 +57,4 @@ public class PointOfInterest : MonoBehaviour
         for (int i = 0; i < positions.Length; i++)
             Gizmos.DrawLine(positions[i], positions[(i + 1) % positions.Length]);
     }
-
-
-
-
 }

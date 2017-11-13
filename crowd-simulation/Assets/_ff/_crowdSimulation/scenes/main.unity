@@ -1922,7 +1922,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: Radius
-      value: 61.63
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -1996,7 +1996,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: GizmoCirclesPerMeter
-      value: 1
+      value: 1.36
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -2745,7 +2745,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: Radius
-      value: 61.63
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -2819,7 +2819,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: GizmoCirclesPerMeter
-      value: 1
+      value: 1.36
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -6696,7 +6696,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: Radius
-      value: 19.27
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -6770,7 +6770,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: GizmoCirclesPerMeter
-      value: 1
+      value: 1.36
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -7355,7 +7355,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: Radius
-      value: 61.63
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -7429,7 +7429,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: GizmoCirclesPerMeter
-      value: 1
+      value: 1.36
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -7648,7 +7648,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: GizmoCirclesPerMeter
-      value: 1
+      value: 1.36
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -7870,7 +7870,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: Radius
-      value: 61.63
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -7949,7 +7949,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: GizmoCirclesPerMeter
-      value: 1
+      value: 1.36
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -8668,7 +8668,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: Radius
-      value: 61.63
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -8742,7 +8742,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: GizmoCirclesPerMeter
-      value: 1
+      value: 1.36
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -9901,7 +9901,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: Radius
-      value: 61.63
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -9975,7 +9975,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: GizmoCirclesPerMeter
-      value: 1
+      value: 1.36
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -12214,7 +12214,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: Radius
-      value: 61.63
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -12288,7 +12288,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: GizmoCirclesPerMeter
-      value: 1
+      value: 1.36
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
