@@ -95,8 +95,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22a87ba90b7d14d47b6d61f451bcbe2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxRandomDestinationDistance: 110
-  GizmoColor: {r: 1, g: 0.7941177, b: 0, a: 0.072}
+  MaxRandomDestinationDistance: 46
+  GizmoColor: {r: 1, g: 0.7941177, b: 0, a: 0.109}
   _currentInterests:
     m_keys: []
     m_values: []
@@ -112,6 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AgentCategory: {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
+  Exit: {x: 40, y: 0, z: 40}
   _currentInterests:
     m_keys: []
     m_values: []
