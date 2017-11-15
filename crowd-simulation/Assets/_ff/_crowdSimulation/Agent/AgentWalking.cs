@@ -36,13 +36,11 @@ public class AgentWalking : MonoBehaviour
     public void SetDestination(Vector3 destination)
     {
         CurrentDestination = destination;
-        // _destinationIsPOI = true;
     }
 
     public void SetNewRandomDestination()
     {
         CurrentDestination = GenerateRandomDestination();
-        // _destinationIsPOI = false;
     }
 
     public bool CheckIfReachedRandomDestination()
@@ -69,7 +67,6 @@ public class AgentWalking : MonoBehaviour
     private NavMeshAgent _navMeshAgent;
 
     private Vector3 _currentDestination;
-    // private bool _destinationIsPOI;
 
     public Interests _currentInterests;
 }
