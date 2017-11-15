@@ -11,4 +11,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b919df4f82b168045b39dc0ebb06091d, type: 3}
   m_Name: Wine
   m_EditorClassIdentifier: 
-  Color: {r: 0.7794118, g: 1, b: 0.9318771, a: 1}
+  Color: {r: 0.62084186, g: 0.79655176, b: 0.7422883, a: 1}

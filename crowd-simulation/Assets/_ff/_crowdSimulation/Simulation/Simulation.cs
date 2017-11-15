@@ -22,9 +22,9 @@ public class Simulation : Singleton<Simulation>
         var attractionsInScene = FindObjectsOfType<PointOfInterest>();
         foreach (var a in attractionsInScene)
         {
-            if (!PointsOfInterest.ContainsKey(a.AttractionCategory))
-                PointsOfInterest.Add(a.AttractionCategory, new List<PointOfInterest>());
-            PointsOfInterest[a.AttractionCategory].Add(a);
+            if (!PointsOfInterest.ContainsKey(a.InterestCategory))
+                PointsOfInterest.Add(a.InterestCategory, new List<PointOfInterest>());
+            PointsOfInterest[a.InterestCategory].Add(a);
         }
     }
 
