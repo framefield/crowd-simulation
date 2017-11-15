@@ -5,8 +5,9 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class PointOfInterest : MonoBehaviour
 {
-    public InterestCategory AttractionCategory;
+    public InterestCategory InterestCategory;
 
+    public float InnerSatisfactionRadius;
     [SerializeField] float Radius;
     [SerializeField] AnimationCurve AttractionDistribution;
     [SerializeField] TMPro.TextMeshPro Label;
@@ -26,20 +27,32 @@ public class PointOfInterest : MonoBehaviour
 
         for (int i = 0; i < numberOfCircles; i++)
         {
-            var alphaFromAttraction = AttractionDistribution.Evaluate((i + 1f) / numberOfCircles);
-            Gizmos.color = AttractionCategory.Color * new Color(1, 1, 1, 0) + new Color(0, 0, 0, alphaFromAttraction);
-            var radiusFraction = Radius * (i + 1) / numberOfCircles;
-            var circleVertices = GenerateCircleVertices(radiusFraction);
-            DrawLine(circleVertices);
+            var alphaFromAttraction = AttractionDistribution.Evaluate((numberOfCircles - i) / numberOfCircles);
+            var color = InterestCategory.Color * new Color(1, 1, 1, 0) + new Color(0, 0, 0, alphaFromAttraction);
+            var radiusFraction = Radius * (numberOfCircles - i) / numberOfCircles;
+            DrawGizmoCircle(radiusFraction, color);
         }
 
-        Label.text = AttractionCategory.ToString().Split('(')[0];
-        Label.color = AttractionCategory.Color;
+        Label.text = InterestCategory.ToString().Split('(')[0];
+        Label.color = InterestCategory.Color;
     }
 
-    private Vector3[] GenerateCircleVertices(float radius)
+    void OnDrawGizmosSelected()
     {
-        var resolution = 32;
+        var offset = 0.1f;
+        DrawGizmoCircle(Radius, Color.grey, true, 256);
+        DrawGizmoCircle(Radius + offset, Color.black, true, 256);
+    }
+
+    private void DrawGizmoCircle(float radius, Color color, bool dotted = false, int resolution = 64)
+    {
+        Gizmos.color = color;
+        var circleVertices = GenerateCircleVertices(radius, resolution);
+        DrawLine(circleVertices, dotted);
+    }
+
+    private Vector3[] GenerateCircleVertices(float radius, int resolution)
+    {
         List<Vector3> allPositions = new List<Vector3>();
         var pos = new Vector3(radius, 0, 0);
 
@@ -52,9 +65,20 @@ public class PointOfInterest : MonoBehaviour
         return allPositions.ToArray();
     }
 
-    private void DrawLine(Vector3[] positions)
+
+    private void DrawLine(Vector3[] positions, bool dotted)
     {
         for (int i = 0; i < positions.Length; i++)
+        {
+            var frequency = 1f;
+            if (dotted)
+            {
+                var x = (1 + Mathf.Sin(i * frequency)) * 0.5f;
+                Gizmos.color = Color.Lerp(Color.white, Color.grey, x);
+                // Gizmos.color = Color.Lerp(Color.blue, Color.yellow, x);
+            }
+
             Gizmos.DrawLine(positions[i], positions[(i + 1) % positions.Length]);
+        }
     }
 }
