@@ -6,6 +6,8 @@ using UnityEngine.AI;
 public class Agent : MonoBehaviour
 {
     [SerializeField] AgentCategory AgentCategory;
+    [SerializeField] Vector3 Exit;
+
 
     void Start()
     {
@@ -17,15 +19,32 @@ public class Agent : MonoBehaviour
         RenderAttractedness();
     }
 
+    private bool HasSatisfiedAllInterests()
+    {
+        var cullminatedInterests = 0f;
+
+        foreach (var value in _currentInterests.Values)
+        {
+            cullminatedInterests += value;
+        }
+        return cullminatedInterests == 0f;
+    }
+
     void Update()
     {
+        if (HasSatisfiedAllInterests())
+        {
+            _agentWalking.SetDestination(Exit);
+            return;
+        }
+
         var choosenPointOfInterest = ChoosePointOfInterest();
         var foundAttraction = choosenPointOfInterest != null;
-        var wasLockedToAttraction = _lockedPointOfInterest != null;
+        var isLockedToAttraction = _lockedPointOfInterest != null;
 
         if (!foundAttraction)
         {
-            if (wasLockedToAttraction)
+            if (isLockedToAttraction)
             {
                 _lockedPointOfInterest = null;
                 _agentWalking.SetNewRandomDestination();
@@ -54,38 +73,48 @@ public class Agent : MonoBehaviour
 
     private void MakeInterestSimulationStep()
     {
-        var key = _lockedPointOfInterest.AttractionCategory;
-        var value = _currentInterests[key];
-        value = Mathf.Max(value + AgentCategory.Stamina, 0f);
-        _currentInterests[key] = value;
+        var key = _lockedPointOfInterest.InterestCategory;
+        var currentInterest = _currentInterests[key];
+
+        if (ReachedCurrentPOI())
+            currentInterest = 0;
+        else
+            currentInterest = Mathf.Max(currentInterest + AgentCategory.Stamina, 0f);
+
+        _currentInterests[key] = currentInterest;
     }
 
+    private bool ReachedCurrentPOI()
+    {
+        var distance = Vector3.Distance(transform.position, _lockedPointOfInterest.transform.position);
+        return distance < _lockedPointOfInterest.InnerSatisfactionRadius;
+    }
 
     private PointOfInterest ChoosePointOfInterest()
     {
-        PointOfInterest choosenPointOfInterest = null;
-        var maxFoundInterestedness = 0f;
+        PointOfInterest choosenPOI = null;
+        var maxFoundAttraction = 0f;
 
         foreach (KeyValuePair<InterestCategory, float> interest in _currentInterests)
         {
-            var attraction = GetMostVisibilePointOfInterest(interest.Key);
+            var mostVisiblePOI = GetMostVisibilePointOfInterest(interest.Key);
 
-            float generalAttraction;
+            float visibility;
 
-            var foundAttraction = attraction != null;
+            var foundPOI = mostVisiblePOI != null;
 
-            generalAttraction = foundAttraction
-               ? attraction.GetVisibilityAtGlobalPosition(this.transform.position)
+            visibility = foundPOI
+               ? mostVisiblePOI.GetVisibilityAtGlobalPosition(this.transform.position)
                : 0f;
 
-            var personalAttraction = generalAttraction * GetCurrentInterest(interest.Key);
-            if (personalAttraction > maxFoundInterestedness)
+            var attraction = visibility * GetCurrentInterest(interest.Key);
+            if (attraction > maxFoundAttraction)
             {
-                choosenPointOfInterest = attraction;
-                maxFoundInterestedness = personalAttraction;
+                choosenPOI = mostVisiblePOI;
+                maxFoundAttraction = attraction;
             }
         }
-        return choosenPointOfInterest;
+        return choosenPOI;
     }
 
     public PointOfInterest GetMostVisibilePointOfInterest(InterestCategory interestCategory)
@@ -112,9 +141,33 @@ public class Agent : MonoBehaviour
             return 0f;
     }
 
+    public InterestCategory GetHighestInterest()
+    {
+        var highestInterestValue = 0f;
+        InterestCategory highestInterestCategory = null;
+        foreach (KeyValuePair<InterestCategory, float> pair in _currentInterests)
+        {
+            if (pair.Value > highestInterestValue)
+            {
+                highestInterestCategory = pair.Key;
+                highestInterestValue = pair.Value;
+            }
+        }
+        return highestInterestCategory;
+    }
+
+
     float _attractednessOnStart = -1f;
     private void RenderAttractedness()
     {
+        Color colorByCategory;
+        if (_lockedPointOfInterest != null)
+            colorByCategory = _lockedPointOfInterest.InterestCategory.Color;
+        else
+        {
+            colorByCategory = GetHighestInterest().Color * 0.5f;
+        }
+
         var culminatedAttractedness = 0f;
         foreach (KeyValuePair<InterestCategory, float> pair in _currentInterests)
             culminatedAttractedness += pair.Value;
@@ -125,7 +178,7 @@ public class Agent : MonoBehaviour
         }
 
         var brightness = culminatedAttractedness / _attractednessOnStart;
-        var color = AgentCategory.AgentColor * new Color(brightness, brightness, brightness, 1);
+        var color = colorByCategory * new Color(brightness, brightness, brightness, 1);
         GetComponent<Renderer>().material.SetColor("_Color", color);
     }
 
