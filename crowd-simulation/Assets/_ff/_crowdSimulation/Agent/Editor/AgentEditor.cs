@@ -7,8 +7,6 @@ using UnityEngine;
 public class AgentEditor : Editor
 {
     private Material material;
-    private Dictionary<InterestCategory, float[]> AttractednessBuffer = new Dictionary<InterestCategory, float[]>();
-    private Dictionary<InterestCategory, float[]> AttractivenessBuffer = new Dictionary<InterestCategory, float[]>();
     private Dictionary<InterestCategory, float[]> PersonalAttractionBuffer = new Dictionary<InterestCategory, float[]>();
     public const int _bufferSize = 100;
     private int _arrayPointer = 0;
@@ -27,14 +25,6 @@ public class AgentEditor : Editor
     {
         foreach (KeyValuePair<InterestCategory, float> pair in _agent._currentInterests)
         {
-            AttractednessBuffer[pair.Key] = new float[_bufferSize];
-            for (int i = 0; i < _bufferSize; i++)
-                AttractednessBuffer[pair.Key][i] = 0f;
-
-            AttractivenessBuffer[pair.Key] = new float[_bufferSize];
-            for (int i = 0; i < _bufferSize; i++)
-                AttractivenessBuffer[pair.Key][i] = 0f;
-
             PersonalAttractionBuffer[pair.Key] = new float[_bufferSize];
             for (int i = 0; i < _bufferSize; i++)
                 PersonalAttractionBuffer[pair.Key][i] = 0f;
@@ -45,20 +35,17 @@ public class AgentEditor : Editor
     {
         foreach (KeyValuePair<InterestCategory, float> pair in _agent._currentInterests)
         {
-            var attraction = _agent.GetMostVisibilePointOfInterest(pair.Key);
+            var mostVisiblePOI = _agent.GetMostVisibilePointOfInterest(pair.Key);
 
-            var foundAttraction = attraction != null;
-            var generalAttraction = foundAttraction
-            ? attraction.GetVisibilityAtGlobalPosition(_agent.transform.position)
+            var foundPOI = mostVisiblePOI != null;
+            var visibility = foundPOI
+            ? mostVisiblePOI.GetVisibilityAtGlobalPosition(_agent.transform.position)
             : 0f;
 
-            var personalAttraction = generalAttraction * _agent.GetCurrentInterest(pair.Key);
+            var attraction = visibility * _agent.GetCurrentInterest(pair.Key);
 
-            AttractednessBuffer[pair.Key][_arrayPointer] = pair.Value;
-            AttractivenessBuffer[pair.Key][_arrayPointer] = generalAttraction;
-            PersonalAttractionBuffer[pair.Key][_arrayPointer] = personalAttraction;
+            PersonalAttractionBuffer[pair.Key][_arrayPointer] = attraction;
         }
-
 
         _arrayPointer = (_arrayPointer + 1) % _bufferSize;
     }
@@ -67,39 +54,21 @@ public class AgentEditor : Editor
     {
         DrawDefaultInspector();
         AddValueToBuffer(_agent._currentInterests);
-        Rect _layoutRectangle = GUILayoutUtility.GetRect(10, 10000, 200, 200);
+
         GUILayoutUtility.GetRect(10, 10000, 4, 4);
-        Rect _attractivenessRect = GUILayoutUtility.GetRect(10, 10000, 200, 200);
-        GUILayoutUtility.GetRect(10, 10000, 4, 4);
-        Rect _personalAttractionRect = GUILayoutUtility.GetRect(10, 10000, 200, 200);
+        GUILayout.TextArea("Attractedness");
+        Rect _attractionRect = GUILayoutUtility.GetRect(10, 10000, 200, 200);
 
         GUILayout.BeginHorizontal(EditorStyles.helpBox);
         if (Event.current.type == EventType.Repaint)
         {
-            GUI.BeginClip(_layoutRectangle);
-            GL.PushMatrix();
-            GL.Clear(true, false, Color.black);
-            material.SetPass(0);
-            RenderBackgroundGrid(_layoutRectangle);
-            RenderBuffer(_layoutRectangle, AttractednessBuffer);
-            GL.PopMatrix();
-            GUI.EndClip();
 
-            GUI.BeginClip(_attractivenessRect);
+            GUI.BeginClip(_attractionRect);
             GL.PushMatrix();
             GL.Clear(true, false, Color.black);
             material.SetPass(0);
-            RenderBackgroundGrid(_attractivenessRect);
-            RenderBuffer(_attractivenessRect, AttractivenessBuffer);
-            GL.PopMatrix();
-            GUI.EndClip();
-
-            GUI.BeginClip(_personalAttractionRect);
-            GL.PushMatrix();
-            GL.Clear(true, false, Color.black);
-            material.SetPass(0);
-            RenderBackgroundGrid(_personalAttractionRect);
-            RenderBuffer(_personalAttractionRect, PersonalAttractionBuffer);
+            RenderBackgroundGrid(_attractionRect);
+            RenderBuffer(_attractionRect, PersonalAttractionBuffer);
             GL.PopMatrix();
             GUI.EndClip();
 
