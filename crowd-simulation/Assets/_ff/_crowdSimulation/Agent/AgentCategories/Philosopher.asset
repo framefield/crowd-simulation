@@ -17,8 +17,12 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 4d09bde4c6058284da73c07e7e900904, type: 2}
     - {fileID: 11400000, guid: 24b7be9908d768f4e8fe77703ab9360f, type: 2}
     - {fileID: 11400000, guid: 67536b4f0df653149bb59a48a4a37aee, type: 2}
+    - {fileID: 11400000, guid: 719d828a902201946b8185906bc1cd69, type: 2}
+    - {fileID: 11400000, guid: f9793856e7fd70948bc391ae5cd87c15, type: 2}
     m_values:
-    - 0.46
-    - 0.33
-    - 0.36
+    - 1
+    - 0.8
+    - 0.7
+    - 0.95
+    - 0.9
   Stamina: -0.001
