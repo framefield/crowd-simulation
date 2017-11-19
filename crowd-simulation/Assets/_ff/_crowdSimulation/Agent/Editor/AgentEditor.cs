@@ -36,6 +36,8 @@ public class AgentEditor : Editor
         foreach (KeyValuePair<InterestCategory, float> pair in _agent._currentInterests)
         {
             var mostVisiblePOI = _agent.GetMostVisibilePointOfInterest(pair.Key);
+            if (mostVisiblePOI == null)
+                continue;
 
             var foundPOI = mostVisiblePOI != null;
             var visibility = foundPOI

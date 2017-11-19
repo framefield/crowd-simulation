@@ -7,31 +7,25 @@ public class RandomWalkArea : MonoBehaviour
 {
     void OnEnable()
     {
-
         Vertices = new List<Vector3>();
         Triangles = new List<int[]>();
+        Border = new List<int>();
 
         Vertices.Add(new Vector3(INITIALSIZE, 0, INITIALSIZE));
         Vertices.Add(new Vector3(-INITIALSIZE, 0, INITIALSIZE));
         Vertices.Add(new Vector3(-INITIALSIZE, 0, -INITIALSIZE));
 
-        int[] t0 = { 0, 1, 2 };
+        int[] t0 = { 0, 2, 1 };
         Triangles.Add(t0);
-        Border.Add(0);
-        Border.Add(1);
-        Border.Add(2);
+        Border.AddRange(t0);
     }
-
 
     void OnDrawGizmos()
     {
-        foreach (var t in Triangles)
-            DrawTriangle(t);
-        // DrawPolygon();
-
-        // Debug.Log("TRIANGLES");
+        DrawMesh();
         // foreach (var t in Triangles)
-        //     Debug.Log(t[0] + ", " + t[1] + ", " + t[2]);
+        //     DrawTriangle(t);
+        DrawPolygon();
     }
 
     public void InsertVertexBetweenVertices(int v0, int v1)
@@ -47,28 +41,27 @@ public class RandomWalkArea : MonoBehaviour
         InsertVertexIntoBorder(iNewVertex, v0, v1);
         Vertices.Add(newPointBetweenV0AndV1);
 
-
-
-
+        Debug.Log(Triangles.Remove(triangleToSplit));
         int[] newTriangle0 = { v0, iNewVertex, iOppositeVertex };
-        int[] newTriangle1 = { v1, iNewVertex, iOppositeVertex };
+        int[] newTriangle1 = { v1, iOppositeVertex, iNewVertex };
 
         Triangles.Add(newTriangle0);
         Triangles.Add(newTriangle1);
-
     }
 
-    void InsertVertexIntoBorder(int iNewVertex, int leftNeighbour, int rightNeighbour)
+    void InsertVertexIntoBorder(int iNewVertex, int iNeighbour0, int iNeighbour1)
     {
         int positionToInsertAt = -1;
         for (int i = 0; i < Border.Count; i++)
         {
-            if (i == rightNeighbour && (i + 1 % Border.Count) == leftNeighbour)
+            var iBorderVertex0 = Border[i];
+            var iBorderVertex1 = Border[(i + 1) % Border.Count];
+
+            if ((iBorderVertex0 == iNeighbour0 && iBorderVertex1 == iNeighbour1) || (iBorderVertex0 == iNeighbour1 && iBorderVertex1 == iNeighbour0))
             {
-                positionToInsertAt = (i + 1 % Border.Count);
+                positionToInsertAt = ((i + 1) % Border.Count);
             }
         }
-        Debug.Log(positionToInsertAt);
         Border.Insert(positionToInsertAt, iNewVertex);
     }
 
@@ -96,19 +89,35 @@ public class RandomWalkArea : MonoBehaviour
     public void DrawPolygon()
     {
         Gizmos.color = Color.white;
+
         for (int i = 0; i < Border.Count; i++)
-        {
             Gizmos.DrawLine(Vertices[Border[i]], Vertices[Border[(i + 1) % Border.Count]]);
-        }
     }
 
     public void DrawTriangle(int[] triangle)
     {
         Gizmos.color = Color.red;
+
         for (int i = 0; i < 3; i++)
-        {
             Gizmos.DrawLine(Vertices[triangle[i]], Vertices[triangle[(i + 1) % 3]]);
-        }
+    }
+
+    public void DrawMesh()
+    {
+        var m = new Mesh();
+        m.SetVertices(Vertices);
+
+        var tris = new List<int>();
+        foreach (var t in Triangles)
+            tris.AddRange(t);
+        m.SetTriangles(tris, 0);
+
+        var normals = new List<Vector3>();
+        foreach (var v in Vertices)
+            normals.Add(Vector3.up);
+        m.SetNormals(normals);
+
+        Gizmos.DrawMesh(m);
     }
 
     public List<Vector3> Vertices;

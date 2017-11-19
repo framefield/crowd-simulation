@@ -6,46 +6,46 @@ using UnityEngine;
 [CustomEditor(typeof(RandomWalkArea))]
 public class RandomWalkAreaEditor : Editor
 {
-
     void OnSceneGUI()
     {
         var randomWalkArea = target as RandomWalkArea;
         var vertices = randomWalkArea.Vertices;
+        var border = randomWalkArea.Border;
 
         Handles.color = Color.white;
         var snapMode = DetermineSnapMode();
 
-        var iLastPoint = -1;
-        for (var i = 0; i < vertices.Count; i++)
+        for (var i = 0; i < border.Count; i++)
         {
             // Draw handles
             EditorGUI.BeginChangeCheck();
-            var point = vertices[i];
+
+            var iPoint = border[i];
+            var iNextPoint = border[(i + 1) % border.Count];
+            var point = vertices[iPoint];
+            var nextPoint = vertices[iNextPoint];
+
             point = Handles.DoPositionHandle(point, Quaternion.identity);
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(randomWalkArea, "Change randomWalkArea");
                 EditorUtility.SetDirty(randomWalkArea);
                 var snapPoint = ApplySnap(point, snapMode);
-                vertices[i] = snapPoint;
+                vertices[iPoint] = snapPoint;
             }
 
-            if (i > 0)
+            Handles.BeginGUI();
+            var midPoint = (point + nextPoint) / 2;
+            var viewPos = Camera.current.WorldToScreenPoint(midPoint);
+
+            if (GUI.Button(new Rect(viewPos.x - 8, Camera.current.pixelHeight - viewPos.y - 8, 16, 16), "+"))
             {
-                // Handles.DrawLine(point, vertices[iLastPoint]);
+                Debug.Log(iPoint + " , " + iNextPoint);
+                randomWalkArea.InsertVertexBetweenVertices(iPoint, iNextPoint);
 
-                Handles.BeginGUI();
-                var midPoint = (point + vertices[iLastPoint]) / 2;
-                var viewPos = Camera.current.WorldToScreenPoint(midPoint);
-                if (GUI.Button(new Rect(viewPos.x - 8, Camera.current.pixelHeight - viewPos.y - 8, 16, 16), "+"))
-                {
-                    randomWalkArea.InsertVertexBetweenVertices(i, iLastPoint);
-                    // vertices.Insert(i, midPoint);
-                    // InsertPoint(line, points, i, midPoint);
-                }
-                Handles.EndGUI();
             }
-            iLastPoint = i;
+
+            Handles.EndGUI();
         }
     }
 
