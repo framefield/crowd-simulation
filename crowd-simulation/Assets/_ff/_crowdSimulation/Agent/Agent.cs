@@ -121,6 +121,9 @@ public class Agent : MonoBehaviour
     {
         PointOfInterest mostVisiblePointOfInterest = null;
         var maxFoundVisibility = 0f;
+        if (!Simulation.Instance.PointsOfInterest.ContainsKey(interestCategory))
+            return null;
+
         foreach (var poi in Simulation.Instance.PointsOfInterest[interestCategory])
         {
             var poiVisibility = poi.GetVisibilityAtGlobalPosition(this.transform.position);
