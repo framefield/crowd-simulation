@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -15,7 +16,6 @@ public class Agent : MonoBehaviour
         _currentInterests.CopyFrom(AgentCategory.AgentInterests);
 
         _agentWalking = GetComponent<AgentWalking>();
-
         RenderAttractedness();
     }
 
@@ -41,6 +41,13 @@ public class Agent : MonoBehaviour
         var choosenPointOfInterest = ChoosePointOfInterest();
         var foundAttraction = choosenPointOfInterest != null;
         var isLockedToAttraction = _lockedPointOfInterest != null;
+
+        if (DidNotMoveForTimeT())
+        {
+            Debug.Log("Did not move for time t");
+            _lockedPointOfInterest = null;
+            _agentWalking.SetNewRandomDestination();
+        }
 
         if (!foundAttraction)
         {
@@ -69,6 +76,37 @@ public class Agent : MonoBehaviour
 
         _agentWalking.SetDestination(choosenPointOfInterest.transform.position);
         _lockedPointOfInterest = choosenPointOfInterest;
+    }
+
+    [Header("Change destination when stuck:")]
+    [Range(0.01f, 0.05f)]
+    public float MoveEpsylon;
+    [Range(0.1f, 2f)]
+    public float MaxTimeWithoutMovementBeforeNewTarget;
+
+    private float _lastTimeMoved;
+    private Vector3 _lastPosition = Vector3.zero;
+
+    private bool DidNotMoveForTimeT()
+    {
+        if (_lastPosition == null)
+        {
+            _lastPosition = transform.position;
+            _lastTimeMoved = Time.time;
+            return false;
+        }
+
+        var distanceMovedSinceLastFrame = Vector3.Distance(transform.position, _lastPosition);
+        var hasMovedLastFrame = distanceMovedSinceLastFrame > MoveEpsylon;
+
+        if (hasMovedLastFrame)
+            _lastTimeMoved = Time.time;
+
+        var timeSinceLastMove = Time.time - _lastTimeMoved;
+
+        _lastPosition = transform.position;
+
+        return timeSinceLastMove > MaxTimeWithoutMovementBeforeNewTarget;
     }
 
     private void MakeInterestSimulationStep()
@@ -168,7 +206,7 @@ public class Agent : MonoBehaviour
             colorByCategory = _lockedPointOfInterest.InterestCategory.Color;
         else
         {
-            colorByCategory = GetHighestInterest().Color * 0.5f;
+            colorByCategory = Color.white;
         }
 
         var culminatedAttractedness = 0f;
