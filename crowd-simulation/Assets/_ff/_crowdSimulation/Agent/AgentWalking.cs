@@ -53,12 +53,14 @@ public class AgentWalking : MonoBehaviour
 
     private Vector3 GenerateRandomDestination()
     {
-        var vectorToRandomPosition = Random.insideUnitSphere * MaxRandomDestinationDistance;
-        vectorToRandomPosition.Scale(new Vector3(1, 0, 1));
-        vectorToRandomPosition += transform.position;
+        // var vectorToRandomPosition = Random.insideUnitSphere * MaxRandomDestinationDistance;
+        // vectorToRandomPosition.Scale(new Vector3(1, 0, 1));
+        // vectorToRandomPosition += transform.position;
+
+        var randomPosOnMarker = new Vector3((Random.value - 0.5f) * 60f, 0f, (Random.value - 0.5f) * 60f);
 
         NavMeshHit hit;
-        NavMesh.SamplePosition(vectorToRandomPosition, out hit, MaxRandomDestinationDistance, 1);
+        NavMesh.SamplePosition(randomPosOnMarker, out hit, MaxRandomDestinationDistance, 1);
         Vector3 closestDestinationOnNavMesh = hit.position;
 
         return closestDestinationOnNavMesh;
