@@ -7,6 +7,7 @@ using UnityEngine.AI;
 public class Agent : MonoBehaviour
 {
     [SerializeField] AgentCategory AgentCategory;
+    // [SerializeField] TMPro.TextMeshPro Label;
     private Vector3 _exit;
 
 
@@ -21,12 +22,23 @@ public class Agent : MonoBehaviour
         _currentState = State.RandomWalking;
         _creationTime = Time.time;
         _exit = transform.position;
+        _allRenderers = GetComponentsInChildren<Renderer>();
+        _camera = Camera.main;
     }
 
+    private Camera _camera;
     void Update()
     {
+        SearchForAttractivePersonInNeighbourhood();
+
+        // Label.transform.LookAt(transform.position + transform.position - _camera.transform.position);
+        // Label.text = _currentState.ToString();
+
+        if (_currentState == State.OnWayToExit)
+            return;
 
         RenderAttractedness();
+
         if (_currentState == State.DoingTransaction)
         {
             var timeSinceTransactionStarted = Time.time - _transactionStartTime;
@@ -42,22 +54,24 @@ public class Agent : MonoBehaviour
 
         if (HasSatisfiedAllInterests())
         {
+            _currentState = State.OnWayToExit;
             _agentWalking.SetDestination(_exit);
             return;
         }
 
         var choosenPointOfInterest = ChoosePointOfInterest();
-        var foundAttraction = choosenPointOfInterest != null;
-        var isLockedToAttraction = _lockedPointOfInterest != null;
+        var foundPOI = choosenPointOfInterest != null;
 
-        if (!foundAttraction)
+
+        if (!foundPOI)
         {
             if (HasSpentMaxTimeOnMarket())
                 SetAllInterestsToZero();
 
-            if (isLockedToAttraction)
+            if (_currentState == State.WalkingToPOI)
             {
                 _lockedPointOfInterest = null;
+                _currentState = State.RandomWalking;
                 _agentWalking.SetNewRandomDestination();
                 return;
             }
@@ -87,6 +101,12 @@ public class Agent : MonoBehaviour
 
         _agentWalking.SetDestination(choosenPointOfInterest.transform.position);
         _lockedPointOfInterest = choosenPointOfInterest;
+    }
+
+    private void SearchForAttractivePersonInNeighbourhood()
+    {
+        var neighbours = Simulation.Instance.FindAllAgentsInRadiusAroundAgent(1, gameObject);
+        // Debug.Log(neighbours.Count);
     }
 
 
@@ -224,18 +244,16 @@ public class Agent : MonoBehaviour
         var brightness = culminatedAttractedness / _attractednessOnStart;
         // var color = colorByCategory * new Color(brightness, brightness, brightness, 1);
 
-        GetComponent<Renderer>().material.SetColor("_Color", colorByCategory);
+        foreach (var r in _allRenderers)
+            r.material.SetColor("_Color", colorByCategory);
     }
 
-
+    private Renderer[] _allRenderers = new Renderer[0];
     private AgentWalking _agentWalking;
     private PointOfInterest _lockedPointOfInterest;
     public Interests _currentInterests;
-
-    // private bool _isDoingTransaction;
     private float _transactionStartTime;
     private float _creationTime;
-
     private State _currentState;
     private enum State { RandomWalking, WalkingToPOI, DoingTransaction, OnWayToExit }
 }

@@ -44,8 +44,29 @@ public class Simulation : Singleton<Simulation>
         }
     }
 
-    private void SpawnAgentAtPosition(Vector3 position, GameObject agentPrefab)
+    public void SpawnAgentAtPosition(Vector3 position, GameObject agentPrefab)
     {
-        Instantiate(agentPrefab, position, Quaternion.identity);
+        Debug.Log("spawning");
+        _allAgents.Add(Instantiate(agentPrefab, position, Quaternion.identity, this.transform));
     }
+
+    public List<GameObject> FindAllAgentsInRadiusAroundAgent(float radius, GameObject agent)
+    {
+        var foundInRadius = new List<GameObject>();
+
+        foreach (var a in _allAgents)
+        {
+            if (a == agent)
+                continue;
+
+            var distance = Vector3.Distance(a.transform.position, agent.transform.position);
+            if (distance < radius)
+                foundInRadius.Add(a);
+        }
+
+        return foundInRadius;
+    }
+
+    private List<GameObject> _allAgents = new List<GameObject>();
+
 }
