@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Name: Papyrus
   m_EditorClassIdentifier: 
   Color: {r: 0, g: 0.8310345, b: 0.3544117, a: 1}
+  TransactionTime: 6.97

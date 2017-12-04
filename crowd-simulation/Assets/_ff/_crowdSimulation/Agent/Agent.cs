@@ -7,7 +7,7 @@ using UnityEngine.AI;
 public class Agent : MonoBehaviour
 {
     [SerializeField] AgentCategory AgentCategory;
-    [SerializeField] Vector3 Exit;
+    private Vector3 _exit;
 
 
     void Start()
@@ -17,6 +17,8 @@ public class Agent : MonoBehaviour
 
         _agentWalking = GetComponent<AgentWalking>();
         RenderAttractedness();
+        _creationTime = Time.time;
+        _exit = transform.position;
     }
 
     private bool HasSatisfiedAllInterests()
@@ -30,11 +32,37 @@ public class Agent : MonoBehaviour
         return cullminatedInterests == 0f;
     }
 
+    private bool HasSpentMaxTimeOnMarket()
+    {
+        return (Time.time - _creationTime) > AgentCategory.MaxTimeOnMarket;
+    }
+
+    private void SetAllInterestsToZero()
+    {
+        _currentInterests.Clear();
+    }
+
     void Update()
     {
+
+
+        RenderAttractedness();
+        if (_isDoingTransaction)
+        {
+            var timeSinceTransactionStarted = Time.time - _transactionStartTime;
+            if (timeSinceTransactionStarted < _lockedPointOfInterest.InterestCategory.TransactionTime)
+                return;
+
+            //complete transaction
+            SetInterestOfCurrentPOISCategory(0f);
+            _lockedPointOfInterest = null;
+            _isDoingTransaction = false;
+        }
+
+
         if (HasSatisfiedAllInterests())
         {
-            _agentWalking.SetDestination(Exit);
+            _agentWalking.SetDestination(_exit);
             return;
         }
 
@@ -42,15 +70,11 @@ public class Agent : MonoBehaviour
         var foundAttraction = choosenPointOfInterest != null;
         var isLockedToAttraction = _lockedPointOfInterest != null;
 
-        if (DidNotMoveForTimeT())
-        {
-            Debug.Log("Did not move for time t");
-            _lockedPointOfInterest = null;
-            _agentWalking.SetNewRandomDestination();
-        }
-
         if (!foundAttraction)
         {
+            if (HasSpentMaxTimeOnMarket())
+                SetAllInterestsToZero();
+
             if (isLockedToAttraction)
             {
                 _lockedPointOfInterest = null;
@@ -69,8 +93,15 @@ public class Agent : MonoBehaviour
 
         if (choosenPointOfInterest == _lockedPointOfInterest)
         {
+            if (ReachedCurrentPOI())
+            {
+                _isDoingTransaction = true;
+                _transactionStartTime = Time.time;
+                return;
+            }
+
+
             MakeInterestSimulationStep();
-            RenderAttractedness();
             return;
         }
 
@@ -78,48 +109,54 @@ public class Agent : MonoBehaviour
         _lockedPointOfInterest = choosenPointOfInterest;
     }
 
-    [Header("Change destination when stuck:")]
-    [Range(0.01f, 0.05f)]
-    public float MoveEpsylon;
-    [Range(0.1f, 2f)]
-    public float MaxTimeWithoutMovementBeforeNewTarget;
+    // [Header("Change destination when stuck:")]
+    // [Range(0.01f, 0.05f)]
+    // public float MoveEpsylon;
+    // [Range(0.1f, 2f)]
+    // public float MaxTimeWithoutMovementBeforeNewTarget;
 
-    private float _lastTimeMoved;
-    private Vector3 _lastPosition = Vector3.zero;
+    // private float _lastTimeMoved;
+    // private Vector3 _lastPosition = Vector3.zero;
 
-    private bool DidNotMoveForTimeT()
+    // private bool DidNotMoveForTimeT()
+    // {
+    //     if (_lastPosition == null)
+    //     {
+    //         _lastPosition = transform.position;
+    //         _lastTimeMoved = Time.time;
+    //         return false;
+    //     }
+
+    //     var distanceMovedSinceLastFrame = Vector3.Distance(transform.position, _lastPosition);
+    //     var hasMovedLastFrame = distanceMovedSinceLastFrame > MoveEpsylon;
+
+    //     if (hasMovedLastFrame)
+    //         _lastTimeMoved = Time.time;
+
+    //     var timeSinceLastMove = Time.time - _lastTimeMoved;
+
+    //     _lastPosition = transform.position;
+
+    //     return timeSinceLastMove > MaxTimeWithoutMovementBeforeNewTarget;
+    // }
+
+    private void CompleteTransaction()
     {
-        if (_lastPosition == null)
-        {
-            _lastPosition = transform.position;
-            _lastTimeMoved = Time.time;
-            return false;
-        }
 
-        var distanceMovedSinceLastFrame = Vector3.Distance(transform.position, _lastPosition);
-        var hasMovedLastFrame = distanceMovedSinceLastFrame > MoveEpsylon;
-
-        if (hasMovedLastFrame)
-            _lastTimeMoved = Time.time;
-
-        var timeSinceLastMove = Time.time - _lastTimeMoved;
-
-        _lastPosition = transform.position;
-
-        return timeSinceLastMove > MaxTimeWithoutMovementBeforeNewTarget;
     }
 
     private void MakeInterestSimulationStep()
     {
         var key = _lockedPointOfInterest.InterestCategory;
         var currentInterest = _currentInterests[key];
+        currentInterest = Mathf.Max(currentInterest + AgentCategory.Stamina, 0f);
+        SetInterestOfCurrentPOISCategory(currentInterest);
+    }
 
-        if (ReachedCurrentPOI())
-            currentInterest = 0;
-        else
-            currentInterest = Mathf.Max(currentInterest + AgentCategory.Stamina, 0f);
-
-        _currentInterests[key] = currentInterest;
+    private void SetInterestOfCurrentPOISCategory(float newInterestValue)
+    {
+        var key = _lockedPointOfInterest.InterestCategory;
+        _currentInterests[key] = newInterestValue;
     }
 
     private bool ReachedCurrentPOI()
@@ -219,8 +256,9 @@ public class Agent : MonoBehaviour
         }
 
         var brightness = culminatedAttractedness / _attractednessOnStart;
-        var color = colorByCategory * new Color(brightness, brightness, brightness, 1);
-        GetComponent<Renderer>().material.SetColor("_Color", color);
+        // var color = colorByCategory * new Color(brightness, brightness, brightness, 1);
+
+        GetComponent<Renderer>().material.SetColor("_Color", colorByCategory);
     }
 
 
@@ -228,4 +266,7 @@ public class Agent : MonoBehaviour
     private PointOfInterest _lockedPointOfInterest;
     public Interests _currentInterests;
 
+    private bool _isDoingTransaction;
+    private float _transactionStartTime;
+    private float _creationTime;
 }

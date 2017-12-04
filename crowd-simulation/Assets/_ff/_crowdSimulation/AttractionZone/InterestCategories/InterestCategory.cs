@@ -8,5 +8,6 @@ using System.Collections.Generic;
 public class InterestCategory : ScriptableObject
 {
     public Color Color = Color.white;
+    public float TransactionTime = 1f;
 }
 

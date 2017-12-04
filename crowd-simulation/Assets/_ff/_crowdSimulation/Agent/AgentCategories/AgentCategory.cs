@@ -8,6 +8,7 @@ using System.Collections.Generic;
 public class AgentCategory : ScriptableObject
 {
     public Color AgentColor = Color.white;
+    public float MaxTimeOnMarket = float.PositiveInfinity;
     public Interests AgentInterests;
     public float Stamina;
 }
