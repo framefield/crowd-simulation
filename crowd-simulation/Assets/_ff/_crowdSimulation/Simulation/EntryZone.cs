@@ -16,7 +16,7 @@ public class EntryZone : MonoBehaviour
 
         var n = Mathf.Ceil(_agentsToSpawn);
         for (int i = 0; i < n; i++)
-            Instantiate(AgentPrefab, transform.position, Quaternion.identity);
+            Simulation.Instance.SpawnAgentAtPosition(transform.position, AgentPrefab);
 
         _agentsToSpawn -= n;
     }
