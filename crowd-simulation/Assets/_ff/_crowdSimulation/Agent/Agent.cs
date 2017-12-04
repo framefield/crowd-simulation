@@ -17,37 +17,17 @@ public class Agent : MonoBehaviour
 
         _agentWalking = GetComponent<AgentWalking>();
         RenderAttractedness();
+
+        _currentState = State.RandomWalking;
         _creationTime = Time.time;
         _exit = transform.position;
-    }
-
-    private bool HasSatisfiedAllInterests()
-    {
-        var cullminatedInterests = 0f;
-
-        foreach (var value in _currentInterests.Values)
-        {
-            cullminatedInterests += value;
-        }
-        return cullminatedInterests == 0f;
-    }
-
-    private bool HasSpentMaxTimeOnMarket()
-    {
-        return (Time.time - _creationTime) > AgentCategory.MaxTimeOnMarket;
-    }
-
-    private void SetAllInterestsToZero()
-    {
-        _currentInterests.Clear();
     }
 
     void Update()
     {
 
-
         RenderAttractedness();
-        if (_isDoingTransaction)
+        if (_currentState == State.DoingTransaction)
         {
             var timeSinceTransactionStarted = Time.time - _transactionStartTime;
             if (timeSinceTransactionStarted < _lockedPointOfInterest.InterestCategory.TransactionTime)
@@ -56,7 +36,7 @@ public class Agent : MonoBehaviour
             //complete transaction
             SetInterestOfCurrentPOISCategory(0f);
             _lockedPointOfInterest = null;
-            _isDoingTransaction = false;
+            _currentState = State.RandomWalking;
         }
 
 
@@ -95,7 +75,7 @@ public class Agent : MonoBehaviour
         {
             if (ReachedCurrentPOI())
             {
-                _isDoingTransaction = true;
+                _currentState = State.DoingTransaction;
                 _transactionStartTime = Time.time;
                 return;
             }
@@ -109,40 +89,26 @@ public class Agent : MonoBehaviour
         _lockedPointOfInterest = choosenPointOfInterest;
     }
 
-    // [Header("Change destination when stuck:")]
-    // [Range(0.01f, 0.05f)]
-    // public float MoveEpsylon;
-    // [Range(0.1f, 2f)]
-    // public float MaxTimeWithoutMovementBeforeNewTarget;
 
-    // private float _lastTimeMoved;
-    // private Vector3 _lastPosition = Vector3.zero;
-
-    // private bool DidNotMoveForTimeT()
-    // {
-    //     if (_lastPosition == null)
-    //     {
-    //         _lastPosition = transform.position;
-    //         _lastTimeMoved = Time.time;
-    //         return false;
-    //     }
-
-    //     var distanceMovedSinceLastFrame = Vector3.Distance(transform.position, _lastPosition);
-    //     var hasMovedLastFrame = distanceMovedSinceLastFrame > MoveEpsylon;
-
-    //     if (hasMovedLastFrame)
-    //         _lastTimeMoved = Time.time;
-
-    //     var timeSinceLastMove = Time.time - _lastTimeMoved;
-
-    //     _lastPosition = transform.position;
-
-    //     return timeSinceLastMove > MaxTimeWithoutMovementBeforeNewTarget;
-    // }
-
-    private void CompleteTransaction()
+    private bool HasSatisfiedAllInterests()
     {
+        var cullminatedInterests = 0f;
 
+        foreach (var value in _currentInterests.Values)
+        {
+            cullminatedInterests += value;
+        }
+        return cullminatedInterests == 0f;
+    }
+
+    private bool HasSpentMaxTimeOnMarket()
+    {
+        return (Time.time - _creationTime) > AgentCategory.MaxTimeOnMarket;
+    }
+
+    private void SetAllInterestsToZero()
+    {
+        _currentInterests.Clear();
     }
 
     private void MakeInterestSimulationStep()
@@ -266,7 +232,10 @@ public class Agent : MonoBehaviour
     private PointOfInterest _lockedPointOfInterest;
     public Interests _currentInterests;
 
-    private bool _isDoingTransaction;
+    // private bool _isDoingTransaction;
     private float _transactionStartTime;
     private float _creationTime;
+
+    private State _currentState;
+    private enum State { RandomWalking, WalkingToPOI, DoingTransaction, OnWayToExit }
 }
