@@ -11,8 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8af57c7bab01b49468d9d3629df4a925, type: 3}
   m_Name: Amazonen
   m_EditorClassIdentifier: 
-  Color: {r: 0.57586205, g: 0.57586205, b: 0.57586205, a: 1}
-  TransactionTime: 1
+  Color: {r: 0.81724143, g: 0.799214, b: 0.799214, a: 1}
+  TransactionTime: 1.84
   MaxTimeOnMarket: Infinity
   Interests:
     m_keys:

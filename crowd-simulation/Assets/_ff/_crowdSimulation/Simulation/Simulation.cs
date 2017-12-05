@@ -17,6 +17,8 @@ public class Simulation : Singleton<Simulation>
 
     [SerializeField] float SpawnRadius;
 
+    [SerializeField] TMPro.TMP_Text Log;
+
 
     void Start()
     {
@@ -44,8 +46,17 @@ public class Simulation : Singleton<Simulation>
                 SpawnAgentAtPosition(hit.point, AgentPrefab, CategoryToSpawnOnMouseDown);
             }
         }
+        WriteStatusToPanel();
     }
 
+    private void WriteStatusToPanel()
+    {
+        var output = "";
+        foreach (var key in _potentialInterlocutors.Keys)
+            output += " | " + key + " : " + _potentialInterlocutors[key].Count;
+
+        Log.text = output;
+    }
 
     public void SpawnAgentAtPosition(Vector3 position, GameObject agentPrefab, AgentCategory category)
     {
@@ -54,7 +65,6 @@ public class Simulation : Singleton<Simulation>
         newAgent.AgentCategory = category;
         AddAgentToPotentialInterlocutors(newAgent);
     }
-
 
     public Agent FindClosestNeighbourOfCategory(AgentCategory category, Agent agent)
     {
@@ -74,9 +84,11 @@ public class Simulation : Singleton<Simulation>
             }
         }
 
+        if (closestNeighbour != null)
+            Debug.Log(agent + " found " + closestNeighbour);
+
         return closestNeighbour;
     }
-
 
     private void AddAgentToPotentialInterlocutors(Agent agent)
     {
@@ -87,5 +99,4 @@ public class Simulation : Singleton<Simulation>
     }
 
     private Dictionary<AgentCategory, List<Agent>> _potentialInterlocutors = new Dictionary<AgentCategory, List<Agent>>();
-
 }
