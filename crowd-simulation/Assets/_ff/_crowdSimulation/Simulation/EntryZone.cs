@@ -7,7 +7,11 @@ public class EntryZone : MonoBehaviour
 
     [SerializeField]
     GameObject AgentPrefab;
+
+    [SerializeField]
+    AgentCategory AgentCategory;
     public float AgentsPerSecond;
+
 
 
     void Update()
@@ -16,7 +20,7 @@ public class EntryZone : MonoBehaviour
 
         var n = Mathf.Ceil(_agentsToSpawn);
         for (int i = 0; i < n; i++)
-            Simulation.Instance.SpawnAgentAtPosition(transform.position, AgentPrefab);
+            Simulation.Instance.SpawnAgentAtPosition(transform.position, AgentPrefab, AgentCategory);
 
         _agentsToSpawn -= n;
     }

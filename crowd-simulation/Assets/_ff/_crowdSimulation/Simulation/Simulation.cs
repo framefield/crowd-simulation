@@ -9,6 +9,7 @@ public class Simulation : Singleton<Simulation>
     public Dictionary<InterestCategory, List<PointOfInterest>> PointsOfInterest = new Dictionary<InterestCategory, List<PointOfInterest>>();
 
     [SerializeField] GameObject AgentPrefab;
+    [SerializeField] AgentCategory CategoryToSpawnOnMouseDown;
 
     [SerializeField] int PathfindingIterationsPerFrame;
 
@@ -40,17 +41,17 @@ public class Simulation : Singleton<Simulation>
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit, 1000.0f))
             {
-                SpawnAgentAtPosition(hit.point, AgentPrefab);
+                SpawnAgentAtPosition(hit.point, AgentPrefab, CategoryToSpawnOnMouseDown);
             }
         }
     }
 
 
-    public void SpawnAgentAtPosition(Vector3 position, GameObject agentPrefab)
+    public void SpawnAgentAtPosition(Vector3 position, GameObject agentPrefab, AgentCategory category)
     {
-        Debug.Log("spawning");
         var newAgentGO = Instantiate(agentPrefab, position, Quaternion.identity, this.transform);
         var newAgent = newAgentGO.GetComponent<Agent>();
+        newAgent.AgentCategory = category;
         AddAgentToPotentialInterlocutors(newAgent);
     }
 
