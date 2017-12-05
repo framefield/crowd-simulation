@@ -11,11 +11,11 @@ public class Simulation : Singleton<Simulation>
     [SerializeField] GameObject AgentPrefab;
 
     [SerializeField] int PathfindingIterationsPerFrame;
-    [Range(0.5f, 20)]
-    [SerializeField]
-    float AvoidancePredictionTime;
+
+    [SerializeField] [Range(0.5f, 20)] float AvoidancePredictionTime;
 
     [SerializeField] float SpawnRadius;
+
 
     void Start()
     {
@@ -27,6 +27,7 @@ public class Simulation : Singleton<Simulation>
             PointsOfInterest[a.InterestCategory].Add(a);
         }
     }
+
 
     void Update()
     {
@@ -44,29 +45,46 @@ public class Simulation : Singleton<Simulation>
         }
     }
 
+
     public void SpawnAgentAtPosition(Vector3 position, GameObject agentPrefab)
     {
         Debug.Log("spawning");
-        _allAgents.Add(Instantiate(agentPrefab, position, Quaternion.identity, this.transform));
+        var newAgentGO = Instantiate(agentPrefab, position, Quaternion.identity, this.transform);
+        var newAgent = newAgentGO.GetComponent<Agent>();
+        AddAgentToPotentialInterlocutors(newAgent);
     }
 
-    public List<GameObject> FindAllAgentsInRadiusAroundAgent(float radius, GameObject agent)
-    {
-        var foundInRadius = new List<GameObject>();
 
-        foreach (var a in _allAgents)
+    public Agent FindClosestNeighbourOfCategory(AgentCategory category, Agent agent)
+    {
+        Agent closestNeighbour = null;
+        var smallestDistance = float.PositiveInfinity;
+
+        foreach (var a in _potentialInterlocutors[category])
         {
             if (a == agent)
                 continue;
 
             var distance = Vector3.Distance(a.transform.position, agent.transform.position);
-            if (distance < radius)
-                foundInRadius.Add(a);
+            if (distance < smallestDistance)
+            {
+                closestNeighbour = a;
+                smallestDistance = distance;
+            }
         }
 
-        return foundInRadius;
+        return closestNeighbour;
     }
 
-    private List<GameObject> _allAgents = new List<GameObject>();
+
+    private void AddAgentToPotentialInterlocutors(Agent agent)
+    {
+        if (!_potentialInterlocutors.ContainsKey(agent.AgentCategory))
+            _potentialInterlocutors.Add(agent.AgentCategory, new List<Agent>());
+
+        _potentialInterlocutors[agent.AgentCategory].Add(agent);
+    }
+
+    private Dictionary<AgentCategory, List<Agent>> _potentialInterlocutors = new Dictionary<AgentCategory, List<Agent>>();
 
 }

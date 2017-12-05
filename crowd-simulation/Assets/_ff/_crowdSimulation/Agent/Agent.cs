@@ -6,15 +6,20 @@ using UnityEngine.AI;
 
 public class Agent : MonoBehaviour
 {
-    [SerializeField] AgentCategory AgentCategory;
+    public AgentCategory AgentCategory;
     // [SerializeField] TMPro.TextMeshPro Label;
     private Vector3 _exit;
+
+    [SerializeField] float SocialInteractionRadius;
 
 
     void Start()
     {
         _currentInterests = new Interests();
-        _currentInterests.CopyFrom(AgentCategory.AgentInterests);
+        _currentInterests.CopyFrom(AgentCategory.Interests);
+
+        _currentSocialInterests = new SocialInterests();
+        _currentSocialInterests.CopyFrom(AgentCategory.SocialInterests);
 
         _agentWalking = GetComponent<AgentWalking>();
         RenderAttractedness();
@@ -60,8 +65,10 @@ public class Agent : MonoBehaviour
         }
 
         var choosenPointOfInterest = ChoosePointOfInterest();
-        var foundPOI = choosenPointOfInterest != null;
+        var choosenInterlocutor = SearchForAttractivePersonInNeighbourhood();
 
+        var foundPOI = choosenPointOfInterest != null;
+        var foundInterlocutor = choosenInterlocutor != null;
 
         if (!foundPOI)
         {
@@ -77,6 +84,7 @@ public class Agent : MonoBehaviour
             }
             else
             {
+                // if(foundInterlocutor)
                 if (_agentWalking.CheckIfReachedRandomDestination())
                 {
                     _agentWalking.SetNewRandomDestination();
@@ -103,10 +111,26 @@ public class Agent : MonoBehaviour
         _lockedPointOfInterest = choosenPointOfInterest;
     }
 
-    private void SearchForAttractivePersonInNeighbourhood()
+    private Agent SearchForAttractivePersonInNeighbourhood()
     {
-        var neighbours = Simulation.Instance.FindAllAgentsInRadiusAroundAgent(1, gameObject);
-        // Debug.Log(neighbours.Count);
+        Agent mostAttractiveInterlocutor = null;
+        float highestAttractiveness = 0f;
+
+        foreach (KeyValuePair<AgentCategory, float> socialInterest in _currentSocialInterests)
+        {
+            var interlocutorsCategory = socialInterest.Key;
+            var interlocutorsAttractiveness = socialInterest.Value;
+
+            var closestNeighbour = Simulation.Instance.FindClosestNeighbourOfCategory(interlocutorsCategory, this);
+            var neighbourInSocialInteractionRadius = Vector3.Distance(closestNeighbour.transform.position, transform.position) < SocialInteractionRadius;
+
+            if (neighbourInSocialInteractionRadius && interlocutorsAttractiveness > highestAttractiveness)
+            {
+                mostAttractiveInterlocutor = closestNeighbour;
+                highestAttractiveness = interlocutorsAttractiveness;
+            }
+        }
+        return mostAttractiveInterlocutor;
     }
 
 
@@ -252,6 +276,7 @@ public class Agent : MonoBehaviour
     private AgentWalking _agentWalking;
     private PointOfInterest _lockedPointOfInterest;
     public Interests _currentInterests;
+    public SocialInterests _currentSocialInterests;
     private float _transactionStartTime;
     private float _creationTime;
     private State _currentState;
