@@ -11,6 +11,7 @@ public class Agent : MonoBehaviour
     private Vector3 _exit;
 
     [SerializeField] float SocialInteractionRadius;
+    [SerializeField] float SocialTransactionRadius;
 
 
     void Start()
@@ -18,7 +19,7 @@ public class Agent : MonoBehaviour
         _currentInterests = new Interests();
         _currentInterests.CopyFrom(AgentCategory.Interests);
 
-        _currentSocialInterests = new SocialInterests();
+        _currentSocialInterests = new Interests();
         _currentSocialInterests.CopyFrom(AgentCategory.SocialInterests);
 
         _agentWalking = GetComponent<AgentWalking>();
@@ -39,7 +40,7 @@ public class Agent : MonoBehaviour
         // Label.transform.LookAt(transform.position + transform.position - _camera.transform.position);
         // Label.text = _currentState.ToString();
 
-        if (_currentState == State.OnWayToExit)
+        if (_currentState == State.WalkingToExit)
             return;
 
         RenderAttractedness();
@@ -59,7 +60,7 @@ public class Agent : MonoBehaviour
 
         if (HasSatisfiedAllInterests())
         {
-            _currentState = State.OnWayToExit;
+            _currentState = State.WalkingToExit;
             _agentWalking.SetDestination(_exit);
             return;
         }
@@ -84,10 +85,23 @@ public class Agent : MonoBehaviour
             }
             else
             {
-                // if(foundInterlocutor)
+                if (foundInterlocutor)
+                {
+                    _currentState = State.WalkingToInterlocutor;
+                    _agentWalking.SetDestination(choosenInterlocutor.transform.position);
+
+                    var distanceToInterlocutor = Vector3.Distance(choosenInterlocutor.transform.position, transform.position);
+                    if (distanceToInterlocutor < SocialTransactionRadius)
+                        _currentState = State.DoingSocialTransaction;
+
+                    return;
+                }
+
                 if (_agentWalking.CheckIfReachedRandomDestination())
                 {
                     _agentWalking.SetNewRandomDestination();
+                    _currentState = State.RandomWalking;
+                    return;
                 }
                 return;
             }
@@ -102,13 +116,22 @@ public class Agent : MonoBehaviour
                 return;
             }
 
-
             MakeInterestSimulationStep();
             return;
         }
 
         _agentWalking.SetDestination(choosenPointOfInterest.transform.position);
+        _currentState = State.WalkingToPOI;
         _lockedPointOfInterest = choosenPointOfInterest;
+    }
+
+    void OnDrawGizmos()
+    {
+        if (_currentState == State.WalkingToInterlocutor)
+        {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawSphere(transform.position + 1.4f * Vector3.up, 0.3f);
+        }
     }
 
     private Agent SearchForAttractivePersonInNeighbourhood()
@@ -116,9 +139,9 @@ public class Agent : MonoBehaviour
         Agent mostAttractiveInterlocutor = null;
         float highestAttractiveness = 0f;
 
-        foreach (KeyValuePair<AgentCategory, float> socialInterest in _currentSocialInterests)
+        foreach (KeyValuePair<InterestCategory, float> socialInterest in _currentSocialInterests)
         {
-            var interlocutorsCategory = socialInterest.Key;
+            var interlocutorsCategory = socialInterest.Key as AgentCategory;
             var interlocutorsAttractiveness = socialInterest.Value;
 
             var closestNeighbour = Simulation.Instance.FindClosestNeighbourOfCategory(interlocutorsCategory, this);
@@ -132,7 +155,6 @@ public class Agent : MonoBehaviour
         }
         return mostAttractiveInterlocutor;
     }
-
 
     private bool HasSatisfiedAllInterests()
     {
@@ -253,7 +275,7 @@ public class Agent : MonoBehaviour
             colorByCategory = _lockedPointOfInterest.InterestCategory.Color;
         else
         {
-            colorByCategory = Color.white;
+            colorByCategory = AgentCategory.Color;
         }
 
         var culminatedAttractedness = 0f;
@@ -274,11 +296,14 @@ public class Agent : MonoBehaviour
 
     private Renderer[] _allRenderers = new Renderer[0];
     private AgentWalking _agentWalking;
+
     private PointOfInterest _lockedPointOfInterest;
+
+
     public Interests _currentInterests;
-    public SocialInterests _currentSocialInterests;
+    public Interests _currentSocialInterests;
     private float _transactionStartTime;
     private float _creationTime;
     private State _currentState;
-    private enum State { RandomWalking, WalkingToPOI, DoingTransaction, OnWayToExit }
+    private enum State { RandomWalking, WalkingToPOI, WalkingToInterlocutor, WalkingToExit, DoingTransaction, DoingSocialTransaction }
 }

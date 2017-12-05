@@ -361,7 +361,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AgentCategory: {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
+  SocialInteractionRadius: 1.86
   _currentInterests:
+    m_keys: []
+    m_values: []
+  _currentSocialInterests:
     m_keys: []
     m_values: []
 --- !u!136 &136841960635931188
@@ -386,7 +390,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.55
-  m_Speed: 2
+  m_Speed: 6
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
