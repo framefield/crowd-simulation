@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: Amazonen
   m_EditorClassIdentifier: 
   Color: {r: 0.81724143, g: 0.799214, b: 0.799214, a: 1}
-  TransactionTime: 1.84
+  TransactionTime: 4.72
   MaxTimeOnMarket: Infinity
   Interests:
     m_keys:
@@ -28,4 +28,5 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
     m_values:
     - 0.18
-  Stamina: -0
+  Stamina: 0
+  MaxTimeTryingToReachInteraction: 18.42

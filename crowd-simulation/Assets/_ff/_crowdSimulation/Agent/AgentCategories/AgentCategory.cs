@@ -11,5 +11,6 @@ public class AgentCategory : InterestCategory
     public Interests Interests;
     public Interests SocialInterests;
     public float Stamina;
+    public float MaxTimeTryingToReachInteraction;
 }
 

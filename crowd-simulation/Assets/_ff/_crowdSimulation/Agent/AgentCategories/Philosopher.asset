@@ -11,15 +11,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8af57c7bab01b49468d9d3629df4a925, type: 3}
   m_Name: Philosopher
   m_EditorClassIdentifier: 
-  Color: {r: 0.70141983, g: 0.7854134, b: 0.8517241, a: 1}
-  TransactionTime: 1.54
+  Color: {r: 0.33886918, g: 0.3413793, b: 0.34060413, a: 1}
+  TransactionTime: 5.84
   MaxTimeOnMarket: Infinity
   Interests:
     m_keys:
     - {fileID: 11400000, guid: 67536b4f0df653149bb59a48a4a37aee, type: 2}
     - {fileID: 11400000, guid: 4d09bde4c6058284da73c07e7e900904, type: 2}
     - {fileID: 11400000, guid: f9793856e7fd70948bc391ae5cd87c15, type: 2}
+    - {fileID: 11400000, guid: 24b7be9908d768f4e8fe77703ab9360f, type: 2}
     m_values:
+    - 0.65
     - 0.65
     - 0.65
     - 0.65
@@ -27,5 +29,6 @@ MonoBehaviour:
     m_keys:
     - {fileID: 11400000}
     m_values:
-    - 0.24
-  Stamina: -0
+    - 0.83
+  Stamina: 0
+  MaxTimeTryingToReachInteraction: 18.42

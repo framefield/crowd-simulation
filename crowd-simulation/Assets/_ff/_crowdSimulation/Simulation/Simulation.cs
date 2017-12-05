@@ -19,6 +19,8 @@ public class Simulation : Singleton<Simulation>
 
     [SerializeField] TMPro.TMP_Text Log;
 
+    [SerializeField] bool EnableSocialInteraction = false;
+
 
     void Start()
     {
@@ -68,6 +70,9 @@ public class Simulation : Singleton<Simulation>
 
     public Agent FindClosestNeighbourOfCategory(AgentCategory category, Agent agent)
     {
+        if (!EnableSocialInteraction)
+            return null;
+
         Agent closestNeighbour = null;
         var smallestDistance = float.PositiveInfinity;
 
@@ -83,10 +88,6 @@ public class Simulation : Singleton<Simulation>
                 smallestDistance = distance;
             }
         }
-
-        if (closestNeighbour != null)
-            Debug.Log(agent + " found " + closestNeighbour);
-
         return closestNeighbour;
     }
 

@@ -33,7 +33,7 @@ public class Agent : MonoBehaviour
     private void CompleteTransaction()
     {
         //complete transaction
-        SetInterestOfCurrentPOISCategory(0f);
+        SetLockedInterestValue(0f);
         _lockedInterest = null;
     }
 
@@ -46,19 +46,13 @@ public class Agent : MonoBehaviour
     private Camera _camera;
     void Update()
     {
+        MakeInterestSimulationStep();
+
         RenderAttractedness();
 
         if (_currentState == State.WalkingToExit)
             return;
 
-        if (_currentState == State.DoingTransaction)
-        {
-            if (!HasFinishedTransaction())
-                return;
-
-            CompleteTransaction();
-            _currentState = State.RandomWalking;
-        }
 
         if (HasSatisfiedAllInterests())
         {
@@ -67,80 +61,144 @@ public class Agent : MonoBehaviour
             return;
         }
 
-        // search for possible targets
+        // search for possible targets > possible state are: randomWalking, walkingToPOI, walkingToPerson
 
-        var choosenPointOfInterest = ChoosePointOfInterest();
-        var choosenInterlocutor = SearchForAttractivePersonInNeighbourhood();
+        var favouritePOI = ChoosePointOfInterest();
+        var favouritePerson = ChoosePersonInNeighbourhood();
 
-        var foundPOI = choosenPointOfInterest != null;
-        var foundInterlocutor = choosenInterlocutor != null;
+        var hasFoundPOI = favouritePOI != null;
+        var hasFoundPerson = favouritePerson != null;
 
-        if (!foundPOI)
+        if (_currentState == State.DoingTransaction || _currentState == State.DoingPersonTransaction)
+        {
+            bool transactionTargetIsStillInRange = false;
+            if (_currentState == State.DoingTransaction)
+                transactionTargetIsStillInRange = favouritePOI != null && _lockedInterest == favouritePOI.InterestCategory;
+            if (_currentState == State.DoingPersonTransaction)
+                transactionTargetIsStillInRange = favouritePerson != null && _lockedInterest == favouritePerson.AgentCategory as InterestCategory;
+
+            if (!transactionTargetIsStillInRange)
+            {
+                // cancel transaction
+                Debug.Log("cancel transaction with lockedintererst : " + _lockedInterest);
+                _lockedInterest = null;
+                _currentState = State.RandomWalking;
+                return;
+            }
+
+            if (_currentState == State.DoingPersonTransaction)
+                _agentWalking.SetDestination(favouritePerson.transform.position);
+
+
+            if (!HasFinishedTransaction())
+                return;
+
+            CompleteTransaction();
+            _currentState = State.RandomWalking;
+            return;
+        }
+
+        if (!hasFoundPOI && !hasFoundPerson)
         {
             if (HasSpentMaxTimeOnMarket())
                 SetAllInterestsToZero();
 
-            if (_currentState == State.WalkingToPOI)
+            if (_currentState == State.WalkingToPOI || _currentState == State.WalkingToPerson)            // lost target -> change to random walk
             {
                 _lockedInterest = null;
                 _currentState = State.RandomWalking;
                 _agentWalking.SetNewRandomDestination();
                 return;
             }
-            else
+            if (_currentState == State.RandomWalking)
             {
-                if (foundInterlocutor)
-                {
-                    _currentState = State.WalkingToInterlocutor;
-                    _agentWalking.SetDestination(choosenInterlocutor.transform.position);
-                    _lockedInterest = choosenInterlocutor.AgentCategory as InterestCategory;
-
-                    var distanceToInterlocutor = Vector3.Distance(choosenInterlocutor.transform.position, transform.position);
-                    if (distanceToInterlocutor < SocialTransactionRadius)
-                        _currentState = State.DoingTransaction;
-
-                    return;
-                }
-                _lockedInterest = null;
-                _currentState = State.RandomWalking;
-
                 if (_agentWalking.CheckIfReachedRandomDestination())
                 {
                     _agentWalking.SetNewRandomDestination();
                     return;
                 }
-                return;
             }
         }
 
-        if (choosenPointOfInterest.InterestCategory == _lockedInterest)
+        if (hasFoundPOI)
         {
-            if (ReachedCurrentPOI(choosenPointOfInterest))
+            if (_currentState == State.RandomWalking) // just found poi
             {
-                _currentState = State.DoingTransaction;
-                _transactionStartTime = Time.time;
+                _agentWalking.SetDestination(favouritePOI.transform.position);
+                _lockedInterest = favouritePOI.InterestCategory;
+                _lockedInterestTime = Time.time;
+                _currentState = State.WalkingToPOI;
+                return;
+            }
+            if (_currentState == State.WalkingToPOI) // continue towards poi
+            {
+                if (ReachedPOI(favouritePOI))
+                {
+                    InitTransaction();
+                    _currentState = State.DoingTransaction;
+                    return;
+                }
+
+                var hasTriedForTooLong = Time.time - _lockedInterestTime > AgentCategory.MaxTimeTryingToReachInteraction;
+                if (hasTriedForTooLong)
+                {
+                    CompleteTransaction();
+                    _currentState = State.RandomWalking;
+                    return;
+                }
+            }
+        }
+
+        if (hasFoundPerson)
+        {
+            if (_currentState == State.RandomWalking)
+            {
+                _agentWalking.SetDestination(favouritePerson.transform.position);
+                _lockedInterest = favouritePerson.AgentCategory as InterestCategory;
+                _lockedInterestTime = Time.time;
+                _currentState = State.WalkingToPerson;
                 return;
             }
 
-            MakeInterestSimulationStep();
-            return;
+            if (_currentState == State.WalkingToPerson)
+            {
+                _agentWalking.SetDestination(favouritePerson.transform.position);
+                if (HasReachedPerson(favouritePerson))
+                {
+                    InitTransaction();
+                    _currentState = State.DoingPersonTransaction;
+                }
+                return;
+            }
         }
+    }
 
-        _agentWalking.SetDestination(choosenPointOfInterest.transform.position);
-        _currentState = State.WalkingToPOI;
-        _lockedInterest = choosenPointOfInterest.InterestCategory;
+    private bool HasReachedPerson(Agent person)
+    {
+        var distanceToInterlocutor = Vector3.Distance(person.transform.position, transform.position);
+        return distanceToInterlocutor < SocialTransactionRadius;
+    }
+
+    private void InitTransaction()
+    {
+        _transactionStartTime = Time.time;
     }
 
     void OnDrawGizmos()
     {
-        if (_currentState == State.DoingTransaction)
+        if (_lockedInterest != null)
+        {
+            Gizmos.color = _lockedInterest.Color;
+            Gizmos.DrawSphere(transform.position + 3f * Vector3.up, 0.3f);
+        }
+        if (_currentState == State.DoingTransaction || _currentState == State.DoingPersonTransaction)
         {
             Gizmos.color = Color.white;
-            Gizmos.DrawSphere(transform.position + 3f * Vector3.up, 0.2f);
+            Gizmos.DrawSphere(transform.position + 4f * Vector3.up, 0.2f);
         }
     }
 
-    private Agent SearchForAttractivePersonInNeighbourhood()
+    private Agent ChoosePersonInNeighbourhood()
     {
         Agent mostAttractiveInterlocutor = null;
         float highestAttractiveness = 0f;
@@ -151,6 +209,9 @@ public class Agent : MonoBehaviour
             var interlocutorsAttractiveness = socialInterest.Value;
 
             var closestNeighbour = Simulation.Instance.FindClosestNeighbourOfCategory(interlocutorsCategory, this);
+            if (closestNeighbour == null)
+                continue;
+
             var neighbourInSocialInteractionRadius = Vector3.Distance(closestNeighbour.transform.position, transform.position) < SocialInteractionRadius;
 
             if (neighbourInSocialInteractionRadius && interlocutorsAttractiveness > highestAttractiveness)
@@ -185,13 +246,21 @@ public class Agent : MonoBehaviour
 
     private void MakeInterestSimulationStep()
     {
+        if (_lockedInterest == null)
+            return;
+
         var key = _lockedInterest;
-        var currentInterest = _currentInterests[key];
+        float currentInterest;
+        if (_currentInterests.ContainsKey(key))
+            currentInterest = _currentInterests[key];
+        else
+            currentInterest = _currentSocialInterests[key];
+
         currentInterest = Mathf.Max(currentInterest + AgentCategory.Stamina, 0f);
-        SetInterestOfCurrentPOISCategory(currentInterest);
+        SetLockedInterestValue(currentInterest);
     }
 
-    private void SetInterestOfCurrentPOISCategory(float newInterestValue)
+    private void SetLockedInterestValue(float newInterestValue)
     {
         var key = _lockedInterest;
         if (_currentInterests.ContainsKey(key))
@@ -200,7 +269,7 @@ public class Agent : MonoBehaviour
             _currentSocialInterests[key] = newInterestValue;
     }
 
-    private bool ReachedCurrentPOI(PointOfInterest poi)
+    private bool ReachedPOI(PointOfInterest poi)
     {
         var distance = Vector3.Distance(transform.position, poi.transform.position);
         return distance < poi.InnerSatisfactionRadius;
@@ -280,12 +349,12 @@ public class Agent : MonoBehaviour
     private void RenderAttractedness()
     {
         Color colorByCategory;
-        if (_lockedInterest != null)
-            colorByCategory = _lockedInterest.Color;
-        else
-        {
-            colorByCategory = AgentCategory.Color;
-        }
+        // if (_lockedInterest != null)
+        //     colorByCategory = _lockedInterest.Color;
+        // else
+        // {
+        colorByCategory = AgentCategory.Color;
+        // }
 
         var culminatedAttractedness = 0f;
         foreach (KeyValuePair<InterestCategory, float> pair in _currentInterests)
@@ -304,13 +373,16 @@ public class Agent : MonoBehaviour
 
     private Renderer[] _allRenderers = new Renderer[0];
     private AgentWalking _agentWalking;
-    private InterestCategory _lockedInterest;
 
     public Interests _currentInterests;
     public Interests _currentSocialInterests;
 
+    private InterestCategory _lockedInterest;
+    private float _lockedInterestTime;
+
     private float _transactionStartTime;
+
     private float _creationTime;
     private State _currentState;
-    private enum State { RandomWalking, WalkingToPOI, WalkingToInterlocutor, WalkingToExit, DoingTransaction }
+    private enum State { RandomWalking, WalkingToPOI, WalkingToPerson, WalkingToExit, DoingTransaction, DoingPersonTransaction }
 }
