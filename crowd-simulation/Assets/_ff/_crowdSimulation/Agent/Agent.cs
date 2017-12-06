@@ -168,7 +168,8 @@ public class Agent : MonoBehaviour
                 spheresize = spheresize * Mathf.Abs(Mathf.Sin(frequency * Time.time));
 
             Gizmos.color = _lockedInterest.Color;
-            Gizmos.DrawSphere(transform.position + 3f * Vector3.up, spheresize);
+            // Gizmos.DrawSphere(transform.position + 3f * Vector3.up, spheresize);
+            Gizmos.DrawWireSphere(transform.position + 3f * Vector3.up, spheresize);
         }
     }
 
