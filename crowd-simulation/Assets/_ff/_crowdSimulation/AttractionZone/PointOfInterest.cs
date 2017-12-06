@@ -33,7 +33,12 @@ public class PointOfInterest : MonoBehaviour
             DrawGizmoCircle(radiusFraction, color);
         }
 
-        Label.text = InterestCategory.ToString().Split('(')[0];
+        var category = InterestCategory.ToString().Split('(')[0];
+        Label.text = category;
+        var gameObjectName = category + "- PointOfInterest";
+        if (gameObject.name != gameObjectName)
+            gameObject.name = gameObjectName;
+
         Label.color = InterestCategory.Color;
     }
 
@@ -75,7 +80,6 @@ public class PointOfInterest : MonoBehaviour
             {
                 var x = (1 + Mathf.Sin(i * frequency)) * 0.5f;
                 Gizmos.color = Color.Lerp(Color.white, Color.grey, x);
-                // Gizmos.color = Color.Lerp(Color.blue, Color.yellow, x);
             }
 
             Gizmos.DrawLine(positions[i], positions[(i + 1) % positions.Length]);
