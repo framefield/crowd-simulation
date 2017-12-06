@@ -51,8 +51,11 @@ public class Agent : MonoBehaviour
         var favouritePOI = ChoosePointOfInterest();
         var favouritePerson = ChoosePersonInNeighbourhood();
 
-        var hasFoundPOI = favouritePOI != null;
-        var hasFoundPerson = favouritePerson != null;
+        var interestInPOI = favouritePOI != null ? GetCurrentInterest(favouritePOI.InterestCategory) : 0f;
+        var interestInPerson = favouritePerson != null ? GetCurrentInterest(favouritePerson.AgentCategory) : 0f;
+
+        var hasFoundPOI = favouritePOI != null && interestInPOI >= interestInPerson;
+        var hasFoundPerson = favouritePerson != null && interestInPOI < interestInPerson;
 
         if (_currentState == State.DoingTransaction || _currentState == State.DoingPersonTransaction)
         {
@@ -119,11 +122,9 @@ public class Agent : MonoBehaviour
 
         if (hasFoundPOI)
         {
-            if (_currentState == State.RandomWalking) // just found poi
+            if (_currentState == State.RandomWalking || _currentState == State.WalkingToPerson) // just found poi
             {
-                _agentWalking.SetDestination(favouritePOI.transform.position);
-                _lockedInterest = favouritePOI.InterestCategory;
-                _lockedInterestTime = Time.time;
+                InitWalkToPOI(favouritePOI);
                 _currentState = State.WalkingToPOI;
                 return;
             }
@@ -143,16 +144,21 @@ public class Agent : MonoBehaviour
                     _currentState = State.RandomWalking;
                     return;
                 }
+
+                if (favouritePOI != _lockedInterest)
+                {
+                    InitWalkToPOI(favouritePOI);
+                    return;
+                }
             }
+
         }
 
         if (hasFoundPerson)
         {
-            if (_currentState == State.RandomWalking)
+            if (_currentState == State.RandomWalking || _currentState == State.WalkingToPOI)
             {
-                _agentWalking.SetDestination(favouritePerson.transform.position);
-                _lockedInterest = favouritePerson.AgentCategory as InterestCategory;
-                _lockedInterestTime = Time.time;
+                InitWalkToPerson(favouritePerson);
                 _currentState = State.WalkingToPerson;
                 return;
             }
@@ -185,6 +191,20 @@ public class Agent : MonoBehaviour
         }
     }
 
+    private void InitWalkToPOI(PointOfInterest poi)
+    {
+        _agentWalking.SetDestination(poi.transform.position);
+        _lockedInterest = poi.InterestCategory;
+        _lockedInterestTime = Time.time;
+    }
+
+    private void InitWalkToPerson(Agent person)
+    {
+        _agentWalking.SetDestination(person.transform.position);
+        _lockedInterest = person.AgentCategory as InterestCategory;
+        _lockedInterestTime = Time.time;
+    }
+
     private Agent ChoosePersonInNeighbourhood()
     {
         Agent mostAttractiveInterlocutor = null;
@@ -192,24 +212,25 @@ public class Agent : MonoBehaviour
 
         foreach (KeyValuePair<InterestCategory, float> socialInterest in CurrentSocialInterests)
         {
-            var interlocutorsCategory = socialInterest.Key as AgentCategory;
-            var interlocutorsAttractiveness = socialInterest.Value;
+            var personCategory = socialInterest.Key as AgentCategory;
+            var personAttractiveness = socialInterest.Value;
 
-            var closestNeighbour = Simulation.Instance.FindClosestNeighbourOfCategory(interlocutorsCategory, this);
+            var closestNeighbour = Simulation.Instance.FindClosestNeighbourOfCategory(personCategory, this);
             if (closestNeighbour == null)
                 continue;
 
             var distanceToClosestNeighbour = Vector3.Distance(closestNeighbour.transform.position, transform.position);
             var neighbourInSocialInteractionRadius = distanceToClosestNeighbour < SocialInteractionRadius;
 
-            if (neighbourInSocialInteractionRadius && interlocutorsAttractiveness > highestAttractiveness)
+            if (neighbourInSocialInteractionRadius && personAttractiveness > highestAttractiveness)
             {
                 mostAttractiveInterlocutor = closestNeighbour;
-                highestAttractiveness = interlocutorsAttractiveness;
+                highestAttractiveness = personAttractiveness;
             }
         }
         return mostAttractiveInterlocutor;
     }
+
 
     private void InitTransaction()
     {
@@ -296,16 +317,9 @@ public class Agent : MonoBehaviour
         foreach (KeyValuePair<InterestCategory, float> interest in CurrentInterests)
         {
             var mostVisiblePOI = GetMostVisiblePointOfInterest(interest.Key);
-
-            float visibility;
-
             var foundPOI = mostVisiblePOI != null;
 
-            visibility = foundPOI
-               ? mostVisiblePOI.GetVisibilityAtGlobalPosition(this.transform.position)
-               : 0f;
-
-            var attraction = visibility * GetCurrentInterest(interest.Key);
+            var attraction = foundPOI ? GetCurrentInterest(interest.Key) : 0f;
             if (attraction > maxFoundAttraction)
             {
                 choosenPOI = mostVisiblePOI;
@@ -338,6 +352,8 @@ public class Agent : MonoBehaviour
     {
         if (CurrentInterests.ContainsKey(interestCategory))
             return CurrentInterests[interestCategory];
+        if (CurrentSocialInterests.ContainsKey(interestCategory))
+            return CurrentSocialInterests[interestCategory];
         else
             return 0f;
     }
