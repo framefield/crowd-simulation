@@ -55,28 +55,28 @@ public class AgentEditor : Editor
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
-        // AddValueToBuffer(_agent.CurrentInterests);
+        AddValueToBuffer(_agent.CurrentInterests);
 
-        // GUILayoutUtility.GetRect(10, 10000, 4, 4);
-        // GUILayout.TextArea("Attractedness");
-        // Rect _attractionRect = GUILayoutUtility.GetRect(10, 10000, 200, 200);
+        GUILayoutUtility.GetRect(10, 10000, 4, 4);
+        GUILayout.TextArea("Attractedness");
+        Rect _attractionRect = GUILayoutUtility.GetRect(10, 10000, 200, 200);
 
-        // GUILayout.BeginHorizontal(EditorStyles.helpBox);
-        // if (Event.current.type == EventType.Repaint)
-        // {
+        GUILayout.BeginHorizontal(EditorStyles.helpBox);
+        if (Event.current.type == EventType.Repaint)
+        {
 
-        //     GUI.BeginClip(_attractionRect);
-        //     GL.PushMatrix();
-        //     GL.Clear(true, false, Color.black);
-        //     material.SetPass(0);
-        //     RenderBackgroundGrid(_attractionRect);
-        //     RenderBuffer(_attractionRect, PersonalAttractionBuffer);
-        //     GL.PopMatrix();
-        //     GUI.EndClip();
+            GUI.BeginClip(_attractionRect);
+            GL.PushMatrix();
+            GL.Clear(true, false, Color.black);
+            material.SetPass(0);
+            RenderBackgroundGrid(_attractionRect);
+            RenderBuffer(_attractionRect, PersonalAttractionBuffer);
+            GL.PopMatrix();
+            GUI.EndClip();
 
-        // }
+        }
 
-        // GUILayout.EndHorizontal();
+        GUILayout.EndHorizontal();
     }
 
     void RenderBackgroundGrid(Rect rect)

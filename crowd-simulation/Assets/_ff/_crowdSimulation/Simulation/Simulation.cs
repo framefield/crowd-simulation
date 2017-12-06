@@ -52,8 +52,8 @@ public class Simulation : Singleton<Simulation>
     private void WriteStatusToPanel()
     {
         var output = "";
-        foreach (var key in _potentialInterlocutors.Keys)
-            output += " | " + key.name + " : " + _potentialInterlocutors[key].Count;
+        foreach (var key in _agents.Keys)
+            output += " | " + key.name + " : " + _agents[key].Count;
         output += " |";
 
         output += " FPS: ";
@@ -78,7 +78,7 @@ public class Simulation : Singleton<Simulation>
         Agent closestNeighbour = null;
 
         var smallestDistanceSquared = float.PositiveInfinity;
-        foreach (var a in _potentialInterlocutors[category])
+        foreach (var a in GetPersons(category))
         {
             if (a == agent)
                 continue;
@@ -95,13 +95,21 @@ public class Simulation : Singleton<Simulation>
         return closestNeighbour;
     }
 
-    private void AddAgentToPotentialInterlocutors(Agent agent)
+    private List<Agent> GetPersons(AgentCategory category)
     {
-        if (!_potentialInterlocutors.ContainsKey(agent.AgentCategory))
-            _potentialInterlocutors.Add(agent.AgentCategory, new List<Agent>());
+        if (_agents.ContainsKey(category))
+            return _agents[category];
 
-        _potentialInterlocutors[agent.AgentCategory].Add(agent);
+        return new List<Agent>();
     }
 
-    private Dictionary<AgentCategory, List<Agent>> _potentialInterlocutors = new Dictionary<AgentCategory, List<Agent>>();
+    private void AddAgentToPotentialInterlocutors(Agent agent)
+    {
+        if (!_agents.ContainsKey(agent.AgentCategory))
+            _agents.Add(agent.AgentCategory, new List<Agent>());
+
+        _agents[agent.AgentCategory].Add(agent);
+    }
+
+    private Dictionary<AgentCategory, List<Agent>> _agents = new Dictionary<AgentCategory, List<Agent>>();
 }
