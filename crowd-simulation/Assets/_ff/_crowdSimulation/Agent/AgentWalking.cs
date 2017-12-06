@@ -17,7 +17,17 @@ public class AgentWalking : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = GizmoColor;
-        Gizmos.DrawLine(transform.position, CurrentDestination);
+        // Gizmos.DrawLine(transform.position, CurrentDestination);
+
+        var path = _navMeshAgent.path;
+
+        if (path != null)
+        {
+            for (int i = 0; i < path.corners.Length - 1; i++)
+            {
+                Gizmos.DrawLine(path.corners[i], path.corners[i + 1]);
+            }
+        }
     }
 
     private Vector3 CurrentDestination
@@ -69,6 +79,4 @@ public class AgentWalking : MonoBehaviour
     private NavMeshAgent _navMeshAgent;
 
     private Vector3 _currentDestination;
-
-    public Interests _currentInterests;
 }
