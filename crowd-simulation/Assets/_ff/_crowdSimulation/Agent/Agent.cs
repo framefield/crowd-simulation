@@ -88,11 +88,23 @@ public class Agent : MonoBehaviour
             if (HasSpentMaxTimeOnMarket())
                 SetAllInterestsToZero();
 
-            if (_currentState == State.WalkingToPOI || _currentState == State.WalkingToPerson)            // lost target -> change to random walk
+            // if (_currentState == State.WalkingToPOI || _currentState == State.WalkingToPerson)            // lost target -> change to random walk
+            if (_currentState == State.WalkingToPerson)            // lost target -> change to random walk
             {
                 _lockedInterest = null;
                 _currentState = State.RandomWalking;
                 _agentWalking.SetNewRandomDestination();
+                return;
+            }
+            if (_currentState == State.WalkingToPOI)            // lost target -> change to random walk
+            {
+                var hasTriedForTooLong = Time.time - _lockedInterestTime > AgentCategory.MaxTimeTryingToReachInteraction;
+                if (hasTriedForTooLong)
+                {
+                    CompleteTransaction();
+                    _currentState = State.RandomWalking;
+                    return;
+                }
                 return;
             }
             if (_currentState == State.RandomWalking)
@@ -283,7 +295,7 @@ public class Agent : MonoBehaviour
 
         foreach (KeyValuePair<InterestCategory, float> interest in CurrentInterests)
         {
-            var mostVisiblePOI = GetMostVisibilePointOfInterest(interest.Key);
+            var mostVisiblePOI = GetMostVisiblePointOfInterest(interest.Key);
 
             float visibility;
 
@@ -303,7 +315,7 @@ public class Agent : MonoBehaviour
         return choosenPOI;
     }
 
-    public PointOfInterest GetMostVisibilePointOfInterest(InterestCategory interestCategory)
+    public PointOfInterest GetMostVisiblePointOfInterest(InterestCategory interestCategory)
     {
         PointOfInterest mostVisiblePointOfInterest = null;
         var maxFoundVisibility = 0f;
