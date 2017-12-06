@@ -18,12 +18,12 @@ public class AgentEditor : Editor
         material = new Material(Shader.Find("Hidden/Internal-Colored"));
 
         InitArrays();
-        AddValueToBuffer(_agent._currentInterests);
+        AddValueToBuffer(_agent.CurrentInterests);
     }
 
     void InitArrays()
     {
-        foreach (KeyValuePair<InterestCategory, float> pair in _agent._currentInterests)
+        foreach (KeyValuePair<InterestCategory, float> pair in _agent.CurrentInterests)
         {
             PersonalAttractionBuffer[pair.Key] = new float[_bufferSize];
             for (int i = 0; i < _bufferSize; i++)
@@ -33,7 +33,7 @@ public class AgentEditor : Editor
 
     public void AddValueToBuffer(Interests attractedness)
     {
-        foreach (KeyValuePair<InterestCategory, float> pair in _agent._currentInterests)
+        foreach (KeyValuePair<InterestCategory, float> pair in _agent.CurrentInterests)
         {
             var mostVisiblePOI = _agent.GetMostVisibilePointOfInterest(pair.Key);
             if (mostVisiblePOI == null)
@@ -55,28 +55,28 @@ public class AgentEditor : Editor
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
-        AddValueToBuffer(_agent._currentInterests);
+        // AddValueToBuffer(_agent.CurrentInterests);
 
-        GUILayoutUtility.GetRect(10, 10000, 4, 4);
-        GUILayout.TextArea("Attractedness");
-        Rect _attractionRect = GUILayoutUtility.GetRect(10, 10000, 200, 200);
+        // GUILayoutUtility.GetRect(10, 10000, 4, 4);
+        // GUILayout.TextArea("Attractedness");
+        // Rect _attractionRect = GUILayoutUtility.GetRect(10, 10000, 200, 200);
 
-        GUILayout.BeginHorizontal(EditorStyles.helpBox);
-        if (Event.current.type == EventType.Repaint)
-        {
+        // GUILayout.BeginHorizontal(EditorStyles.helpBox);
+        // if (Event.current.type == EventType.Repaint)
+        // {
 
-            GUI.BeginClip(_attractionRect);
-            GL.PushMatrix();
-            GL.Clear(true, false, Color.black);
-            material.SetPass(0);
-            RenderBackgroundGrid(_attractionRect);
-            RenderBuffer(_attractionRect, PersonalAttractionBuffer);
-            GL.PopMatrix();
-            GUI.EndClip();
+        //     GUI.BeginClip(_attractionRect);
+        //     GL.PushMatrix();
+        //     GL.Clear(true, false, Color.black);
+        //     material.SetPass(0);
+        //     RenderBackgroundGrid(_attractionRect);
+        //     RenderBuffer(_attractionRect, PersonalAttractionBuffer);
+        //     GL.PopMatrix();
+        //     GUI.EndClip();
 
-        }
+        // }
 
-        GUILayout.EndHorizontal();
+        // GUILayout.EndHorizontal();
     }
 
     void RenderBackgroundGrid(Rect rect)
