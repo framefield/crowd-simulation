@@ -15,8 +15,6 @@ public class Simulation : Singleton<Simulation>
 
     [SerializeField] [Range(0.5f, 20)] float AvoidancePredictionTime;
 
-    [SerializeField] float SpawnRadius;
-
     [SerializeField] TMPro.TMP_Text Log;
 
     [SerializeField] bool EnableSocialInteraction = false;
@@ -74,20 +72,22 @@ public class Simulation : Singleton<Simulation>
             return null;
 
         Agent closestNeighbour = null;
-        var smallestDistance = float.PositiveInfinity;
 
+        var smallestDistanceSquared = float.PositiveInfinity;
         foreach (var a in _potentialInterlocutors[category])
         {
             if (a == agent)
                 continue;
 
-            var distance = Vector3.Distance(a.transform.position, agent.transform.position);
-            if (distance < smallestDistance)
+            var diffVector = agent.transform.position - a.transform.position;
+            var distanceSquared = Vector3.Dot(diffVector, diffVector);
+            if (distanceSquared < smallestDistanceSquared)
             {
                 closestNeighbour = a;
-                smallestDistance = distance;
+                smallestDistanceSquared = distanceSquared;
             }
         }
+
         return closestNeighbour;
     }
 
