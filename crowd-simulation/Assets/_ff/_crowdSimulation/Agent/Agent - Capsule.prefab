@@ -103,8 +103,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1322652125248464}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.068, z: 0}
-  m_LocalScale: {x: 1, y: 0.9675332, z: 1}
+  m_LocalPosition: {x: 0, y: 0.5972, z: 0}
+  m_LocalScale: {x: 1, y: 1.4967606, z: 1.0000005}
   m_Children: []
   m_Father: {fileID: 4019898063436740}
   m_RootOrder: 1
@@ -147,7 +147,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1514013221086272}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_MotionVectors: 1
@@ -254,8 +254,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AgentCategory: {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
-  SocialInteractionRadius: 11.8
-  SocialTransactionRadius: 0.98
+  SocialInteractionRadius: 4.03
+  SocialTransactionRadius: 1.46
   _currentInterests:
     m_keys: []
     m_values: []
@@ -310,7 +310,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.55
-  m_Speed: 2.66
+  m_Speed: 4.19
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
