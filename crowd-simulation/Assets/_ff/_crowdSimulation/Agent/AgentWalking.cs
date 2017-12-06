@@ -17,10 +17,8 @@ public class AgentWalking : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = GizmoColor;
-        // Gizmos.DrawLine(transform.position, CurrentDestination);
 
         var path = _navMeshAgent.path;
-
         if (path != null)
         {
             for (int i = 0; i < path.corners.Length - 1; i++)
@@ -63,10 +61,6 @@ public class AgentWalking : MonoBehaviour
 
     private Vector3 GenerateRandomDestination()
     {
-        // var vectorToRandomPosition = Random.insideUnitSphere * MaxRandomDestinationDistance;
-        // vectorToRandomPosition.Scale(new Vector3(1, 0, 1));
-        // vectorToRandomPosition += transform.position;
-
         var randomPosOnMarker = new Vector3((Random.value - 0.5f) * 60f, 0f, (Random.value - 0.5f) * 60f);
 
         NavMeshHit hit;

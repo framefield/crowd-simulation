@@ -33,7 +33,7 @@ public class PointOfInterest : MonoBehaviour
             DrawGizmoCircle(radiusFraction, color);
         }
 
-        var category = InterestCategory.ToString().Split('(')[0];
+        var category = InterestCategory.name;
         Label.text = category;
         var gameObjectName = category + "- PointOfInterest";
         if (gameObject.name != gameObjectName)

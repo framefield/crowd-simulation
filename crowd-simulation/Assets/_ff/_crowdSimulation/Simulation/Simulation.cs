@@ -53,7 +53,11 @@ public class Simulation : Singleton<Simulation>
     {
         var output = "";
         foreach (var key in _potentialInterlocutors.Keys)
-            output += " | " + key + " : " + _potentialInterlocutors[key].Count;
+            output += " | " + key.name + " : " + _potentialInterlocutors[key].Count;
+        output += " |";
+
+        output += " FPS: ";
+        output += (1f / Time.smoothDeltaTime).ToString("n0"); ;
 
         Log.text = output;
     }

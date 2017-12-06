@@ -28,7 +28,7 @@ public class EntryZone : MonoBehaviour
     {
         DrawGizmoCircle(RADIUS, AgentCategory.Color);
 
-        var category = AgentCategory.ToString().Split('(')[0];
+        var category = AgentCategory.name;
         Label.text = category;
         var gameObjectName = category + "- EntryZone";
         if (gameObject.name != gameObjectName)
