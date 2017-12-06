@@ -19,7 +19,11 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 67536b4f0df653149bb59a48a4a37aee, type: 2}
     - {fileID: 11400000, guid: 24b7be9908d768f4e8fe77703ab9360f, type: 2}
     - {fileID: 11400000, guid: 58a6c872b73edb247900431a77368a73, type: 2}
+    - {fileID: 11400000, guid: f9793856e7fd70948bc391ae5cd87c15, type: 2}
+    - {fileID: 11400000, guid: 719d828a902201946b8185906bc1cd69, type: 2}
     m_values:
+    - 0.65
+    - 0.65
     - 0.65
     - 0.65
     - 0.65
@@ -29,4 +33,4 @@ MonoBehaviour:
     m_values:
     - 0.18
   Stamina: 0
-  MaxTimeTryingToReachInteraction: 18.42
+  MaxTimeTryingToReachInteraction: 7.42
