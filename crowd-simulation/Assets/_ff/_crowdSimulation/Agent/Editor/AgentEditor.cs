@@ -36,14 +36,8 @@ public class AgentEditor : Editor
         foreach (KeyValuePair<InterestCategory, float> pair in _agent.CurrentInterests)
         {
             var mostVisiblePOI = _agent.GetMostVisiblePointOfInterest(pair.Key);
-            if (mostVisiblePOI == null)
-                continue;
-
             var foundPOI = mostVisiblePOI != null;
-            var visibility = foundPOI
-            ? mostVisiblePOI.GetVisibilityAt(_agent.transform.position)
-            : 0f;
-
+            var visibility = foundPOI ? 1f : 0f;
             var attraction = visibility * _agent.GetCurrentInterest(pair.Key);
 
             PersonalAttractionBuffer[pair.Key][_arrayPointer] = attraction;
