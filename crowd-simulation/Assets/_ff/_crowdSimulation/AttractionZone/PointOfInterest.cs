@@ -7,11 +7,19 @@ public class PointOfInterest : MonoBehaviour
 {
     public InterestCategory InterestCategory;
 
-    public float InnerSatisfactionRadius;
+
+    [Header("Radii for Interaction with Agents")]
+
+    [SerializeField]
+    float InnerSatisfactionRadius;
+
     [SerializeField] float OuterVisibilityRadius;
 
-    [SerializeField] TMPro.TextMeshPro Label;
-    [SerializeField] float GizmoCirclesPerMeter;
+
+    [Header("Internal Prefab References: should not be touched")]
+
+    [SerializeField]
+    TMPro.TextMeshPro Label;
 
     public float GetVisibilityAt(Vector3 position)
     {
@@ -39,9 +47,9 @@ public class PointOfInterest : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        var color = InterestCategory.Color;
-        DrawGizmoCircle(OuterVisibilityRadius, color);
-        DrawGizmoCircle(InnerSatisfactionRadius, color);
+        Gizmos.color = InterestCategory.Color;
+        GizmoHelper.DrawGizmoCircle(OuterVisibilityRadius, transform.position);
+        GizmoHelper.DrawGizmoCircle(InnerSatisfactionRadius, transform.position);
 
 
         var category = InterestCategory.name;
@@ -56,44 +64,7 @@ public class PointOfInterest : MonoBehaviour
     void OnDrawGizmosSelected()
     {
         var offset = 0.1f;
-        DrawGizmoCircle(OuterVisibilityRadius, Color.grey, true, 256);
-        DrawGizmoCircle(OuterVisibilityRadius + offset, Color.black, true, 256);
-    }
-
-    private void DrawGizmoCircle(float radius, Color color, bool dotted = false, int resolution = 64)
-    {
-        Gizmos.color = color;
-        var circleVertices = GenerateCircleVertices(radius, resolution);
-        DrawLine(circleVertices, dotted);
-    }
-
-    private Vector3[] GenerateCircleVertices(float radius, int resolution)
-    {
-        List<Vector3> allPositions = new List<Vector3>();
-        var pos = new Vector3(radius, 0, 0);
-
-        for (int i = 0; i < resolution; i++)
-        {
-            var circlePosition = Quaternion.Euler(0, i * 360 / resolution, 0) * pos;
-            allPositions.Add(transform.position + circlePosition);
-        }
-
-        return allPositions.ToArray();
-    }
-
-
-    private void DrawLine(Vector3[] positions, bool dotted)
-    {
-        for (int i = 0; i < positions.Length; i++)
-        {
-            var frequency = 1f;
-            if (dotted)
-            {
-                var x = (1 + Mathf.Sin(i * frequency)) * 0.5f;
-                Gizmos.color = Color.Lerp(Color.white, Color.grey, x);
-            }
-
-            Gizmos.DrawLine(positions[i], positions[(i + 1) % positions.Length]);
-        }
+        GizmoHelper.DrawGizmoCircle(OuterVisibilityRadius, transform.position, true, 256);
+        GizmoHelper.DrawGizmoCircle(OuterVisibilityRadius + offset, transform.position, true, 256);
     }
 }
