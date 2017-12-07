@@ -823,7 +823,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: InnerSatisfactionRadius
-      value: 1.5
+      value: 0.73
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -903,7 +903,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: InnerSatisfactionRadius
-      value: 1.5
+      value: 0.73
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -1852,7 +1852,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: InnerSatisfactionRadius
-      value: 1.5
+      value: 0.73
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -3372,7 +3372,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: InnerSatisfactionRadius
-      value: 1.5
+      value: 0.73
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -4309,7 +4309,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: InnerSatisfactionRadius
-      value: 1.5
+      value: 0.73
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -5200,7 +5200,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: InnerSatisfactionRadius
-      value: 1.5
+      value: 0.73
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -5561,7 +5561,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: InnerSatisfactionRadius
-      value: 1.5
+      value: 0.73
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
@@ -6129,7 +6129,7 @@ Prefab:
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
       propertyPath: InnerSatisfactionRadius
-      value: 1.5
+      value: 0.73
       objectReference: {fileID: 0}
     - target: {fileID: 114440305609561552, guid: e48467efd6f72284eb37d9847cc8e878,
         type: 2}
