@@ -260,7 +260,7 @@ MonoBehaviour:
   PersistencyBonus: 0.2
   SocialInteractionRadius: 4.03
   SocialTransactionRadius: 0.5
-  MinDistanceTraveledRecentlyBeforeGiveUp: 0.3
+  MinDistanceTraveledRecentlyBeforeGiveUp: 0.05
   distanceTraveledRecently: 0
 --- !u!136 &136651268802396290
 CapsuleCollider:

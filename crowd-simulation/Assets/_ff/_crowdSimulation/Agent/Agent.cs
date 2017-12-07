@@ -11,6 +11,8 @@ public class Agent : MonoBehaviour
     public Interests CurrentSocialInterests;
 
     public float PersistencyBonus;
+    public float MaxTimeToFollowPerson;
+
     [SerializeField] float SocialInteractionRadius;
     [SerializeField] float SocialTransactionRadius;
 
@@ -139,7 +141,7 @@ public class Agent : MonoBehaviour
             }
             if (_currentState == State.WalkingToPOI) // continue towards poi
             {
-                if (HasReachedPOI(favouritePOI))
+                if (favouritePOI.IsInsideTransactionRadius(transform.position))
                 {
                     InitTransaction();
                     _currentState = State.DoingTransaction;
@@ -250,6 +252,11 @@ public class Agent : MonoBehaviour
         SetLockedInterestValue(0f);
         _lockedInterest = null;
     }
+    private bool HasSpentMaxTimeFollowingPerson()
+    {
+        var timeSpentFollowingPerson = Time.time - _lockedInterestTime;
+        return timeSpentFollowingPerson > MaxTimeToFollowPerson;
+    }
 
     private bool HasFinishedTransaction()
     {
@@ -284,11 +291,6 @@ public class Agent : MonoBehaviour
         CurrentInterests.Clear();
     }
 
-    private bool HasReachedPOI(PointOfInterest poi)
-    {
-        var distance = Vector3.Distance(transform.position, poi.transform.position);
-        return distance < poi.InnerSatisfactionRadius;
-    }
 
     // only necessary if stamina is used
     public float MinDistanceTraveledRecentlyBeforeGiveUp;
@@ -316,7 +318,7 @@ public class Agent : MonoBehaviour
         SetLockedInterestValue(currentInterest);
     }
 
-    private const int N = 180;
+    private const int N = 60;
     private Queue<float> _lastNDistancesTraveled;
     private Vector3 _lastPosition;
 
@@ -386,7 +388,7 @@ public class Agent : MonoBehaviour
 
         foreach (var poi in Simulation.Instance.PointsOfInterest[interestCategory])
         {
-            var poiVisibility = poi.GetVisibilityAtGlobalPosition(this.transform.position);
+            var poiVisibility = poi.GetVisibilityAt(this.transform.position);
             if (poiVisibility > maxFoundVisibility)
             {
                 mostVisiblePointOfInterest = poi;

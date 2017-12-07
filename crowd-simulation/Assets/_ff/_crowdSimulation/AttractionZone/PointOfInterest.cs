@@ -8,30 +8,41 @@ public class PointOfInterest : MonoBehaviour
     public InterestCategory InterestCategory;
 
     public float InnerSatisfactionRadius;
-    [SerializeField] float Radius;
-    [SerializeField] AnimationCurve AttractionDistribution;
+    [SerializeField] float OuterVisibilityRadius;
+
     [SerializeField] TMPro.TextMeshPro Label;
     [SerializeField] float GizmoCirclesPerMeter;
 
-    public float GetVisibilityAtGlobalPosition(Vector3 spectator)
+    public float GetVisibilityAt(Vector3 position)
     {
-        var distance = Vector3.Distance(spectator, this.transform.position);
-        var distanceNormalized = distance / Radius;
-        var attractiveness = AttractionDistribution.Evaluate(distanceNormalized);
-        return attractiveness;
+        var squaredDistanceOnXZ = GetSquaredDistanceOnXZPlane(position);
+        var normalizedDistance = squaredDistanceOnXZ / (OuterVisibilityRadius * OuterVisibilityRadius);
+        var visibility = normalizedDistance > 1 ? 0f : 1 / normalizedDistance;
+        return visibility;
+    }
+
+    public bool IsInsideTransactionRadius(Vector3 position)
+    {
+        var squaredDistanceOnXZ = GetSquaredDistanceOnXZPlane(position);
+        var normalizedDistance = squaredDistanceOnXZ / (InnerSatisfactionRadius * InnerSatisfactionRadius);
+        return normalizedDistance < 1;
+    }
+
+    private float GetSquaredDistanceOnXZPlane(Vector3 position)
+    {
+        var spectatorOnXZ = new Vector2(position.x, position.z);
+        var thisPOIOnXZ = new Vector2(transform.position.x, transform.position.z);
+        var diffVectorOnXZ = spectatorOnXZ - thisPOIOnXZ;
+        var squaredDistance = Vector2.Dot(diffVectorOnXZ, diffVectorOnXZ);
+        return squaredDistance;
     }
 
     void OnDrawGizmos()
     {
-        var numberOfCircles = GizmoCirclesPerMeter * Radius;
+        var color = InterestCategory.Color;
+        DrawGizmoCircle(OuterVisibilityRadius, color);
+        DrawGizmoCircle(InnerSatisfactionRadius, color);
 
-        for (int i = 0; i < numberOfCircles; i++)
-        {
-            var alphaFromAttraction = AttractionDistribution.Evaluate((numberOfCircles - i) / numberOfCircles);
-            var color = InterestCategory.Color * new Color(1, 1, 1, 0) + new Color(0, 0, 0, alphaFromAttraction);
-            var radiusFraction = Radius * (numberOfCircles - i) / numberOfCircles;
-            DrawGizmoCircle(radiusFraction, color);
-        }
 
         var category = InterestCategory.name;
         Label.text = category;
@@ -45,8 +56,8 @@ public class PointOfInterest : MonoBehaviour
     void OnDrawGizmosSelected()
     {
         var offset = 0.1f;
-        DrawGizmoCircle(Radius, Color.grey, true, 256);
-        DrawGizmoCircle(Radius + offset, Color.black, true, 256);
+        DrawGizmoCircle(OuterVisibilityRadius, Color.grey, true, 256);
+        DrawGizmoCircle(OuterVisibilityRadius + offset, Color.black, true, 256);
     }
 
     private void DrawGizmoCircle(float radius, Color color, bool dotted = false, int resolution = 64)

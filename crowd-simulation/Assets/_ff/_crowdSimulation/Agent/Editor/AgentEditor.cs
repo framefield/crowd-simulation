@@ -41,7 +41,7 @@ public class AgentEditor : Editor
 
             var foundPOI = mostVisiblePOI != null;
             var visibility = foundPOI
-            ? mostVisiblePOI.GetVisibilityAtGlobalPosition(_agent.transform.position)
+            ? mostVisiblePOI.GetVisibilityAt(_agent.transform.position)
             : 0f;
 
             var attraction = visibility * _agent.GetCurrentInterest(pair.Key);
