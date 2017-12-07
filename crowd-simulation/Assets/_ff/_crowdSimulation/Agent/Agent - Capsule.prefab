@@ -237,8 +237,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22a87ba90b7d14d47b6d61f451bcbe2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxRandomDestinationDistance: 46
-  GizmoColor: {r: 1, g: 1, b: 1, a: 0.078}
+  HasReachedDestinationEpsylon: 0.04
+  DrawPath: 1
+  PathAlpha: 0.055
 --- !u!114 &114782175463676002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -258,10 +259,13 @@ MonoBehaviour:
     m_keys: []
     m_values: []
   PersistencyBonus: 0.2
+  MaxTimeToFollowPerson: 3
+  MinDistanceTraveledRecentlyBeforeGiveUp: 0.05
   SocialInteractionRadius: 4.03
   SocialTransactionRadius: 0.5
-  MinDistanceTraveledRecentlyBeforeGiveUp: 0.05
-  distanceTraveledRecently: 0
+  DrawIndicatorAboveAgent: 1
+  DrawSocialInteractionRadii: 1
+  SocialInteractionRadiiAlpha: 0.057
 --- !u!136 &136651268802396290
 CapsuleCollider:
   m_ObjectHideFlags: 1
