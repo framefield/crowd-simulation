@@ -5,18 +5,29 @@ using UnityEngine.AI;
 
 public class AgentWalking : MonoBehaviour
 {
-    [SerializeField] [Range(10, 500)] float MaxRandomDestinationDistance;
-    [SerializeField] Color GizmoColor;
+    [Range(0f, 1f)]
+    [SerializeField]
+    float HasReachedDestinationEpsylon;
+
+    [SerializeField] bool DrawPath;
+
+    [Range(0f, 1f)]
+    [SerializeField]
+    float PathAlpha;
 
     void Start()
     {
+        _agent = GetComponent<Agent>();
         _navMeshAgent = GetComponent<NavMeshAgent>();
         SetNewRandomDestination();
     }
 
     void OnDrawGizmos()
     {
-        Gizmos.color = GizmoColor;
+        if (!DrawPath)
+            return;
+
+        Gizmos.color = _agent.AgentCategory.Color * new Color(1, 1, 1, PathAlpha);
 
         var path = _navMeshAgent.path;
         if (path != null)
@@ -53,9 +64,10 @@ public class AgentWalking : MonoBehaviour
 
     public bool CheckIfReachedRandomDestination()
     {
-        var distanceToRandomDestination = Vector3.Distance(this.transform.position, CurrentDestination);
-
-        var hasReachedDestination = distanceToRandomDestination < MaxRandomDestinationDistance / 5f;
+        var diffVector = CurrentDestination - transform.position;
+        var diffOnXZ = new Vector2(diffVector.x, diffVector.z);
+        var squaredDistance = Vector2.Dot(diffOnXZ, diffOnXZ);
+        var hasReachedDestination = squaredDistance < HasReachedDestinationEpsylon;
         return hasReachedDestination;
     }
 
@@ -64,13 +76,13 @@ public class AgentWalking : MonoBehaviour
         var randomPosOnMarker = new Vector3((Random.value - 0.5f) * 60f, 0f, (Random.value - 0.5f) * 60f);
 
         NavMeshHit hit;
-        NavMesh.SamplePosition(randomPosOnMarker, out hit, MaxRandomDestinationDistance, 1);
+        NavMesh.SamplePosition(randomPosOnMarker, out hit, float.PositiveInfinity, 1);
         Vector3 closestDestinationOnNavMesh = hit.position;
 
         return closestDestinationOnNavMesh;
     }
 
     private NavMeshAgent _navMeshAgent;
-
+    private Agent _agent;
     private Vector3 _currentDestination;
 }
