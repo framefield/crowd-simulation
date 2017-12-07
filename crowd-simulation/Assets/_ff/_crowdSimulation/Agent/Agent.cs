@@ -7,14 +7,39 @@ using UnityEngine.AI;
 public class Agent : MonoBehaviour
 {
     public AgentCategory AgentCategory;
+
     public Interests CurrentInterests;
     public Interests CurrentSocialInterests;
 
-    public float PersistencyBonus;
-    public float MaxTimeToFollowPerson;
 
-    [SerializeField] float SocialInteractionRadius;
+    [Header("Decision Making Parameters")]
+
+    [SerializeField]
+    float PersistencyBonus;
+
+    [SerializeField] float MaxTimeToFollowPerson;
+
+    [SerializeField] float MinDistanceTraveledRecentlyBeforeGiveUp;
+
+
+    [Header("Radii for Social Interaction")]
+
+    [SerializeField]
+    float SocialInteractionRadius;
+
     [SerializeField] float SocialTransactionRadius;
+
+
+    [Header("Visualization")]
+
+    [SerializeField]
+    bool DrawIndicatorAboveAgent;
+    [SerializeField] bool DrawSocialInteractionRadii;
+
+    [Range(0f, 1f)]
+    [SerializeField]
+    float SocialInteractionRadiiAlpha;
+
 
     void Start()
     {
@@ -33,12 +58,15 @@ public class Agent : MonoBehaviour
         _allRenderers = GetComponentsInChildren<Renderer>();
     }
 
+
     void Update()
     {
-        if (_currentState == State.WalkingToPerson || _currentState == State.WalkingToPOI)
-            ReduceValueOfLockedInterest();
+        if (_currentState == State.WalkingToPOI)
+            ReduceValueOfLockedPOIIfNotMoving();
+        else if (_currentState == State.WalkingToPerson)
+            ReduceValueOfLockedPersonIfFollowingForTooLong();
         else
-            _isBoredOfWaiting = false;
+            _isBored = false;
 
         RenderAttractedness();
 
@@ -52,8 +80,6 @@ public class Agent : MonoBehaviour
             _currentState = State.WalkingToExit;
             return;
         }
-
-        // search for possible targets > possible state are: randomWalking, walkingToPOI, walkingToPerson
 
         var favouritePOI = ChoosePointOfInterest();
         var favouritePerson = ChoosePersonInNeighbourhood();
@@ -74,8 +100,6 @@ public class Agent : MonoBehaviour
 
             if (!transactionTargetIsStillInRange)
             {
-                // cancel transaction
-                Debug.Log("cancel transaction with lockedintererst : " + _lockedInterest);
                 _lockedInterest = null;
                 _currentState = State.RandomWalking;
                 return;
@@ -98,7 +122,6 @@ public class Agent : MonoBehaviour
             if (HasSpentMaxTimeOnMarket())
                 SetAllInterestsToZero();
 
-            // if (_currentState == State.WalkingToPOI || _currentState == State.WalkingToPerson)            // lost target -> change to random walk
             if (_currentState == State.WalkingToPerson)            // lost target -> change to random walk
             {
                 _lockedInterest = null;
@@ -108,7 +131,7 @@ public class Agent : MonoBehaviour
             }
             if (_currentState == State.WalkingToPOI)            // lost target -> change to random walk
             {
-                // need to make a difference between : lost interest and making detour
+                // distinguish between : lost interest and making detour
 
                 var i = GetCurrentInterest(_lockedInterest);
                 var hasTriedForTooLong = i <= 0;
@@ -179,24 +202,28 @@ public class Agent : MonoBehaviour
         }
     }
 
+
     void OnDrawGizmos()
     {
-        if (_lockedInterest != null)
+        if (DrawIndicatorAboveAgent && _lockedInterest != null)
         {
             var spheresize = 0.3f;
             var frequency = 3;
             if (_currentState == State.DoingTransaction || _currentState == State.DoingPersonTransaction)
                 spheresize = spheresize * Mathf.Abs(Mathf.Sin(frequency * Time.time));
 
-            Gizmos.color = _isBoredOfWaiting ? Color.red : _lockedInterest.Color;
-            // if (_isBoredOfWaiting)
-            // Gizmos.color = Color.Lerp(Gizmos.color, Color.red, Mathf.Abs(Mathf.Sin(frequency * Time.time)));
-
-
-            // Gizmos.DrawSphere(transform.position + 3f * Vector3.up, spheresize);
+            Gizmos.color = _isBored ? Color.red : _lockedInterest.Color;
             Gizmos.DrawWireSphere(transform.position + 3f * Vector3.up, spheresize);
         }
+
+        if (DrawSocialInteractionRadii)
+        {
+            Gizmos.color = AgentCategory.Color * new Color(1, 1, 1, SocialInteractionRadiiAlpha);
+            GizmoHelper.DrawGizmoCircle(SocialInteractionRadius, transform.position);
+            GizmoHelper.DrawGizmoCircle(SocialTransactionRadius, transform.position);
+        }
     }
+
 
     private void InitWalkToPOI(PointOfInterest poi)
     {
@@ -206,6 +233,7 @@ public class Agent : MonoBehaviour
         _lockedInterestTime = Time.time;
     }
 
+
     private void InitWalkToPerson(Agent person)
     {
         _agentWalking.SetDestination(person.transform.position);
@@ -213,6 +241,7 @@ public class Agent : MonoBehaviour
         SetLockedInterestValue(GetCurrentInterest(_lockedInterest) + PersistencyBonus);
         _lockedInterestTime = Time.time;
     }
+
 
     private Agent ChoosePersonInNeighbourhood()
     {
@@ -246,17 +275,21 @@ public class Agent : MonoBehaviour
         _transactionStartTime = Time.time;
     }
 
+
     private void CompleteTransaction()
     {
         //complete transaction
         SetLockedInterestValue(0f);
         _lockedInterest = null;
     }
+
+
     private bool HasSpentMaxTimeFollowingPerson()
     {
         var timeSpentFollowingPerson = Time.time - _lockedInterestTime;
         return timeSpentFollowingPerson > MaxTimeToFollowPerson;
     }
+
 
     private bool HasFinishedTransaction()
     {
@@ -264,11 +297,13 @@ public class Agent : MonoBehaviour
         return timeSinceTransactionStarted > _lockedInterest.TransactionTime;
     }
 
+
     private bool HasReachedPerson(Agent person)
     {
         var distanceToInterlocutor = Vector3.Distance(person.transform.position, transform.position);
         return distanceToInterlocutor < SocialTransactionRadius;
     }
+
 
     private bool HasSatisfiedAllInterests()
     {
@@ -281,10 +316,12 @@ public class Agent : MonoBehaviour
         return cullminatedInterests == 0f;
     }
 
+
     private bool HasSpentMaxTimeOnMarket()
     {
         return (Time.time - _creationTime) > AgentCategory.MaxTimeOnMarket;
     }
+
 
     private void SetAllInterestsToZero()
     {
@@ -292,31 +329,33 @@ public class Agent : MonoBehaviour
     }
 
 
-    // only necessary if stamina is used
-    public float MinDistanceTraveledRecentlyBeforeGiveUp;
-    public float distanceTraveledRecently;
-    private bool _isBoredOfWaiting;
-
-    private void ReduceValueOfLockedInterest()
+    private void ReduceValueOfLockedPOIIfNotMoving()
     {
-        distanceTraveledRecently = GetSquaredDistanceTraveledRecently();
-
         if (_lockedInterest == null)
             return;
 
-        var key = _lockedInterest;
-        float currentInterest;
-        if (CurrentInterests.ContainsKey(key))
-            currentInterest = CurrentInterests[key];
-        else
-            currentInterest = CurrentSocialInterests[key];
+        _distanceTraveledRecently = GetSquaredDistanceTraveledRecently();
+        _isBored = _distanceTraveledRecently < MinDistanceTraveledRecentlyBeforeGiveUp;
+        if (!_isBored)
+            return;
 
-        _isBoredOfWaiting = distanceTraveledRecently < MinDistanceTraveledRecentlyBeforeGiveUp;
-        if (_isBoredOfWaiting)
-            currentInterest = Mathf.Max(currentInterest + AgentCategory.Stamina, 0f);
-
-        SetLockedInterestValue(currentInterest);
+        var updatedInterest = CurrentInterests[_lockedInterest];
+        updatedInterest = Mathf.Max(updatedInterest + AgentCategory.Stamina, 0f);
+        CurrentInterests[_lockedInterest] = updatedInterest;
     }
+
+
+    private void ReduceValueOfLockedPersonIfFollowingForTooLong()
+    {
+        _isBored = HasSpentMaxTimeFollowingPerson();
+        if (!_isBored)
+            return;
+
+        var updatedInterest = CurrentSocialInterests[_lockedInterest];
+        updatedInterest = Mathf.Max(updatedInterest + AgentCategory.Stamina, 0f);
+        CurrentSocialInterests[_lockedInterest] = updatedInterest;
+    }
+
 
     private const int N = 60;
     private Queue<float> _lastNDistancesTraveled;
@@ -337,7 +376,6 @@ public class Agent : MonoBehaviour
         var vectorTraveledSinceLastFrame = transform.position - _lastPosition;
         var distanceTraveledSinceLastFrameSquared = Vector3.Dot(vectorTraveledSinceLastFrame, vectorTraveledSinceLastFrame);
 
-
         _lastNDistancesTraveled.Enqueue(distanceTraveledSinceLastFrameSquared);
         _lastNDistancesTraveled.Dequeue();
 
@@ -348,6 +386,7 @@ public class Agent : MonoBehaviour
         _lastPosition = transform.position;
         return distance;
     }
+
 
     private void SetLockedInterestValue(float newInterestValue)
     {
@@ -379,6 +418,7 @@ public class Agent : MonoBehaviour
         return choosenPOI;
     }
 
+
     public PointOfInterest GetMostVisiblePointOfInterest(InterestCategory interestCategory)
     {
         PointOfInterest mostVisiblePointOfInterest = null;
@@ -398,6 +438,7 @@ public class Agent : MonoBehaviour
         return mostVisiblePointOfInterest;
     }
 
+
     public float GetCurrentInterest(InterestCategory interestCategory)
     {
         if (CurrentInterests.ContainsKey(interestCategory))
@@ -408,29 +449,21 @@ public class Agent : MonoBehaviour
             return 0f;
     }
 
-    // float _attractednessOnStart = -1f;
+
     private void RenderAttractedness()
     {
-        // var culminatedAttractedness = 0f;
-
-        // foreach (KeyValuePair<InterestCategory, float> pair in _currentInterests)
-        //     culminatedAttractedness += pair.Value;
-
-        // if (_attractednessOnStart == -1f)
-        // {
-        //     _attractednessOnStart = culminatedAttractedness;
-        // }
-        // var brightness = culminatedAttractedness / _attractednessOnStart;
-
         foreach (var r in _allRenderers)
             r.material.SetColor("_Color", AgentCategory.Color);
     }
 
+
     private Renderer[] _allRenderers = new Renderer[0];
     private AgentWalking _agentWalking;
-
     private InterestCategory _lockedInterest;
 
+    private bool _isBored;
+
+    private float _distanceTraveledRecently;
 
     private float _lockedInterestTime;
     private float _transactionStartTime;
