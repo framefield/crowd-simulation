@@ -5,7 +5,7 @@ using UnityEngine;
 public class GizmoHelper
 {
 
-    static public void DrawGizmoCircle(float radius, Vector3 center, bool dotted = false, int resolution = 64)
+    static public void DrawGizmoCircle(float radius, Vector3 center, bool dotted = false, int resolution = 32)
     {
         var circleVertices = GenerateCircleVertices(center, radius, resolution);
         DrawLine(circleVertices, dotted);
