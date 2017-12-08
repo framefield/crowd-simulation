@@ -5,15 +5,24 @@ using UnityEngine.AI;
 
 public class AgentWalking : MonoBehaviour
 {
+    [Header("PARAMETERS")]
+
     [Range(0f, 1f)]
     [SerializeField]
     float HasReachedDestinationEpsylon;
 
-    [SerializeField] bool DrawPath;
+    [SerializeField]
+    float RandomWalkRadius;
+
+    [Header("VISUALIZATION")]
+
+    [SerializeField]
+    bool DrawPath;
 
     [Range(0f, 1f)]
     [SerializeField]
     float PathAlpha;
+
 
     void Start()
     {
@@ -21,6 +30,7 @@ public class AgentWalking : MonoBehaviour
         _navMeshAgent = GetComponent<NavMeshAgent>();
         SetNewRandomDestination();
     }
+
 
     void OnDrawGizmos()
     {
@@ -39,6 +49,7 @@ public class AgentWalking : MonoBehaviour
         }
     }
 
+
     private Vector3 CurrentDestination
     {
         set
@@ -52,35 +63,48 @@ public class AgentWalking : MonoBehaviour
         }
     }
 
+
     public void SetDestination(Vector3 destination)
     {
-        CurrentDestination = destination;
+        NavMeshHit hit;
+        NavMesh.SamplePosition(destination, out hit, float.PositiveInfinity, 1);
+        Vector3 closestDestinationOnNavMesh = hit.position;
+        CurrentDestination = closestDestinationOnNavMesh;
     }
+
 
     public void SetNewRandomDestination()
     {
         CurrentDestination = GenerateRandomDestination();
     }
 
-    public bool CheckIfReachedRandomDestination()
+
+    public bool HasReachedCurrentDestination()
     {
-        var diffVector = CurrentDestination - transform.position;
-        var diffOnXZ = new Vector2(diffVector.x, diffVector.z);
-        var squaredDistance = Vector2.Dot(diffOnXZ, diffOnXZ);
+        var squaredDistance = GetSquaredDistanceToCurrentDestination();
         var hasReachedDestination = squaredDistance < HasReachedDestinationEpsylon;
         return hasReachedDestination;
     }
 
+    public float GetSquaredDistanceToCurrentDestination()
+    {
+        var diffVector = CurrentDestination - transform.position;
+        var diffOnXZ = new Vector2(diffVector.x, diffVector.z);
+        var squaredDistance = Vector2.Dot(diffOnXZ, diffOnXZ);
+        return squaredDistance;
+    }
+
+
     private Vector3 GenerateRandomDestination()
     {
-        var randomPosOnMarker = new Vector3((Random.value - 0.5f) * 60f, 0f, (Random.value - 0.5f) * 60f);
-
+        var randomUnitSpherePosition = transform.position + Random.insideUnitSphere * RandomWalkRadius;
         NavMeshHit hit;
-        NavMesh.SamplePosition(randomPosOnMarker, out hit, float.PositiveInfinity, 1);
+        NavMesh.SamplePosition(randomUnitSpherePosition, out hit, float.PositiveInfinity, 1);
         Vector3 closestDestinationOnNavMesh = hit.position;
 
         return closestDestinationOnNavMesh;
     }
+
 
     private NavMeshAgent _navMeshAgent;
     private Agent _agent;
