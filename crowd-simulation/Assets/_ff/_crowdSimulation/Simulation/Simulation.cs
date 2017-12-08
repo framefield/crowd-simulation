@@ -6,27 +6,50 @@ using UnityEngine.AI;
 
 public class Simulation : Singleton<Simulation>
 {
-    public Dictionary<InterestCategory, List<PointOfInterest>> PointsOfInterest = new Dictionary<InterestCategory, List<PointOfInterest>>();
+    [HideInInspector]
+    public Dictionary<AttractionCategory, List<AttractionZone>> PointsOfInterest = new Dictionary<AttractionCategory, List<AttractionZone>>();
 
-    [SerializeField] GameObject AgentPrefab;
-    [SerializeField] AgentCategory CategoryToSpawnOnMouseDown;
 
-    [SerializeField] int PathfindingIterationsPerFrame;
+    [Header("MANUAL AGENT SPAWNING")]
 
-    [SerializeField] [Range(0.5f, 20)] float AvoidancePredictionTime;
+    [SerializeField]
+    bool SpawnAgentOnMouseDown;
 
-    [SerializeField] TMPro.TMP_Text Log;
+    [SerializeField]
+    AgentCategory CategoryToSpawnOnMouseDown;
 
-    [SerializeField] bool EnableSocialInteraction = false;
+    [Header("NAVMESH PARAMETERS")]
 
+    [SerializeField]
+    int PathfindingIterationsPerFrame;
+
+    [SerializeField]
+    [Range(0.5f, 20)]
+    float AvoidancePredictionTime;
+
+    [Header("SIMULATION PARAMETERS")]
+
+    [SerializeField]
+    bool EnableSocialInteraction;
+
+    [SerializeField]
+    int MaxAgentCount;
+
+    [Header("INTERNAL - DO NOT TOUCH")]
+
+    [SerializeField]
+    GameObject AgentPrefab;
+
+    [SerializeField]
+    TMPro.TMP_Text Log;
 
     void Start()
     {
-        var attractionsInScene = FindObjectsOfType<PointOfInterest>();
+        var attractionsInScene = FindObjectsOfType<AttractionZone>();
         foreach (var a in attractionsInScene)
         {
             if (!PointsOfInterest.ContainsKey(a.InterestCategory))
-                PointsOfInterest.Add(a.InterestCategory, new List<PointOfInterest>());
+                PointsOfInterest.Add(a.InterestCategory, new List<AttractionZone>());
             PointsOfInterest[a.InterestCategory].Add(a);
         }
     }
@@ -37,7 +60,7 @@ public class Simulation : Singleton<Simulation>
         NavMesh.pathfindingIterationsPerFrame = PathfindingIterationsPerFrame;
         NavMesh.avoidancePredictionTime = AvoidancePredictionTime;
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && SpawnAgentOnMouseDown)
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -49,18 +72,34 @@ public class Simulation : Singleton<Simulation>
         WriteStatusToPanel();
     }
 
+
+    public bool HasReachedMaxAgentCount()
+    {
+        int agentCount = 0;
+        foreach (var agentList in _agents.Values)
+            agentCount += agentList.Count;
+        return agentCount < MaxAgentCount;
+    }
+
+
+    public void RemoveAgent(Agent agent)
+    {
+        _agents[agent.AgentCategory].Remove(agent);
+    }
+
+
     private void WriteStatusToPanel()
     {
         var output = "";
         foreach (var key in _agents.Keys)
-            output += " | " + key.name + " : " + _agents[key].Count;
-        output += " |";
+            output += key.name + " : " + _agents[key].Count + "         ";
 
-        output += " FPS: ";
-        output += (1f / Time.smoothDeltaTime).ToString("n0"); ;
+        // output += " FPS: ";
+        // output += (1f / Time.smoothDeltaTime).ToString("n0"); ;
 
         Log.text = output;
     }
+
 
     public void SpawnAgentAtPosition(Vector3 position, GameObject agentPrefab, AgentCategory category)
     {
@@ -69,6 +108,7 @@ public class Simulation : Singleton<Simulation>
         newAgent.AgentCategory = category;
         AddAgentToPotentialInterlocutors(newAgent);
     }
+
 
     public Agent FindClosestNeighbourOfCategory(AgentCategory category, Agent agent)
     {
@@ -95,6 +135,7 @@ public class Simulation : Singleton<Simulation>
         return closestNeighbour;
     }
 
+
     private List<Agent> GetPersons(AgentCategory category)
     {
         if (_agents.ContainsKey(category))
@@ -103,6 +144,7 @@ public class Simulation : Singleton<Simulation>
         return new List<Agent>();
     }
 
+
     private void AddAgentToPotentialInterlocutors(Agent agent)
     {
         if (!_agents.ContainsKey(agent.AgentCategory))
@@ -110,6 +152,7 @@ public class Simulation : Singleton<Simulation>
 
         _agents[agent.AgentCategory].Add(agent);
     }
+
 
     private Dictionary<AgentCategory, List<Agent>> _agents = new Dictionary<AgentCategory, List<Agent>>();
 }

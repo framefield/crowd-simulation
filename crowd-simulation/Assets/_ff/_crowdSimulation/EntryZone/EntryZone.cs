@@ -4,18 +4,24 @@ using UnityEngine;
 
 public class EntryZone : MonoBehaviour
 {
+    [Header("PARAMETERS")]
+
+    [SerializeField]
+    AgentCategory AgentCategory;
+
+    [SerializeField] float AgentsSpawnedPerSecond;
+
+
+    [Header("INTERNAL - DO NOT TOUCH")]
+
     [SerializeField]
     GameObject AgentPrefab;
 
     [SerializeField] TMPro.TextMeshPro Label;
 
-    [SerializeField]
-    AgentCategory AgentCategory;
-    public float AgentsPerSecond;
-
     void Update()
     {
-        _agentsToSpawn += Time.deltaTime * AgentsPerSecond;
+        _agentsToSpawn += Time.deltaTime * AgentsSpawnedPerSecond;
 
         var n = Mathf.Ceil(_agentsToSpawn);
         for (int i = 0; i < n; i++)
@@ -75,5 +81,5 @@ public class EntryZone : MonoBehaviour
     }
 
     private float _agentsToSpawn = 0f;
-    private const float RADIUS = 3f;
+    private const float RADIUS = 1f;
 }
