@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8af57c7bab01b49468d9d3629df4a925, type: 3}
+  m_Name: Peasant
+  m_EditorClassIdentifier: 
+  Color: {r: 0.31833163, g: 0.32068965, b: 0.31996143, a: 1}
+  TransactionTime: 16.02
+  MaxTimeOnAgora: 60
+  Interests:
+    m_keys:
+    - {fileID: 11400000, guid: 67536b4f0df653149bb59a48a4a37aee, type: 2}
+    - {fileID: 11400000, guid: 58a6c872b73edb247900431a77368a73, type: 2}
+    m_values:
+    - 0.492
+    - 0.113
+  SocialInterests:
+    m_keys:
+    - {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e, type: 2}
+    m_values:
+    - 0.061
+  MotivationDepletionIfBored: -0.001

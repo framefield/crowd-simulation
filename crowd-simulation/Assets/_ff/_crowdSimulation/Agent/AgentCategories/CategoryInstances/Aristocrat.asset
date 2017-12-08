@@ -9,26 +9,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8af57c7bab01b49468d9d3629df4a925, type: 3}
-  m_Name: Philosopher
+  m_Name: Aristocrat
   m_EditorClassIdentifier: 
-  Color: {r: 0.9926471, g: 1, b: 0.99772924, a: 1}
-  TransactionTime: 16.02
-  MaxTimeOnMarket: 200
+  Color: {r: 0.10689655, g: 0.10689655, b: 0.10689655, a: 1}
+  TransactionTime: 1
+  MaxTimeOnAgora: 60
   Interests:
     m_keys:
     - {fileID: 11400000, guid: 67536b4f0df653149bb59a48a4a37aee, type: 2}
-    - {fileID: 11400000, guid: 4d09bde4c6058284da73c07e7e900904, type: 2}
-    - {fileID: 11400000, guid: f9793856e7fd70948bc391ae5cd87c15, type: 2}
     - {fileID: 11400000, guid: 24b7be9908d768f4e8fe77703ab9360f, type: 2}
+    - {fileID: 11400000, guid: 58a6c872b73edb247900431a77368a73, type: 2}
     m_values:
-    - 0.901
+    - 0.685
     - 0.65
-    - 1
-    - 0.65
+    - 0.539
   SocialInterests:
     m_keys:
     - {fileID: 11400000}
     m_values:
-    - 0
-  Stamina: -0.001
-  MaxTimeTryingToReachInteraction: 7.42
+    - 0.18
+  MotivationDepletionIfBored: -0.001
