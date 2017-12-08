@@ -5,12 +5,12 @@ using System.Collections;
 using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "new AgentCategory", menuName = "CrowdSimulation/AgentCategory", order = 1)]
-public class AgentCategory : InterestCategory
+public class AgentCategory : AttractionCategory
 {
-    public float MaxTimeOnMarket = float.PositiveInfinity;
+    [Header("PARAMTERS")]
+    public float MaxTimeOnAgora = float.PositiveInfinity;
     public Interests Interests;
     public Interests SocialInterests;
-    public float Stamina;
-    public float MaxTimeTryingToReachInteraction;
+    public float MotivationDepletionIfBored;
 }
 
