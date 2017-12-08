@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class PointOfInterest : MonoBehaviour
+public class AttractionZone : MonoBehaviour
 {
-    public InterestCategory InterestCategory;
+    [Header("PARAMETERS")]
 
-
-    [Header("Radii for Interaction with Agents")]
+    public AttractionCategory InterestCategory;
 
     [SerializeField]
     float InnerSatisfactionRadius;
 
-    [SerializeField] float OuterVisibilityRadius;
+    [SerializeField]
+    float OuterVisibilityRadius;
 
 
-    [Header("Internal Prefab References: should not be touched")]
+    [Header("INTERNAL - DO NOT TOUCH")]
 
     [SerializeField]
     TMPro.TextMeshPro Label;
@@ -54,7 +54,7 @@ public class PointOfInterest : MonoBehaviour
 
         var category = InterestCategory.name;
         Label.text = category;
-        var gameObjectName = category + "- PointOfInterest";
+        var gameObjectName = category + "- AttractionZone";
         if (gameObject.name != gameObjectName)
             gameObject.name = gameObjectName;
 
