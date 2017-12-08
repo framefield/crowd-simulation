@@ -7,7 +7,7 @@ using UnityEngine;
 public class AgentEditor : Editor
 {
     private Material material;
-    private Dictionary<InterestCategory, float[]> PersonalAttractionBuffer = new Dictionary<InterestCategory, float[]>();
+    private Dictionary<AttractionCategory, float[]> PersonalAttractionBuffer = new Dictionary<AttractionCategory, float[]>();
     public const int _bufferSize = 100;
     private int _arrayPointer = 0;
     private Agent _agent;
@@ -23,7 +23,7 @@ public class AgentEditor : Editor
 
     void InitArrays()
     {
-        foreach (KeyValuePair<InterestCategory, float> pair in _agent.CurrentInterests)
+        foreach (KeyValuePair<AttractionCategory, float> pair in _agent.CurrentInterests)
         {
             PersonalAttractionBuffer[pair.Key] = new float[_bufferSize];
             for (int i = 0; i < _bufferSize; i++)
@@ -33,7 +33,7 @@ public class AgentEditor : Editor
 
     public void AddValueToBuffer(Interests attractedness)
     {
-        foreach (KeyValuePair<InterestCategory, float> pair in _agent.CurrentInterests)
+        foreach (KeyValuePair<AttractionCategory, float> pair in _agent.CurrentInterests)
         {
             var mostVisiblePOI = _agent.GetMostVisiblePointOfInterest(pair.Key);
             var foundPOI = mostVisiblePOI != null;
@@ -52,7 +52,7 @@ public class AgentEditor : Editor
         AddValueToBuffer(_agent.CurrentInterests);
 
         GUILayoutUtility.GetRect(10, 10000, 4, 4);
-        GUILayout.TextArea("Attractedness");
+        GUILayout.TextArea("MOTIVATION");
         Rect _attractionRect = GUILayoutUtility.GetRect(10, 10000, 200, 200);
 
         GUILayout.BeginHorizontal(EditorStyles.helpBox);
@@ -115,9 +115,9 @@ public class AgentEditor : Editor
         GL.End();
     }
 
-    void RenderBuffer(Rect r, Dictionary<InterestCategory, float[]> dictionary)
+    void RenderBuffer(Rect r, Dictionary<AttractionCategory, float[]> dictionary)
     {
-        foreach (KeyValuePair<InterestCategory, float[]> pair in dictionary)
+        foreach (KeyValuePair<AttractionCategory, float[]> pair in dictionary)
         {
             GL.Begin(GL.LINES);
             GL.Color(pair.Key.Color);
