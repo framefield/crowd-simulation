@@ -14,4 +14,4 @@ It's developed by [Framefield.com](http://www.framefield.com)
 
 # License
 
-This project is released under CC-BY_NC_SA license.
+This project is released under CC-BY-NC-SA license.
