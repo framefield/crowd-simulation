@@ -61,6 +61,12 @@ public class AttractionZone : MonoBehaviour
         Label.color = InterestCategory.Color;
     }
 
+    public Vector3 GetRandomPositionInsideSatisfactionCircle()
+    {
+        var posInCircle = InnerSatisfactionRadius * Random.insideUnitCircle;
+        return transform.TransformPoint(new Vector3(posInCircle.x, 0, posInCircle.y));
+    }
+
     void OnDrawGizmosSelected()
     {
         var offset = 0.1f;

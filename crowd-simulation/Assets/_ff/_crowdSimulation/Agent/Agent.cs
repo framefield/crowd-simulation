@@ -72,7 +72,6 @@ public class Agent : MonoBehaviour
         else if (_currentState == State.WalkingToPerson)
             ReduceValueOfLockedPersonIfFollowingForTooLong();
 
-
         RenderAttractedness();
 
         if (_currentState == State.WalkingToExit)
@@ -244,7 +243,7 @@ public class Agent : MonoBehaviour
 
     private void InitWalkToPOI(AttractionZone poi)
     {
-        _agentWalking.SetDestination(poi.transform.position);
+        _agentWalking.SetDestination(poi.GetRandomPositionInsideSatisfactionCircle());
         _lockedInterest = poi.InterestCategory;
         SetLockedInterestValue(GetCurrentInterest(_lockedInterest) + PersistencyBonus);
         _lockedInterestTime = Time.time;
@@ -374,7 +373,6 @@ public class Agent : MonoBehaviour
 
     private const int N = 60;
     private Queue<float> _lastNDistancesTraveled;
-    private Vector3 _lastPosition;
 
     private void InitRecentDistanceCheck()
     {
@@ -482,13 +480,12 @@ public class Agent : MonoBehaviour
     private AttractionCategory _lockedInterest;
 
     private bool _isBored;
-
+    private Vector3 _lastPosition;
     private float _distanceTraveledRecently;
 
     private float _lockedInterestTime;
     private float _transactionStartTime;
     private float _creationTime;
-
     private Vector3 _exit;
 
     private State _currentState;

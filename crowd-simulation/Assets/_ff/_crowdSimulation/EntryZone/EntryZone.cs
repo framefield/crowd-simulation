@@ -11,7 +11,6 @@ public class EntryZone : MonoBehaviour
 
     [SerializeField] float AgentsSpawnedPerSecond;
 
-
     [Header("INTERNAL - DO NOT TOUCH")]
 
     [SerializeField]
@@ -75,7 +74,6 @@ public class EntryZone : MonoBehaviour
                 var x = (1 + Mathf.Sin(i * frequency)) * 0.5f;
                 Gizmos.color = Color.Lerp(Color.white, Color.grey, x);
             }
-
             Gizmos.DrawLine(positions[i], positions[(i + 1) % positions.Length]);
         }
     }

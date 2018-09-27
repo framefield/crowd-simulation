@@ -84,6 +84,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -99,6 +100,7 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -125,10 +127,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22a87ba90b7d14d47b6d61f451bcbe2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HasReachedDestinationEpsylon: 0.01
-  RandomWalkRadius: 90.73
-  DrawPath: 0
-  PathAlpha: 0.059
+  _hasReachedDestinationEpsylon: 0.01
+  _randomWalkRadius: 90
+  _drawPathToTarget: 1
+  _pathToTargetAlpha: 0.163
+  _drawLoggedPath: 1
+  _loggedPathAlpha: 0.183
 --- !u!114 &114782175463676002
 MonoBehaviour:
   m_ObjectHideFlags: 1
