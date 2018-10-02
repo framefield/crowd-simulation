@@ -37,7 +37,7 @@ public class EntryZoneManager : MonoBehaviour
     private float _SecondsUntilAgentLimitReached;
 
     [SerializeField]
-    private Dictionary<AgentCategory, List<EntryZone>> _entryZonesOverCategory;
+    private Dictionary<AgentCategory, List<EntryZone>> _entryZoneLookUp;
 
     [SerializeField]
     private AgentsPerSecond _agentsScheduledForSpawning;
@@ -50,7 +50,7 @@ public class EntryZoneManager : MonoBehaviour
 
     void Start()
     {
-        _entryZonesOverCategory = InitEntryZonesOverCategory(_entryZones);
+        _entryZoneLookUp = InitEntryZoneLookUp(_entryZones);
         // _numberOfAgentsSpawned = new Dictionary<AgentCategory, int>();
         _agentsScheduledForSpawning = new AgentsPerSecond();
 
@@ -75,44 +75,27 @@ public class EntryZoneManager : MonoBehaviour
                 _simulation.SpawnAgentAtPosition(hit.point, _agentPrefab, PickRandomCategory());
             }
         }
-        foreach (var kvp in _entryZonesOverCategory)
+
+        foreach (var category in _agentCategories)
         {
-            var category = kvp.Key;
             _newAgentsPerSecondPerCategory = DeriveAgentsPerMinute(_globalMaxAgentNumber,
                                                                 _globalNewAgentsPerSecond,
                                                                 _maxNumberOfAgentsPerCategory);
+
             _agentsScheduledForSpawning[category] += _newAgentsPerSecondPerCategory[category] * Time.deltaTime;
-            Debug.Log(category);
             if (_simulation.GetNumberOfAgentsInSimulation(category) >= _maxNumberOfAgentsPerCategory[category])
                 continue;
 
             var agentsToSpawnRightNow = Mathf.FloorToInt(_agentsScheduledForSpawning[category]);
             for (int i = 0; i < agentsToSpawnRightNow; i++)
             {
-                var numberOfZonesForCategory = _entryZonesOverCategory[category].Count;
+                var numberOfZonesForCategory = _entryZoneLookUp[category].Count;
                 var randomIndex = Random.Range(0, numberOfZonesForCategory);
-                var randomEntryZone = _entryZonesOverCategory[category][randomIndex];
-                _simulation.SpawnAgentAtPosition(transform.position, _agentPrefab, randomEntryZone.GetAgentCategory());
+                var randomEntryZone = _entryZoneLookUp[category][randomIndex];
+                _simulation.SpawnAgentAtPosition(randomEntryZone.transform.position, _agentPrefab, randomEntryZone.GetAgentCategory());
                 _agentsScheduledForSpawning[category]--;
             }
         }
-    }
-
-    private bool HaveEntryZonesChanged()
-    {
-        var categoriesInScene = new List<AgentCategory>();
-        foreach (var entryZone in _entryZones)
-        {
-            var category = entryZone.GetAgentCategory();
-            if (!categoriesInScene.Contains(category))
-                categoriesInScene.Add(category);
-
-            if (!_agentCategories.Contains(category))
-                return true;
-        }
-        if (_agentCategories.Count != categoriesInScene.Count)
-            return true;
-        return false;
     }
 
     void OnValidate()
@@ -120,7 +103,7 @@ public class EntryZoneManager : MonoBehaviour
         Debug.Log("OnValidate");
 
         if (HaveEntryZonesChanged())
-            InitData();
+            DeriveDataFromEntryZones();
 
         _globalMaxAgentNumber = CalculateTotalMaxAgents();
         _newAgentsPerSecondPerCategory = DeriveAgentsPerMinute(_globalMaxAgentNumber,
@@ -131,13 +114,12 @@ public class EntryZoneManager : MonoBehaviour
     }
 
     [ContextMenu("InitData")]
-    void InitData()
+    void DeriveDataFromEntryZones()
     {
         Debug.Log("InitDate");
         _agentCategories = new List<AgentCategory>();
         _newAgentsPerSecondPerCategory = new AgentsPerSecond();
         _maxNumberOfAgentsPerCategory = new MaxNumberOfAgents();
-        // var entryZonesInScene =// Object.FindObjectsOfType<EntryZone>();
         foreach (var entryZone in _entryZones)
         {
             var category = entryZone.GetAgentCategory();
@@ -150,18 +132,18 @@ public class EntryZoneManager : MonoBehaviour
         }
     }
 
-    private static Dictionary<AgentCategory, List<EntryZone>> InitEntryZonesOverCategory(List<EntryZone> _entryZones)
+    private static Dictionary<AgentCategory, List<EntryZone>> InitEntryZoneLookUp(List<EntryZone> entryZones)
     {
-        var entryZonesOverCategory = new Dictionary<AgentCategory, List<EntryZone>>();
+        var entryZoneLookUp = new Dictionary<AgentCategory, List<EntryZone>>();
         // var entryZonesInScene = Object.FindObjectsOfType<EntryZone>();
-        foreach (var entryZone in _entryZones)
+        foreach (var entryZone in entryZones)
         {
             var category = entryZone.GetAgentCategory();
-            if (!entryZonesOverCategory.ContainsKey(category))
-                entryZonesOverCategory.Add(category, new List<EntryZone>());
-            entryZonesOverCategory[category].Add(entryZone);
+            if (!entryZoneLookUp.ContainsKey(category))
+                entryZoneLookUp.Add(category, new List<EntryZone>());
+            entryZoneLookUp[category].Add(entryZone);
         }
-        return entryZonesOverCategory;
+        return entryZoneLookUp;
     }
 
     private int CalculateTotalMaxAgents()
@@ -188,13 +170,32 @@ public class EntryZoneManager : MonoBehaviour
         return newValues;
     }
 
+    private bool HaveEntryZonesChanged()
+    {
+        var categoriesInScene = new List<AgentCategory>();
+        foreach (var entryZone in _entryZones)
+        {
+            if (entryZone == null)
+                return false; //hack
+            var category = entryZone.GetAgentCategory();
+            if (!categoriesInScene.Contains(category))
+                categoriesInScene.Add(category);
+
+            if (!_agentCategories.Contains(category))
+                return true;
+        }
+        if (_agentCategories.Count != categoriesInScene.Count)
+            return true;
+        return false;
+    }
+
     private AgentCategory PickRandomCategory()
     {
         var iRandomCategory = Random.Range(0, _agentCategories.Count);
         return _agentCategories[iRandomCategory];
     }
 
-    private List<AgentCategory> _agentCategories;
+    private List<AgentCategory> _agentCategories = new List<AgentCategory>();
 
     private Simulation _simulationCache;
     private Simulation _simulation

@@ -43,6 +43,11 @@ public class Agent : MonoBehaviour
     [SerializeField]
     float SocialInteractionRadiiAlpha;
 
+    public void Init(AgentCategory category, Simulation simulation)
+    {
+        AgentCategory = category;
+        _simulation = simulation;
+    }
 
     void Start()
     {

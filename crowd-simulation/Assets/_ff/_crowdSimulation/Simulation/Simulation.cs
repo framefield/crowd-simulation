@@ -49,6 +49,8 @@ public class Simulation : MonoBehaviour
 
     public int GetNumberOfAgentsInSimulation(AgentCategory category)
     {
+        if (!_agents.ContainsKey(category))
+            return 0;
         return _agents[category].Count;
     }
 
@@ -72,7 +74,7 @@ public class Simulation : MonoBehaviour
     {
         var newAgentGO = Instantiate(agentPrefab, position, Quaternion.identity, this.transform);
         var newAgent = newAgentGO.GetComponent<Agent>();
-        newAgent.AgentCategory = category;
+        newAgent.Init(category, this);
         AddAgentToPotentialInterlocutors(newAgent);
     }
 

@@ -883,6 +883,31 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _entryZones.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _maxNumberOfAgentsPerCategory.m_keys.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _newAgentsPerSecondPerCategory.m_keys.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _maxNumberOfAgentsPerCategory.m_values.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _newAgentsPerSecondPerCategory.m_values.Array.size
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4634390696954982, guid: 1b1695a72b98583408dfa143d34f18d3, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -915,6 +940,26 @@ Prefab:
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _entryZones.Array.data[0]
+      value: 
+      objectReference: {fileID: 375873575}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _entryZones.Array.data[1]
+      value: 
+      objectReference: {fileID: 1379898314}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _entryZones.Array.data[2]
+      value: 
+      objectReference: {fileID: 1618843273}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _entryZones.Array.data[3]
+      value: 
+      objectReference: {fileID: 448669352}
     - target: {fileID: 114058199138158444, guid: 1b1695a72b98583408dfa143d34f18d3,
         type: 2}
       propertyPath: m_havePropertiesChanged
@@ -924,6 +969,87 @@ Prefab:
         type: 2}
       propertyPath: m_isInputParsingRequired
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _maxNumberOfAgentsPerCategory.m_values.Array.data[0]
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _globalMaxAgentNumber
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _newAgentsPerSecondPerCategory.m_values.Array.data[0]
+      value: 0.29666665
+      objectReference: {fileID: 0}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _SecondsUntilAgentLimitReached
+      value: 337.07864
+      objectReference: {fileID: 0}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _maxNumberOfAgentsPerCategory.m_keys.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f,
+        type: 2}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _maxNumberOfAgentsPerCategory.m_keys.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: abe6b503dfa89dc4ab2d7e6206a4ad04,
+        type: 2}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _maxNumberOfAgentsPerCategory.m_values.Array.data[1]
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _maxNumberOfAgentsPerCategory.m_values.Array.data[2]
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _newAgentsPerSecondPerCategory.m_keys.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f,
+        type: 2}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _newAgentsPerSecondPerCategory.m_keys.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: abe6b503dfa89dc4ab2d7e6206a4ad04,
+        type: 2}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _newAgentsPerSecondPerCategory.m_values.Array.data[1]
+      value: 0.29666665
+      objectReference: {fileID: 0}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _newAgentsPerSecondPerCategory.m_values.Array.data[2]
+      value: 0.29666665
+      objectReference: {fileID: 0}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _maxNumberOfAgentsPerCategory.m_keys.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e,
+        type: 2}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _newAgentsPerSecondPerCategory.m_keys.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e,
+        type: 2}
+    - target: {fileID: 114415645970754762, guid: 1b1695a72b98583408dfa143d34f18d3,
+        type: 2}
+      propertyPath: _globalNewAgentsPerSecond
+      value: 0.89
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1b1695a72b98583408dfa143d34f18d3, type: 2}
@@ -4319,50 +4445,6 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: e4e23b80a2bb1c445b473d5db44c1096, type: 3}
   m_PrefabInternal: {fileID: 1438773600}
---- !u!1 &1443017161 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1241452935955628, guid: 1b1695a72b98583408dfa143d34f18d3,
-    type: 2}
-  m_PrefabInternal: {fileID: 384483597}
---- !u!114 &1443017162
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1443017161}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 455cf765d0eb04db291fb7af1e0f1de8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _spawnAgentOnMouseDown: 0
-  _entryZones:
-  - {fileID: 375873575}
-  - {fileID: 1379898314}
-  - {fileID: 1618843273}
-  - {fileID: 448669352}
-  _maxNumberOfAgentsPerCategory:
-    m_keys:
-    - {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e, type: 2}
-    - {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
-    - {fileID: 11400000, guid: abe6b503dfa89dc4ab2d7e6206a4ad04, type: 2}
-    m_values: 640000005d00000064000000
-  _globalMaxAgentNumber: 293
-  _globalNewAgentsPerSecond: 0.48
-  _newAgentsPerSecondPerCategory:
-    m_keys:
-    - {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e, type: 2}
-    - {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
-    - {fileID: 11400000, guid: abe6b503dfa89dc4ab2d7e6206a4ad04, type: 2}
-    m_values:
-    - 0.16382252
-    - 0.15235494
-    - 0.16382252
-  _SecondsUntilAgentLimitReached: 610.4167
-  _agentsScheduledForSpawning:
-    m_keys: []
-    m_values: []
-  _agentPrefab: {fileID: 0}
 --- !u!1001 &1476915341
 Prefab:
   m_ObjectHideFlags: 0
