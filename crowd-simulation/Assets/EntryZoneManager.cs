@@ -54,6 +54,9 @@ public class EntryZoneManager : MonoBehaviour
         foreach (var kvp in _entryZonesOverCategory)
         {
             var category = kvp.Key;
+            _newAgentsPerSecondPerCategory = DeriveAgentsPerMinute(_globalMaxAgentNumber,
+                                                                _globalNewAgentsPerSecond,
+                                                                _maxNumberOfAgentsPerCategory);
             _agentsScheduledForSpawning[category] += _newAgentsPerSecondPerCategory[category] * Time.deltaTime;
             Debug.Log(category);
             if (_numberOfAgentsSpawned[category] >= _maxNumberOfAgentsPerCategory[category])
@@ -127,17 +130,16 @@ public class EntryZoneManager : MonoBehaviour
     }
 
     private static AgentsPerSecond DeriveAgentsPerMinute(int globalMaxAgentNumber,
-                                                            float globalNewAgentsPerMinute,
-                                                            MaxNumberOfAgents maxAgentsPerCategory)
+                                                           float globalNewAgentsPerMinute,
+                                                           MaxNumberOfAgents maxAgentsPerCategory)
     {
         var newValues = new AgentsPerSecond();
         foreach (var kvp in maxAgentsPerCategory)
         {
             var newValue = 1f * maxAgentsPerCategory[kvp.Key] / globalMaxAgentNumber * globalNewAgentsPerMinute;
-            newValues[kvp.Key] = Mathf.RoundToInt(newValue);
+            newValues[kvp.Key] = newValue;
         }
 
         return newValues;
     }
-
 }
