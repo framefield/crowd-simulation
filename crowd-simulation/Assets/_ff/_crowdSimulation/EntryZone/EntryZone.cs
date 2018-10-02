@@ -7,7 +7,7 @@ public class EntryZone : MonoBehaviour
     [Header("PARAMETERS")]
 
     [SerializeField]
-    AgentCategory AgentCategory;
+    AgentCategory _agentCategory;
 
     [SerializeField] float AgentsSpawnedPerSecond;
 
@@ -18,28 +18,33 @@ public class EntryZone : MonoBehaviour
 
     [SerializeField] TMPro.TextMeshPro Label;
 
+    public AgentCategory GetAgentCategory()
+    {
+        return _agentCategory;
+    }
+
     void Update()
     {
         _agentsToSpawn += Time.deltaTime * AgentsSpawnedPerSecond;
 
         var n = Mathf.Ceil(_agentsToSpawn);
         for (int i = 0; i < n; i++)
-            Simulation.Instance.SpawnAgentAtPosition(transform.position, AgentPrefab, AgentCategory);
+            Simulation.Instance.SpawnAgentAtPosition(transform.position, AgentPrefab, _agentCategory);
 
         _agentsToSpawn -= n;
     }
 
     void OnDrawGizmos()
     {
-        DrawGizmoCircle(RADIUS, AgentCategory.Color);
+        DrawGizmoCircle(RADIUS, _agentCategory.Color);
 
-        var category = AgentCategory.name;
+        var category = _agentCategory.name;
         Label.text = category;
         var gameObjectName = category + "- EntryZone";
         if (gameObject.name != gameObjectName)
             gameObject.name = gameObjectName;
 
-        Label.color = AgentCategory.Color;
+        Label.color = _agentCategory.Color;
     }
 
     private void DrawGizmoCircle(float radius, Color color, bool dotted = false, int resolution = 64)
@@ -62,7 +67,6 @@ public class EntryZone : MonoBehaviour
 
         return allPositions.ToArray();
     }
-
 
     private void DrawLine(Vector3[] positions, bool dotted)
     {
