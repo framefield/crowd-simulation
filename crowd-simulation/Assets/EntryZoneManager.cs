@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using ff.utils;
+using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(Simulation))]
@@ -41,6 +42,9 @@ public class EntryZoneManager : MonoBehaviour
 
     [SerializeField]
     private AgentsPerSecond _agentsScheduledForSpawning;
+
+    [SerializeField]
+    public List<AgentCategory> _agentCategories;
 
     [Space(15f)]
 
@@ -83,11 +87,9 @@ public class EntryZoneManager : MonoBehaviour
                                                                 _maxNumberOfAgentsPerCategory);
 
             _agentsScheduledForSpawning[category] += _newAgentsPerSecondPerCategory[category] * Time.deltaTime;
-            if (_simulation.GetNumberOfAgentsInSimulation(category) >= _maxNumberOfAgentsPerCategory[category])
-                continue;
 
             var agentsToSpawnRightNow = Mathf.FloorToInt(_agentsScheduledForSpawning[category]);
-            for (int i = 0; i < agentsToSpawnRightNow; i++)
+            for (int i = 0; i < agentsToSpawnRightNow && !HasReachedMaxAgents(category); i++)
             {
                 var numberOfZonesForCategory = _entryZoneLookUp[category].Count;
                 var randomIndex = Random.Range(0, numberOfZonesForCategory);
@@ -98,11 +100,18 @@ public class EntryZoneManager : MonoBehaviour
         }
     }
 
+    private bool HasReachedMaxAgents(AgentCategory category)
+    {
+        return _simulation.GetNumberOfAgentsInSimulation(category) >= _maxNumberOfAgentsPerCategory[category];
+    }
+
     void OnValidate()
     {
-        Debug.Log("OnValidate");
+        if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling)
 
-        if (HaveEntryZonesChanged())
+            Debug.Log("OnValidate");
+
+        if (HaveEntryZonesChanged() && !EditorApplication.isPlaying)
             DeriveDataFromEntryZones();
 
         _globalMaxAgentNumber = CalculateTotalMaxAgents();
@@ -113,10 +122,9 @@ public class EntryZoneManager : MonoBehaviour
         _SecondsUntilAgentLimitReached = _globalMaxAgentNumber / _globalNewAgentsPerSecond;
     }
 
-    [ContextMenu("InitData")]
     void DeriveDataFromEntryZones()
     {
-        Debug.Log("InitDate");
+        Debug.Log("DeriveDataFromEntryZones");
         _agentCategories = new List<AgentCategory>();
         _newAgentsPerSecondPerCategory = new AgentsPerSecond();
         _maxNumberOfAgentsPerCategory = new MaxNumberOfAgents();
@@ -135,7 +143,6 @@ public class EntryZoneManager : MonoBehaviour
     private static Dictionary<AgentCategory, List<EntryZone>> InitEntryZoneLookUp(List<EntryZone> entryZones)
     {
         var entryZoneLookUp = new Dictionary<AgentCategory, List<EntryZone>>();
-        // var entryZonesInScene = Object.FindObjectsOfType<EntryZone>();
         foreach (var entryZone in entryZones)
         {
             var category = entryZone.GetAgentCategory();
@@ -176,16 +183,25 @@ public class EntryZoneManager : MonoBehaviour
         foreach (var entryZone in _entryZones)
         {
             if (entryZone == null)
+            {
+                Debug.Log("HaveEntryZonesChanged? undefined");
                 return false; //hack
+            }
             var category = entryZone.GetAgentCategory();
             if (!categoriesInScene.Contains(category))
                 categoriesInScene.Add(category);
 
             if (!_agentCategories.Contains(category))
+            {
+                Debug.Log("HaveEntryZonesChanged? category not found");
                 return true;
+            }
         }
         if (_agentCategories.Count != categoriesInScene.Count)
+        {
+            Debug.Log("HaveEntryZonesChanged? count not equal");
             return true;
+        }
         return false;
     }
 
@@ -195,7 +211,6 @@ public class EntryZoneManager : MonoBehaviour
         return _agentCategories[iRandomCategory];
     }
 
-    private List<AgentCategory> _agentCategories = new List<AgentCategory>();
 
     private Simulation _simulationCache;
     private Simulation _simulation
@@ -207,6 +222,4 @@ public class EntryZoneManager : MonoBehaviour
             return _simulationCache;
         }
     }
-
-
 }

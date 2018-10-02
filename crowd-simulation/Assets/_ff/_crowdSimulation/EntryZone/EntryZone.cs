@@ -10,9 +10,6 @@ public class EntryZone : MonoBehaviour
     [SerializeField]
     AgentCategory _agentCategory;
 
-    [SerializeField]
-    float AgentsSpawnedPerSecond;
-
     [Header("INTERNAL - DO NOT TOUCH")]
 
     [SerializeField]
