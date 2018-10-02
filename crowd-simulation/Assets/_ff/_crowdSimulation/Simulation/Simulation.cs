@@ -23,6 +23,11 @@ public class Simulation : MonoBehaviour
     [SerializeField]
     bool EnableSocialInteraction;
 
+    [Header("STATUS")]
+
+    [SerializeField]
+    private MaxNumberOfAgents _numberOfActiveAgents = new MaxNumberOfAgents();
+
     [Header("INTERNAL - DO NOT TOUCH")]
 
     [SerializeField]
@@ -57,17 +62,17 @@ public class Simulation : MonoBehaviour
     public void RemoveAgent(Agent agent)
     {
         _agents[agent.AgentCategory].Remove(agent);
+        _numberOfActiveAgents[agent.AgentCategory]--;
     }
 
+    private void WriteStatusToPanel()
+    {
+        var output = "";
+        foreach (var key in _agents.Keys)
+            output += key.name + " : " + _agents[key].Count + "         ";
 
-    // private void WriteStatusToPanel()
-    // {
-    //     var output = "";
-    //     foreach (var key in _agents.Keys)
-    //         output += key.name + " : " + _agents[key].Count + "         ";
-
-    //     Log.text = output;
-    // }
+        Log.text = output;
+    }
 
 
     public void SpawnAgentAtPosition(Vector3 position, Agent agentPrefab, AgentCategory category)
@@ -75,7 +80,7 @@ public class Simulation : MonoBehaviour
         var newAgentGO = Instantiate(agentPrefab, position, Quaternion.identity, this.transform);
         var newAgent = newAgentGO.GetComponent<Agent>();
         newAgent.Init(category, this);
-        AddAgentToPotentialInterlocutors(newAgent);
+        AddAgent(newAgent);
     }
 
 
@@ -114,12 +119,16 @@ public class Simulation : MonoBehaviour
     }
 
 
-    private void AddAgentToPotentialInterlocutors(Agent agent)
+    private void AddAgent(Agent agent)
     {
         if (!_agents.ContainsKey(agent.AgentCategory))
             _agents.Add(agent.AgentCategory, new List<Agent>());
-
         _agents[agent.AgentCategory].Add(agent);
+
+
+        if (!_numberOfActiveAgents.ContainsKey(agent.AgentCategory))
+            _numberOfActiveAgents.Add(agent.AgentCategory, 0);
+        _numberOfActiveAgents[agent.AgentCategory]++;
     }
 
 
