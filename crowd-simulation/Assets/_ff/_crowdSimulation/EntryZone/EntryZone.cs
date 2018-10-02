@@ -23,15 +23,11 @@ public class EntryZone : MonoBehaviour
         return _agentCategory;
     }
 
-    void Update()
+
+    public void SpawnAgent()
     {
-        _agentsToSpawn += Time.deltaTime * AgentsSpawnedPerSecond;
+        Simulation.Instance.SpawnAgentAtPosition(transform.position, AgentPrefab, _agentCategory);
 
-        var n = Mathf.Ceil(_agentsToSpawn);
-        for (int i = 0; i < n; i++)
-            Simulation.Instance.SpawnAgentAtPosition(transform.position, AgentPrefab, _agentCategory);
-
-        _agentsToSpawn -= n;
     }
 
     void OnDrawGizmos()
@@ -82,6 +78,5 @@ public class EntryZone : MonoBehaviour
         }
     }
 
-    private float _agentsToSpawn = 0f;
     private const float RADIUS = 1f;
 }

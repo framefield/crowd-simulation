@@ -23,12 +23,53 @@ public class EntryZoneManager : MonoBehaviour
     [ReadOnly]
     private float _MinutesUntilAgentLimitReached;
 
-    [TextArea]
-    private string _configurationSummary;
+    [SerializeField]
+    private Dictionary<AgentCategory, List<EntryZone>> _entryZonesOverCategory;
+
+    [SerializeField]
+    private AgentsPerSecond _agentsScheduledForSpawning;
+
+    [SerializeField]
+    private Dictionary<AgentCategory, int> _numberOfAgentsSpawned;
 
     void Start()
     {
+        _entryZonesOverCategory = InitEntryZonesOverCategory();
+        _numberOfAgentsSpawned = new Dictionary<AgentCategory, int>();
+        _agentsScheduledForSpawning = new AgentsPerSecond();
 
+        foreach (var entryZone in _entryZonesOverCategory)
+        {
+            var category = entryZone.Key;
+            if (!_agentsScheduledForSpawning.ContainsKey(category))
+            {
+                _agentsScheduledForSpawning.Add(category, 0f);
+                _numberOfAgentsSpawned.Add(category, 0);
+            }
+        }
+    }
+
+    void Update()
+    {
+        foreach (var kvp in _entryZonesOverCategory)
+        {
+            var category = kvp.Key;
+            _agentsScheduledForSpawning[category] += _newAgentsPerSecondPerCategory[category] * Time.deltaTime;
+            Debug.Log(category);
+            if (_numberOfAgentsSpawned[category] >= _maxNumberOfAgentsPerCategory[category])
+                continue;
+
+            var agentsToSpawnRightNow = Mathf.FloorToInt(_agentsScheduledForSpawning[category]);
+            for (int i = 0; i < agentsToSpawnRightNow; i++)
+            {
+                var numberOfZonesForCategory = _entryZonesOverCategory[category].Count;
+                var randomIndex = Random.Range(0, numberOfZonesForCategory);
+                var randomEntryZone = _entryZonesOverCategory[category][randomIndex];
+                randomEntryZone.SpawnAgent();
+                _numberOfAgentsSpawned[category]++;
+                _agentsScheduledForSpawning[category]--;
+            }
+        }
     }
 
     void OnValidate()
@@ -46,10 +87,11 @@ public class EntryZoneManager : MonoBehaviour
     [ContextMenu("InitData")]
     void InitData()
     {
-        _entryZonesInScene = Object.FindObjectsOfType<EntryZone>();
+        Debug.Log("InitDate");
         _newAgentsPerSecondPerCategory = new AgentsPerSecond();
         _maxNumberOfAgentsPerCategory = new MaxNumberOfAgents();
-        foreach (var entryZone in _entryZonesInScene)
+        var entryZonesInScene = Object.FindObjectsOfType<EntryZone>();
+        foreach (var entryZone in entryZonesInScene)
         {
             var category = entryZone.GetAgentCategory();
             if (!_newAgentsPerSecondPerCategory.ContainsKey(category))
@@ -58,6 +100,20 @@ public class EntryZoneManager : MonoBehaviour
                 _maxNumberOfAgentsPerCategory.Add(category, 0);
             }
         }
+    }
+
+    private static Dictionary<AgentCategory, List<EntryZone>> InitEntryZonesOverCategory()
+    {
+        var entryZonesOverCategory = new Dictionary<AgentCategory, List<EntryZone>>();
+        var entryZonesInScene = Object.FindObjectsOfType<EntryZone>();
+        foreach (var entryZone in entryZonesInScene)
+        {
+            var category = entryZone.GetAgentCategory();
+            if (!entryZonesOverCategory.ContainsKey(category))
+                entryZonesOverCategory.Add(category, new List<EntryZone>());
+            entryZonesOverCategory[category].Add(entryZone);
+        }
+        return entryZonesOverCategory;
     }
 
     private int CalculateTotalMaxAgents()
@@ -84,5 +140,4 @@ public class EntryZoneManager : MonoBehaviour
         return newValues;
     }
 
-    private EntryZone[] _entryZonesInScene;
 }

@@ -6399,19 +6399,33 @@ MonoBehaviour:
     - {fileID: 11400000, guid: abe6b503dfa89dc4ab2d7e6206a4ad04, type: 2}
     - {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
     - {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e, type: 2}
-    m_values: 910100007e0000006e000000
-  _globalMaxAgentNumber: 637
-  _globalNewAgentsPerSecond: 63.45
+    m_values: 000000000000000000000000
+  _globalMaxAgentNumber: 38
+  _globalNewAgentsPerSecond: 1
   _newAgentsPerSecondPerCategory:
     m_keys:
     - {fileID: 11400000, guid: abe6b503dfa89dc4ab2d7e6206a4ad04, type: 2}
     - {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
     - {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e, type: 2}
     m_values:
-    - 40
-    - 13
-    - 11
-  _MinutesUntilAgentLimitReached: 10.039401
+    - 0
+    - 0
+    - 0
+  _MinutesUntilAgentLimitReached: 38
+  _entryZonesOverCategory:
+    m_keys:
+    - {fileID: 11400000, guid: abe6b503dfa89dc4ab2d7e6206a4ad04, type: 2}
+    - {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
+    - {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e, type: 2}
+  _agentsScheduledForSpawning:
+    m_keys:
+    - {fileID: 11400000, guid: abe6b503dfa89dc4ab2d7e6206a4ad04, type: 2}
+    - {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
+    - {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e, type: 2}
+    m_values:
+    - 0
+    - 0
+    - 0
 --- !u!4 &1890442962
 Transform:
   m_ObjectHideFlags: 0

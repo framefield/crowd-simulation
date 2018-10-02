@@ -133,6 +133,7 @@ MonoBehaviour:
   _pathToTargetAlpha: 0.163
   _drawLoggedPath: 1
   _loggedPathAlpha: 0.183
+  _minDistanceBetweenLockedPositions: 0
 --- !u!114 &114782175463676002
 MonoBehaviour:
   m_ObjectHideFlags: 1
