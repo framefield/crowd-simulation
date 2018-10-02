@@ -214,7 +214,7 @@ public class Agent : MonoBehaviour
     private void Kill()
     {
         Debug.Log("kill");
-        Simulation.Instance.RemoveAgent(this);
+        _simulation.RemoveAgent(this);
         GameObject.Destroy(gameObject);
     }
 
@@ -269,7 +269,7 @@ public class Agent : MonoBehaviour
             var personCategory = socialInterest.Key as AgentCategory;
             var personAttractiveness = socialInterest.Value;
 
-            var closestNeighbour = Simulation.Instance.FindClosestNeighbourOfCategory(personCategory, this);
+            var closestNeighbour = _simulation.FindClosestNeighbourOfCategory(personCategory, this);
             if (closestNeighbour == null)
                 continue;
 
@@ -441,10 +441,10 @@ public class Agent : MonoBehaviour
     {
         AttractionZone mostVisiblePointOfInterest = null;
         var maxFoundVisibility = 0f;
-        if (!Simulation.Instance.PointsOfInterest.ContainsKey(interestCategory))
+        if (!_simulation.PointsOfInterest.ContainsKey(interestCategory))
             return null;
 
-        foreach (var poi in Simulation.Instance.PointsOfInterest[interestCategory])
+        foreach (var poi in _simulation.PointsOfInterest[interestCategory])
         {
             var poiVisibility = poi.GetVisibilityAt(this.transform.position);
             if (poiVisibility > maxFoundVisibility)
@@ -490,4 +490,6 @@ public class Agent : MonoBehaviour
 
     private State _currentState;
     private enum State { RandomWalking, WalkingToPOI, WalkingToPerson, WalkingToExit, DoingTransaction, DoingPersonTransaction }
+
+    private Simulation _simulation;
 }

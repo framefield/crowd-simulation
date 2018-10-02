@@ -870,6 +870,12 @@ Transform:
   m_PrefabParentObject: {fileID: 4589265210831098, guid: e48467efd6f72284eb37d9847cc8e878,
     type: 2}
   m_PrefabInternal: {fileID: 371219707}
+--- !u!114 &375873575 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114977821292713752, guid: 7f0b9d06c571ed3418a4b0d295f7203e,
+    type: 2}
+  m_PrefabInternal: {fileID: 479082493}
+  m_Script: {fileID: 11500000, guid: 733fb06e982383a4d9498a481a1e21f5, type: 3}
 --- !u!1001 &384483597
 Prefab:
   m_ObjectHideFlags: 0
@@ -1043,6 +1049,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &448669352 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114977821292713752, guid: 7f0b9d06c571ed3418a4b0d295f7203e,
+    type: 2}
+  m_PrefabInternal: {fileID: 1839382965}
+  m_Script: {fileID: 11500000, guid: 733fb06e982383a4d9498a481a1e21f5, type: 3}
 --- !u!1001 &479082493
 Prefab:
   m_ObjectHideFlags: 0
@@ -3979,6 +3991,12 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1378025561}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1379898314 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114977821292713752, guid: 7f0b9d06c571ed3418a4b0d295f7203e,
+    type: 2}
+  m_PrefabInternal: {fileID: 1797649823}
+  m_Script: {fileID: 11500000, guid: 733fb06e982383a4d9498a481a1e21f5, type: 3}
 --- !u!1 &1391027896
 GameObject:
   m_ObjectHideFlags: 0
@@ -4301,6 +4319,50 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: e4e23b80a2bb1c445b473d5db44c1096, type: 3}
   m_PrefabInternal: {fileID: 1438773600}
+--- !u!1 &1443017161 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1241452935955628, guid: 1b1695a72b98583408dfa143d34f18d3,
+    type: 2}
+  m_PrefabInternal: {fileID: 384483597}
+--- !u!114 &1443017162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1443017161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 455cf765d0eb04db291fb7af1e0f1de8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spawnAgentOnMouseDown: 0
+  _entryZones:
+  - {fileID: 375873575}
+  - {fileID: 1379898314}
+  - {fileID: 1618843273}
+  - {fileID: 448669352}
+  _maxNumberOfAgentsPerCategory:
+    m_keys:
+    - {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e, type: 2}
+    - {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
+    - {fileID: 11400000, guid: abe6b503dfa89dc4ab2d7e6206a4ad04, type: 2}
+    m_values: 640000005d00000064000000
+  _globalMaxAgentNumber: 293
+  _globalNewAgentsPerSecond: 0.48
+  _newAgentsPerSecondPerCategory:
+    m_keys:
+    - {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e, type: 2}
+    - {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
+    - {fileID: 11400000, guid: abe6b503dfa89dc4ab2d7e6206a4ad04, type: 2}
+    m_values:
+    - 0.16382252
+    - 0.15235494
+    - 0.16382252
+  _SecondsUntilAgentLimitReached: 610.4167
+  _agentsScheduledForSpawning:
+    m_keys: []
+    m_values: []
+  _agentPrefab: {fileID: 0}
 --- !u!1001 &1476915341
 Prefab:
   m_ObjectHideFlags: 0
@@ -5284,6 +5346,12 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1591961262}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1618843273 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114977821292713752, guid: 7f0b9d06c571ed3418a4b0d295f7203e,
+    type: 2}
+  m_PrefabInternal: {fileID: 1931057752}
+  m_Script: {fileID: 11500000, guid: 733fb06e982383a4d9498a481a1e21f5, type: 3}
 --- !u!1 &1632736278
 GameObject:
   m_ObjectHideFlags: 0
@@ -6367,78 +6435,6 @@ Transform:
   m_Father: {fileID: 670876342}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: -9.307, y: 0, z: 0}
---- !u!1 &1890442960
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1890442962}
-  - component: {fileID: 1890442961}
-  m_Layer: 0
-  m_Name: EntryZoneManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1890442961
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1890442960}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 455cf765d0eb04db291fb7af1e0f1de8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _maxNumberOfAgentsPerCategory:
-    m_keys:
-    - {fileID: 11400000, guid: abe6b503dfa89dc4ab2d7e6206a4ad04, type: 2}
-    - {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
-    - {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e, type: 2}
-    m_values: 000000000000000000000000
-  _globalMaxAgentNumber: 38
-  _globalNewAgentsPerSecond: 1
-  _newAgentsPerSecondPerCategory:
-    m_keys:
-    - {fileID: 11400000, guid: abe6b503dfa89dc4ab2d7e6206a4ad04, type: 2}
-    - {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
-    - {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e, type: 2}
-    m_values:
-    - 0
-    - 0
-    - 0
-  _MinutesUntilAgentLimitReached: 38
-  _entryZonesOverCategory:
-    m_keys:
-    - {fileID: 11400000, guid: abe6b503dfa89dc4ab2d7e6206a4ad04, type: 2}
-    - {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
-    - {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e, type: 2}
-  _agentsScheduledForSpawning:
-    m_keys:
-    - {fileID: 11400000, guid: abe6b503dfa89dc4ab2d7e6206a4ad04, type: 2}
-    - {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
-    - {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e, type: 2}
-    m_values:
-    - 0
-    - 0
-    - 0
---- !u!4 &1890442962
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1890442960}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 10
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1893473362
 GameObject:
   m_ObjectHideFlags: 0

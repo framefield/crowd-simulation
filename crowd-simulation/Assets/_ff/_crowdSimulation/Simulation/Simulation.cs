@@ -4,19 +4,10 @@ using ff.utils;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Simulation : Singleton<Simulation>
+public class Simulation : MonoBehaviour
 {
     [HideInInspector]
     public Dictionary<AttractionCategory, List<AttractionZone>> PointsOfInterest = new Dictionary<AttractionCategory, List<AttractionZone>>();
-
-
-    [Header("MANUAL AGENT SPAWNING")]
-
-    [SerializeField]
-    bool SpawnAgentOnMouseDown;
-
-    [SerializeField]
-    AgentCategory CategoryToSpawnOnMouseDown;
 
     [Header("NAVMESH PARAMETERS")]
 
@@ -32,13 +23,7 @@ public class Simulation : Singleton<Simulation>
     [SerializeField]
     bool EnableSocialInteraction;
 
-    [SerializeField]
-    int MaxAgentCount;
-
     [Header("INTERNAL - DO NOT TOUCH")]
-
-    [SerializeField]
-    GameObject AgentPrefab;
 
     [SerializeField]
     TMPro.TMP_Text Log;
@@ -59,28 +44,13 @@ public class Simulation : Singleton<Simulation>
     {
         NavMesh.pathfindingIterationsPerFrame = PathfindingIterationsPerFrame;
         NavMesh.avoidancePredictionTime = AvoidancePredictionTime;
-
-        if (Input.GetMouseButton(0) && SpawnAgentOnMouseDown)
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, 1000.0f))
-            {
-                SpawnAgentAtPosition(hit.point, AgentPrefab, CategoryToSpawnOnMouseDown);
-            }
-        }
-        WriteStatusToPanel();
+        // WriteStatusToPanel();
     }
 
-
-    public bool HasReachedMaxAgentCount()
+    public int GetNumberOfAgentsInSimulation(AgentCategory category)
     {
-        int agentCount = 0;
-        foreach (var agentList in _agents.Values)
-            agentCount += agentList.Count;
-        return agentCount < MaxAgentCount;
+        return _agents[category].Count;
     }
-
 
     public void RemoveAgent(Agent agent)
     {
@@ -88,20 +58,17 @@ public class Simulation : Singleton<Simulation>
     }
 
 
-    private void WriteStatusToPanel()
-    {
-        var output = "";
-        foreach (var key in _agents.Keys)
-            output += key.name + " : " + _agents[key].Count + "         ";
+    // private void WriteStatusToPanel()
+    // {
+    //     var output = "";
+    //     foreach (var key in _agents.Keys)
+    //         output += key.name + " : " + _agents[key].Count + "         ";
 
-        // output += " FPS: ";
-        // output += (1f / Time.smoothDeltaTime).ToString("n0"); ;
-
-        Log.text = output;
-    }
+    //     Log.text = output;
+    // }
 
 
-    public void SpawnAgentAtPosition(Vector3 position, GameObject agentPrefab, AgentCategory category)
+    public void SpawnAgentAtPosition(Vector3 position, Agent agentPrefab, AgentCategory category)
     {
         var newAgentGO = Instantiate(agentPrefab, position, Quaternion.identity, this.transform);
         var newAgent = newAgentGO.GetComponent<Agent>();

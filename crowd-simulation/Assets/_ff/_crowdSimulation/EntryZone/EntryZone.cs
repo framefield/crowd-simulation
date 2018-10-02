@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,14 +10,16 @@ public class EntryZone : MonoBehaviour
     [SerializeField]
     AgentCategory _agentCategory;
 
-    [SerializeField] float AgentsSpawnedPerSecond;
+    [SerializeField]
+    float AgentsSpawnedPerSecond;
 
     [Header("INTERNAL - DO NOT TOUCH")]
 
     [SerializeField]
     GameObject AgentPrefab;
 
-    [SerializeField] TMPro.TextMeshPro Label;
+    [SerializeField]
+    TMPro.TextMeshPro Label;
 
     public AgentCategory GetAgentCategory()
     {
@@ -24,11 +27,11 @@ public class EntryZone : MonoBehaviour
     }
 
 
-    public void SpawnAgent()
-    {
-        Simulation.Instance.SpawnAgentAtPosition(transform.position, AgentPrefab, _agentCategory);
+    // public void SpawnAgent(Action<AgentCategory> OnExitSimulationCallback)
+    // {
+    //     Simulation.Instance.SpawnAgentAtPosition(transform.position, AgentPrefab, _agentCategory);
 
-    }
+    // }
 
     void OnDrawGizmos()
     {
@@ -79,4 +82,5 @@ public class EntryZone : MonoBehaviour
     }
 
     private const float RADIUS = 1f;
+    private Action<AgentCategory> _onExitSimulationCallback;
 }
