@@ -3,13 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
+public abstract class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
 {
     [SerializeField]
     TKey[] m_keys;
     [SerializeField]
-    [Range(0f, 1f)]
+    // [Range(0f, 1000f)]
     TValue[] m_values;
+
+    abstract public bool ShouldRenderReadOnly();
 
     public SerializableDictionary()
     {

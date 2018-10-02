@@ -6,4 +6,8 @@ using System;
 [Serializable]
 public class Interests : SerializableDictionary<AttractionCategory, float>
 {
+    public override bool ShouldRenderReadOnly()
+    {
+        return false;
+    }
 }
