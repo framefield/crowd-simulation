@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Color: {r: 0.31833163, g: 0.32068965, b: 0.31996143, a: 1}
   TransactionTime: 16.02
-  MaxTimeOnAgora: 60
+  MaxTimeOnAgora: 600
   Interests:
     m_keys:
     - {fileID: 11400000, guid: 67536b4f0df653149bb59a48a4a37aee, type: 2}
@@ -26,4 +26,4 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e, type: 2}
     m_values:
     - 0.061
-  MotivationDepletionIfBored: -0.001
+  MotivationDepletionIfBored: -0.01

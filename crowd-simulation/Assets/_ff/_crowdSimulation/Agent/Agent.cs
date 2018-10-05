@@ -109,7 +109,7 @@ public class Agent : MonoBehaviour
             if (_currentState == State.DoingTransaction)
                 transactionTargetIsStillInRange = favouritePOI != null && _lockedInterest == favouritePOI.InterestCategory;
             if (_currentState == State.DoingPersonTransaction)
-                transactionTargetIsStillInRange = favouritePerson != null && _lockedInterest == favouritePerson.AgentCategory as AttractionCategory;
+                transactionTargetIsStillInRange = favouritePerson != null && _lockedInterest == favouritePerson.AgentCategory as InterestCategory;
 
             if (!transactionTargetIsStillInRange)
             {
@@ -258,7 +258,7 @@ public class Agent : MonoBehaviour
     private void InitWalkToPerson(Agent person)
     {
         _agentWalking.SetDestination(person.transform.position);
-        _lockedInterest = person.AgentCategory as AttractionCategory;
+        _lockedInterest = person.AgentCategory as InterestCategory;
         SetLockedInterestValue(GetCurrentInterest(_lockedInterest) + PersistencyBonus);
         _lockedInterestTime = Time.time;
     }
@@ -269,7 +269,7 @@ public class Agent : MonoBehaviour
         Agent mostAttractiveInterlocutor = null;
         float highestAttractiveness = 0f;
 
-        foreach (KeyValuePair<AttractionCategory, float> socialInterest in CurrentSocialInterests)
+        foreach (KeyValuePair<InterestCategory, float> socialInterest in CurrentSocialInterests)
         {
             var personCategory = socialInterest.Key as AgentCategory;
             var personAttractiveness = socialInterest.Value;
@@ -426,7 +426,7 @@ public class Agent : MonoBehaviour
         AttractionZone choosenPOI = null;
         var maxFoundAttraction = 0f;
 
-        foreach (KeyValuePair<AttractionCategory, float> interest in CurrentInterests)
+        foreach (KeyValuePair<InterestCategory, float> interest in CurrentInterests)
         {
             var mostVisiblePOI = GetMostVisiblePointOfInterest(interest.Key);
             var foundPOI = mostVisiblePOI != null;
@@ -442,7 +442,7 @@ public class Agent : MonoBehaviour
     }
 
 
-    public AttractionZone GetMostVisiblePointOfInterest(AttractionCategory interestCategory)
+    public AttractionZone GetMostVisiblePointOfInterest(InterestCategory interestCategory)
     {
         AttractionZone mostVisiblePointOfInterest = null;
         var maxFoundVisibility = 0f;
@@ -462,7 +462,7 @@ public class Agent : MonoBehaviour
     }
 
 
-    public float GetCurrentInterest(AttractionCategory interestCategory)
+    public float GetCurrentInterest(InterestCategory interestCategory)
     {
         if (CurrentInterests.ContainsKey(interestCategory))
             return CurrentInterests[interestCategory];
@@ -482,7 +482,7 @@ public class Agent : MonoBehaviour
 
     private Renderer[] _allRenderers = new Renderer[0];
     private AgentWalking _agentWalking;
-    private AttractionCategory _lockedInterest;
+    private InterestCategory _lockedInterest;
 
     private bool _isBored;
     private Vector3 _lastPosition;

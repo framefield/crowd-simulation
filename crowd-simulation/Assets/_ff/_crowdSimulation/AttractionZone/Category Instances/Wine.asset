@@ -11,5 +11,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b919df4f82b168045b39dc0ebb06091d, type: 3}
   m_Name: Wine
   m_EditorClassIdentifier: 
-  Color: {r: 0.05856999, g: 0.79655176, b: 0.79655176, a: 1}
-  TransactionTime: 5
+  Color: {r: 1, g: 0, b: 0, a: 1}
+  TransactionTime: 1

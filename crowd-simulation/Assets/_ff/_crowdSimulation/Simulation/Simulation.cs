@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using ff.utils;
 using UnityEngine;
@@ -7,7 +8,7 @@ using UnityEngine.AI;
 public class Simulation : MonoBehaviour
 {
     [HideInInspector]
-    public Dictionary<AttractionCategory, List<AttractionZone>> PointsOfInterest = new Dictionary<AttractionCategory, List<AttractionZone>>();
+    public Dictionary<InterestCategory, List<AttractionZone>> PointsOfInterest = new Dictionary<InterestCategory, List<AttractionZone>>();
 
     [Header("NAVMESH PARAMETERS")]
 
@@ -32,6 +33,8 @@ public class Simulation : MonoBehaviour
 
     [SerializeField]
     TMPro.TMP_Text Log;
+
+    public event Action<Agent> OnAgentSpawned;
 
     void Start()
     {
@@ -59,6 +62,7 @@ public class Simulation : MonoBehaviour
         return _agents[category].Count;
     }
 
+
     public void RemoveAgent(Agent agent)
     {
         _agents[agent.AgentCategory].Remove(agent);
@@ -81,6 +85,8 @@ public class Simulation : MonoBehaviour
         var newAgent = newAgentGO.GetComponent<Agent>();
         newAgent.Init(category, this);
         AddAgent(newAgent);
+        if (OnAgentSpawned != null)
+            OnAgentSpawned(newAgent);
     }
 
 
@@ -124,7 +130,6 @@ public class Simulation : MonoBehaviour
         if (!_agents.ContainsKey(agent.AgentCategory))
             _agents.Add(agent.AgentCategory, new List<Agent>());
         _agents[agent.AgentCategory].Add(agent);
-
 
         if (!_numberOfActiveAgents.ContainsKey(agent.AgentCategory))
             _numberOfActiveAgents.Add(agent.AgentCategory, 0);

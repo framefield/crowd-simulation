@@ -7,7 +7,7 @@ public class AttractionZone : MonoBehaviour
 {
     [Header("PARAMETERS")]
 
-    public AttractionCategory InterestCategory;
+    public InterestCategory InterestCategory;
 
     [SerializeField]
     float InnerSatisfactionRadius;
@@ -50,7 +50,6 @@ public class AttractionZone : MonoBehaviour
         Gizmos.color = InterestCategory.Color;
         GizmoHelper.DrawGizmoCircle(OuterVisibilityRadius, transform.position);
         GizmoHelper.DrawGizmoCircle(InnerSatisfactionRadius, transform.position);
-
 
         var category = InterestCategory.name;
         Label.text = category;

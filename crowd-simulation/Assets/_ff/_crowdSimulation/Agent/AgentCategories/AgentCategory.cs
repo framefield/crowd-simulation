@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "new AgentCategory", menuName = "CrowdSimulation/AgentCategory", order = 1)]
-public class AgentCategory : AttractionCategory
+public class AgentCategory : InterestCategory
 {
     [Header("PARAMTERS")]
     public float MaxTimeOnAgora = float.PositiveInfinity;

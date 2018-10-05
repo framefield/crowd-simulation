@@ -7,7 +7,7 @@ using UnityEngine;
 public class AgentEditor : Editor
 {
     private Material material;
-    private Dictionary<AttractionCategory, float[]> PersonalAttractionBuffer = new Dictionary<AttractionCategory, float[]>();
+    private Dictionary<InterestCategory, float[]> PersonalAttractionBuffer = new Dictionary<InterestCategory, float[]>();
     public const int _bufferSize = 100;
     private int _arrayPointer = 0;
     private Agent _agent;
@@ -23,7 +23,7 @@ public class AgentEditor : Editor
 
     void InitArrays()
     {
-        foreach (KeyValuePair<AttractionCategory, float> pair in _agent.CurrentInterests)
+        foreach (KeyValuePair<InterestCategory, float> pair in _agent.CurrentInterests)
         {
             PersonalAttractionBuffer[pair.Key] = new float[_bufferSize];
             for (int i = 0; i < _bufferSize; i++)
@@ -33,7 +33,7 @@ public class AgentEditor : Editor
 
     public void AddValueToBuffer(Interests attractedness)
     {
-        foreach (KeyValuePair<AttractionCategory, float> pair in _agent.CurrentInterests)
+        foreach (KeyValuePair<InterestCategory, float> pair in _agent.CurrentInterests)
         {
             var mostVisiblePOI = _agent.GetMostVisiblePointOfInterest(pair.Key);
             var foundPOI = mostVisiblePOI != null;
@@ -115,9 +115,9 @@ public class AgentEditor : Editor
         GL.End();
     }
 
-    void RenderBuffer(Rect r, Dictionary<AttractionCategory, float[]> dictionary)
+    void RenderBuffer(Rect r, Dictionary<InterestCategory, float[]> dictionary)
     {
-        foreach (KeyValuePair<AttractionCategory, float[]> pair in dictionary)
+        foreach (KeyValuePair<InterestCategory, float[]> pair in dictionary)
         {
             GL.Begin(GL.LINES);
             GL.Color(pair.Key.Color);

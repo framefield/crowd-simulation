@@ -11,5 +11,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b919df4f82b168045b39dc0ebb06091d, type: 3}
   m_Name: Food
   m_EditorClassIdentifier: 
-  Color: {r: 0.9463667, g: 1, b: 0.08823532, a: 1}
-  TransactionTime: 5
+  Color: {r: 0.9019608, g: 0, b: 0.49019608, a: 1}
+  TransactionTime: 1
