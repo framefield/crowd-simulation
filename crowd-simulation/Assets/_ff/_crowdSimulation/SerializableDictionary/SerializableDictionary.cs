@@ -11,8 +11,6 @@ public abstract class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TV
     // [Range(0f, 1000f)]
     TValue[] m_values;
 
-    abstract public bool ShouldRenderReadOnly();
-
     public SerializableDictionary()
     {
     }
