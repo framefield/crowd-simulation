@@ -6,6 +6,8 @@ using UnityEngine.AI;
 
 public class Agent : MonoBehaviour
 {
+    public Guid id;
+
     [Header("GENERAL PARAMETERS")]
 
     public AgentCategory AgentCategory;
@@ -51,6 +53,7 @@ public class Agent : MonoBehaviour
 
     void Start()
     {
+        id = Guid.NewGuid();
         CurrentInterests = new Interests();
         CurrentInterests.CopyFrom(AgentCategory.Interests);
 
