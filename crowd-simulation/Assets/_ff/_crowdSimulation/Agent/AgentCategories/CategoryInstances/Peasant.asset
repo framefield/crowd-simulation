@@ -16,11 +16,11 @@ MonoBehaviour:
   MaxTimeOnAgora: 600
   Interests:
     m_keys:
-    - {fileID: 11400000, guid: 67536b4f0df653149bb59a48a4a37aee, type: 2}
-    - {fileID: 11400000, guid: 58a6c872b73edb247900431a77368a73, type: 2}
+    - {fileID: 11400000, guid: c867882d83b144009b36f7b029c620c8, type: 2}
+    - {fileID: 11400000, guid: f85f41bd29a454171aea87ccd37aec95, type: 2}
     m_values:
-    - 0.492
-    - 0.113
+    - 34.92
+    - 34.92
   SocialInterests:
     m_keys:
     - {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e, type: 2}
