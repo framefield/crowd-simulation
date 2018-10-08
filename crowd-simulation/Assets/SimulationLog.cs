@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(Simulation))]
@@ -32,16 +33,76 @@ public class SimulationLog : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.L))
         {
-            var csv = AgentLogData.GenerateCSV(LogData);
-            var path = Application.streamingAssetsPath;
+            var csv = GenerateCSV(LogData);
+            var path = Application.dataPath + "/log.csv";
             Debug.Log(path);
             System.IO.File.WriteAllText(path, csv);
         }
     }
 
+
     public void HandleSpawnedAgent(Agent agent)
     {
         LogData.Add(new AgentLogData(agent));
+    }
+
+
+    private static string GenerateCSV(List<AgentLogData> data)
+    {
+        if (data.Count < 1)
+            return "";
+
+        var categories = AssetDatabase.FindAssets("t:InterestCategory");
+
+        var csv = GenerateHeader(data[0]);
+        foreach (var d in data)
+        {
+            foreach (var slice in d.LogDataSlices)
+            {
+                csv += d.Agent.id + "\t"
+                + slice.SimulationTimeInSeconds + "\t"
+                + slice.Position.x + "\t"
+                + slice.Position.y + "\t"
+                + slice.Position.z + "\t"
+                + d.Agent.AgentCategory.name + "\t";
+
+                foreach (var catGUID in AssetDatabase.FindAssets("t:InterestCategory"))
+                {
+                    var catPath = AssetDatabase.GUIDToAssetPath(catGUID);
+                    var category = UnityEditor.AssetDatabase.LoadAssetAtPath(catPath, typeof(InterestCategory)) as InterestCategory;
+
+                    if (slice.CurrentInterests.ContainsKey(category))
+                    {
+                        csv += slice.CurrentInterests[category] + "\t";
+                        continue;
+                    }
+
+                    if (slice.CurrentSocialInterests.ContainsKey(category))
+                    {
+                        csv += slice.CurrentSocialInterests[category] + "\t";
+                        continue;
+                    }
+                    csv += "0.0f" + "\t";
+
+                }
+                csv += "\n";
+            }
+        }
+        return csv;
+    }
+
+    private static string GenerateHeader(AgentLogData data)
+    {
+        var baseHeader = String.Format("agentID\tsimulationTimeInSeconds\tpositionX\tpositionY\tpositionZ\tAgentCategory\t");
+
+        var interestsHeader = "";
+        foreach (var catGUID in AssetDatabase.FindAssets("t:InterestCategory"))
+        {
+            var catPath = AssetDatabase.GUIDToAssetPath(catGUID);
+            var category = UnityEditor.AssetDatabase.LoadAssetAtPath(catPath, typeof(InterestCategory)) as InterestCategory;
+            interestsHeader += "Interest." + category.name + "\t";
+        }
+        return baseHeader + interestsHeader + "\n";
     }
 
     private Simulation _simulationCache;
