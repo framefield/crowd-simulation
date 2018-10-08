@@ -6,8 +6,13 @@ using System;
 [Serializable]
 public class Interests : SerializableDictionary<InterestCategory, float>
 {
-    public override bool ShouldRenderReadOnly()
+    public Interests Duplicate()
     {
-        return false;
+        var duplicate = new Interests();
+        foreach (var kvp in this)
+        {
+            duplicate.Add(kvp.Key, kvp.Value);
+        }
+        return duplicate;
     }
 }
