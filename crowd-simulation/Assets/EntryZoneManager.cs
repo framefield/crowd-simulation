@@ -35,7 +35,7 @@ public class EntryZoneManager : MonoBehaviour
 
     [SerializeField]
     [ReadOnly]
-    private float _SecondsUntilAgentLimitReached;
+    private string _SecondsUntilAgentLimitReached;
 
     [SerializeField]
     private Dictionary<AgentCategory, List<EntryZone>> _entryZoneLookUp;
@@ -119,7 +119,7 @@ public class EntryZoneManager : MonoBehaviour
                                                                 _globalNewAgentsPerSecond,
                                                                 _maxNumberOfAgentsPerCategory);
 
-        _SecondsUntilAgentLimitReached = _globalMaxAgentNumber / _globalNewAgentsPerSecond;
+        _SecondsUntilAgentLimitReached = (_globalMaxAgentNumber / _globalNewAgentsPerSecond).ToString();
     }
 
     void DeriveDataFromEntryZones()

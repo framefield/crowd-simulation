@@ -10,7 +10,6 @@ public class SimulationLog : MonoBehaviour
     private float _logRate = 1f;
 
     public List<AgentLogData> LogData = new List<AgentLogData>();
-    public event Action LogDataSliceEvent;
 
     void Start()
     {
@@ -26,17 +25,23 @@ public class SimulationLog : MonoBehaviour
             _timeSinceLastLog -= _logRate;
             foreach (var agentLogData in LogData)
             {
-                Debug.Log(agentLogData._agent.AgentCategory);
-                LogDataSliceEvent();
+                agentLogData.LogSlice();
             }
+
         }
 
-
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            var csv = AgentLogData.GenerateCSV(LogData);
+            var path = Application.streamingAssetsPath;
+            Debug.Log(path);
+            System.IO.File.WriteAllText(path, csv);
+        }
     }
 
     public void HandleSpawnedAgent(Agent agent)
     {
-        LogData.Add(new AgentLogData(agent, LogDataSliceEvent));
+        LogData.Add(new AgentLogData(agent));
     }
 
     private Simulation _simulationCache;
