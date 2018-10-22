@@ -20,4 +20,11 @@ public class AgentLogData
             return;
         LogDataSlices.Add(new LogDataSlice(Agent));
     }
+
+    public AgentLogData Duplicate()
+    {
+        var newLogData = new AgentLogData(Agent);
+        newLogData.LogDataSlices = new List<LogDataSlice>(LogDataSlices);
+        return newLogData;
+    }
 }
