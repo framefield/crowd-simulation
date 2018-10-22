@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,118 +11,74 @@ public class SimulationLog : MonoBehaviour
     [SerializeField]
     private float _logRate = 1f;
 
-    public List<AgentLogData> LogData = new List<AgentLogData>();
+    public List<AgentLogData> LoggedAgents = new List<AgentLogData>();
 
     void Start()
     {
         _simulation.OnAgentSpawned += HandleSpawnedAgent;
+        StartCoroutine(WriteTimeIntoFile());
     }
 
-    private float _timeSinceLastLog;
-    void Update()
+    private IEnumerator WriteTimeIntoFile()
     {
-        _timeSinceLastLog += Time.deltaTime;
-        if (_timeSinceLastLog > _logRate)
+        using (StreamWriter sw = new StreamWriter("log.csv"))
         {
-            _timeSinceLastLog -= _logRate;
-            foreach (var agentLogData in LogData)
+            sw.Write(GenerateHeader(_interestCategoriesInProject));
+
+            while (true)
             {
-                agentLogData.LogSlice();
+                _timeSinceLastLog += Time.deltaTime;
+                if (_timeSinceLastLog > _logRate)
+                {
+                    _timeSinceLastLog -= _logRate;
+                    foreach (var agentLogData in LoggedAgents)
+                    {
+                        var csvLine = agentLogData.LogSlice(_interestCategoriesInProject);
+                        sw.Write(csvLine);
+                    }
+                }
+                yield return null;
             }
-
-        }
-
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            var path = Application.dataPath + "/log.csv";
-            EditorApplication.isPaused = true;
-            WriteGenerateCSV(LogData, path);
-            EditorApplication.isPaused = false;
-            Debug.Log(path);
         }
     }
-
 
     public void HandleSpawnedAgent(Agent agent)
     {
-        LogData.Add(new AgentLogData(agent));
+        LoggedAgents.Add(new AgentLogData(agent));
     }
 
-    private static List<AgentLogData> DuplicateAgentLogData(List<AgentLogData> original)
-    {
-        var duplicate = new List<AgentLogData>();
-        foreach (var agentData in original)
-        {
-            duplicate.Add(agentData.Duplicate());
-        }
-        return duplicate;
-    }
-
-    private void WriteGenerateCSV(List<AgentLogData> data, string path)
-    {
-        var dataCopy = DuplicateAgentLogData(data);
-        // if (dataCopy.Count < 1)
-        // yield break;
-
-
-        var interestCategories = new List<InterestCategory>();
-        var catGUIDs = AssetDatabase.FindAssets("t:InterestCategory");
-        foreach (var c in catGUIDs)
-        {
-            var catPath = AssetDatabase.GUIDToAssetPath(c);
-            var category = UnityEditor.AssetDatabase.LoadAssetAtPath(catPath, typeof(InterestCategory)) as InterestCategory;
-            interestCategories.Add(category);
-        }
-
-
-        var csv = GenerateHeader(dataCopy[0]);
-        var i = 0f;
-        foreach (var d in dataCopy)
-        {
-            i++;
-            var progress = i / dataCopy.Count;
-            foreach (var slice in d.LogDataSlices)
-            {
-                csv += d.Agent.id + "\t"
-                + slice.SimulationTimeInSeconds + "\t"
-                + slice.Position.x + "\t"
-                + slice.Position.y + "\t"
-                + slice.Position.z + "\t"
-                + d.Agent.AgentCategory.name + "\t";
-
-                foreach (var category in interestCategories)
-                {
-                    if (slice.CurrentInterests.ContainsKey(category))
-                    {
-                        csv += slice.CurrentInterests[category] + "\t";
-                        continue;
-                    }
-
-                    if (slice.CurrentSocialInterests.ContainsKey(category))
-                    {
-                        csv += slice.CurrentSocialInterests[category] + "\t";
-                        continue;
-                    }
-                    csv += "0.0f" + "\t";
-                }
-                csv += "\n";
-            }
-        }
-        System.IO.File.WriteAllText(path, csv);
-    }
-
-    private static string GenerateHeader(AgentLogData data)
+    private static string GenerateHeader(List<InterestCategory> categories)
     {
         var baseHeader = String.Format("agentID\tsimulationTimeInSeconds\tpositionX\tpositionY\tpositionZ\tAgentCategory\t");
 
         var interestsHeader = "";
-        foreach (var catGUID in AssetDatabase.FindAssets("t:InterestCategory"))
+        foreach (var category in categories)
         {
-            var catPath = AssetDatabase.GUIDToAssetPath(catGUID);
-            var category = UnityEditor.AssetDatabase.LoadAssetAtPath(catPath, typeof(InterestCategory)) as InterestCategory;
             interestsHeader += "Interest." + category.name + "\t";
         }
         return baseHeader + interestsHeader + "\n";
+    }
+
+    private float _timeSinceLastLog;
+
+    private List<InterestCategory> _interestCategoriesInProjectCache;
+    private List<InterestCategory> _interestCategoriesInProject
+    {
+        get
+        {
+            if (_interestCategoriesInProjectCache == null)
+            {
+                _interestCategoriesInProjectCache = new List<InterestCategory>();
+                var catGUIDs = AssetDatabase.FindAssets("t:InterestCategory");
+                foreach (var c in catGUIDs)
+                {
+                    var catPath = AssetDatabase.GUIDToAssetPath(c);
+                    var category = UnityEditor.AssetDatabase.LoadAssetAtPath(catPath, typeof(InterestCategory)) as InterestCategory;
+                    _interestCategoriesInProjectCache.Add(category);
+                }
+            }
+            return _interestCategoriesInProjectCache;
+        }
     }
 
     private Simulation _simulationCache;
