@@ -34,7 +34,9 @@ public class SimulationLog : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.L))
         {
             var path = Application.dataPath + "/log.csv";
-            var csv = StartCoroutine(WriteGenerateCSV(LogData, path));
+            EditorApplication.isPaused = true;
+            WriteGenerateCSV(LogData, path);
+            EditorApplication.isPaused = false;
             Debug.Log(path);
         }
     }
@@ -45,17 +47,39 @@ public class SimulationLog : MonoBehaviour
         LogData.Add(new AgentLogData(agent));
     }
 
-
-    private IEnumerator WriteGenerateCSV(List<AgentLogData> data, string path)
+    private static List<AgentLogData> DuplicateAgentLogData(List<AgentLogData> original)
     {
-        if (data.Count < 1)
-            yield break;
-
-        var categories = AssetDatabase.FindAssets("t:InterestCategory");
-
-        var csv = GenerateHeader(data[0]);
-        foreach (var d in data)
+        var duplicate = new List<AgentLogData>();
+        foreach (var agentData in original)
         {
+            duplicate.Add(agentData.Duplicate());
+        }
+        return duplicate;
+    }
+
+    private void WriteGenerateCSV(List<AgentLogData> data, string path)
+    {
+        var dataCopy = DuplicateAgentLogData(data);
+        // if (dataCopy.Count < 1)
+        // yield break;
+
+
+        var interestCategories = new List<InterestCategory>();
+        var catGUIDs = AssetDatabase.FindAssets("t:InterestCategory");
+        foreach (var c in catGUIDs)
+        {
+            var catPath = AssetDatabase.GUIDToAssetPath(c);
+            var category = UnityEditor.AssetDatabase.LoadAssetAtPath(catPath, typeof(InterestCategory)) as InterestCategory;
+            interestCategories.Add(category);
+        }
+
+
+        var csv = GenerateHeader(dataCopy[0]);
+        var i = 0f;
+        foreach (var d in dataCopy)
+        {
+            i++;
+            var progress = i / dataCopy.Count;
             foreach (var slice in d.LogDataSlices)
             {
                 csv += d.Agent.id + "\t"
@@ -65,11 +89,8 @@ public class SimulationLog : MonoBehaviour
                 + slice.Position.z + "\t"
                 + d.Agent.AgentCategory.name + "\t";
 
-                foreach (var catGUID in AssetDatabase.FindAssets("t:InterestCategory"))
+                foreach (var category in interestCategories)
                 {
-                    var catPath = AssetDatabase.GUIDToAssetPath(catGUID);
-                    var category = UnityEditor.AssetDatabase.LoadAssetAtPath(catPath, typeof(InterestCategory)) as InterestCategory;
-
                     if (slice.CurrentInterests.ContainsKey(category))
                     {
                         csv += slice.CurrentInterests[category] + "\t";
@@ -82,11 +103,9 @@ public class SimulationLog : MonoBehaviour
                         continue;
                     }
                     csv += "0.0f" + "\t";
-
                 }
                 csv += "\n";
             }
-            yield return null;
         }
         System.IO.File.WriteAllText(path, csv);
     }
