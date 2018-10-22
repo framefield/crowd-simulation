@@ -9,11 +9,42 @@ public class LogDataSlice
     public Vector3 Position;
     public Interests CurrentInterests;
     public Interests CurrentSocialInterests;
+    private Agent _agent;
     public LogDataSlice(Agent agent)
     {
         SimulationTimeInSeconds = Time.time;
         Position = agent.transform.position;
         CurrentInterests = agent.CurrentInterests.Duplicate();
         CurrentSocialInterests = agent.CurrentSocialInterests.Duplicate();
+        _agent = agent;
+    }
+
+    public string ToCSVString(List<InterestCategory> interestCategories)
+    {
+        var csvLine = "";
+        csvLine += _agent.id + "\t"
+        + SimulationTimeInSeconds + "\t"
+        + Position.x + "\t"
+        + Position.y + "\t"
+        + Position.z + "\t"
+        + _agent.AgentCategory.name + "\t";
+
+        foreach (var category in interestCategories)
+        {
+            if (CurrentInterests.ContainsKey(category))
+            {
+                csvLine += CurrentInterests[category] + "\t";
+                continue;
+            }
+
+            if (CurrentSocialInterests.ContainsKey(category))
+            {
+                csvLine += CurrentSocialInterests[category] + "\t";
+                continue;
+            }
+            csvLine += "0.0f" + "\t";
+        }
+        csvLine += "\n";
+        return csvLine;
     }
 }

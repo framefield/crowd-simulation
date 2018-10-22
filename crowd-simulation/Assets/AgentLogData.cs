@@ -14,11 +14,16 @@ public class AgentLogData
         Agent = agent;
     }
 
-    public void LogSlice()
+    public string LogSlice(List<InterestCategory> interestCategories)
     {
         if (Agent == null)
-            return;
-        LogDataSlices.Add(new LogDataSlice(Agent));
+            return "";
+
+        var newSlice = new LogDataSlice(Agent);
+
+        LogDataSlices.Add(newSlice);
+
+        return newSlice.ToCSVString(interestCategories);
     }
 
     public AgentLogData Duplicate()
