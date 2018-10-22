@@ -33,10 +33,9 @@ public class SimulationLog : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.L))
         {
-            var csv = GenerateCSV(LogData);
             var path = Application.dataPath + "/log.csv";
+            var csv = StartCoroutine(WriteGenerateCSV(LogData, path));
             Debug.Log(path);
-            System.IO.File.WriteAllText(path, csv);
         }
     }
 
@@ -47,10 +46,10 @@ public class SimulationLog : MonoBehaviour
     }
 
 
-    private static string GenerateCSV(List<AgentLogData> data)
+    private IEnumerator WriteGenerateCSV(List<AgentLogData> data, string path)
     {
         if (data.Count < 1)
-            return "";
+            yield break;
 
         var categories = AssetDatabase.FindAssets("t:InterestCategory");
 
@@ -87,8 +86,9 @@ public class SimulationLog : MonoBehaviour
                 }
                 csv += "\n";
             }
+            yield return null;
         }
-        return csv;
+        System.IO.File.WriteAllText(path, csv);
     }
 
     private static string GenerateHeader(AgentLogData data)
