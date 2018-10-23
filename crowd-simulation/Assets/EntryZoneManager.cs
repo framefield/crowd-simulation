@@ -55,15 +55,14 @@ public class EntryZoneManager : MonoBehaviour
 
     void Start()
     {
-        _entryZoneLookUp = InitEntryZoneLookUp(_entryZones);
-        _simulation.OnAgentRemoved += (agent) =>
-        {
-            _numberOfAgentsThatLeft[agent.AgentCategory]++;
-            _numberOfActiveAgents[agent.AgentCategory]--;
-        };
+        _entryZoneLookUp = InitializeEntryZoneLookUp(_entryZones);
+        InitializeAllDictionariesWithCategories();
+        _simulation.OnAgentRemoved += HandleRemovedAgent;
+        _simulation.OnAgentSpawned += HandleSpawnedAgent;
+    }
 
-        _simulation.OnAgentSpawned += (agent) => _numberOfActiveAgents[agent.AgentCategory]++;
-
+    private void InitializeAllDictionariesWithCategories()
+    {
         foreach (var category in _agentCategories)
         {
             if (!_numberOfAgentsScheduledForSpawning.ContainsKey(category))
@@ -110,6 +109,17 @@ public class EntryZoneManager : MonoBehaviour
         _estimatedTimeUntilAgentLimitReached = (_globalMaxAgentNumber / _globalNewAgentsPerSecond).ToString();
     }
 
+    private void HandleSpawnedAgent(Agent agent)
+    {
+        _numberOfActiveAgents[agent.AgentCategory]++;
+    }
+
+    private void HandleRemovedAgent(Agent agent)
+    {
+        _numberOfAgentsThatLeft[agent.AgentCategory]++;
+        _numberOfActiveAgents[agent.AgentCategory]--;
+    }
+
     private void SpawnAgent(AgentCategory category)
     {
         var randomEntryZone = PickRandomEntryZone(category);
@@ -146,7 +156,7 @@ public class EntryZoneManager : MonoBehaviour
         }
     }
 
-    private static Dictionary<AgentCategory, List<EntryZone>> InitEntryZoneLookUp(List<EntryZone> entryZones)
+    private static Dictionary<AgentCategory, List<EntryZone>> InitializeEntryZoneLookUp(List<EntryZone> entryZones)
     {
         var entryZoneLookUp = new Dictionary<AgentCategory, List<EntryZone>>();
         foreach (var entryZone in entryZones)
