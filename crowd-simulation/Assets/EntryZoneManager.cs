@@ -26,7 +26,7 @@ public class EntryZoneManager : MonoBehaviour
     [SerializeField]
     private AgentCategoryDictionary _numberOfAgentsThatLeft = new AgentCategoryDictionary();
 
-    [Header("SPAWNING SPEED")]
+    [Header("SPAWNING")]
     [SerializeField]
     private float _globalNewAgentsPerSecond = 1f;
 
@@ -35,24 +35,23 @@ public class EntryZoneManager : MonoBehaviour
 
     private AgentCategoryDictionary _numberOfAgentsScheduledForSpawning = new AgentCategoryDictionary();
 
-    [Space(15f)]
-
     [SerializeField]
     [ReadOnly]
     private string _estimatedTimeUntilAgentLimitReached;
-
-    [SerializeField]
-    private Dictionary<AgentCategory, List<EntryZone>> _entryZoneLookUp;
-
-
-    [SerializeField]
-    public List<AgentCategory> _agentCategories;
 
     [Space(15f)]
 
     [Header("INTERNAL PREFAB REFERENCE - DO NOT TOUCH")]
     [SerializeField]
     Agent _agentPrefab;
+
+    [HideInInspector]
+    [SerializeField]
+    private Dictionary<AgentCategory, List<EntryZone>> _entryZoneLookUp;
+
+    [HideInInspector]
+    [SerializeField]
+    public List<AgentCategory> _agentCategories;
 
     void Start()
     {
