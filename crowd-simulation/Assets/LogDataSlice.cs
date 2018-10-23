@@ -9,6 +9,7 @@ public class LogDataSlice
     public Vector3 Position;
     public Interests CurrentInterests;
     public Interests CurrentSocialInterests;
+    public InterestCategory LockedInterest;
     private Agent _agent;
     public LogDataSlice(Agent agent)
     {
@@ -16,6 +17,8 @@ public class LogDataSlice
         Position = agent.transform.position;
         CurrentInterests = agent.CurrentInterests.Duplicate();
         CurrentSocialInterests = agent.CurrentSocialInterests.Duplicate();
+        LockedInterest = agent.LockedInterest;
+
         _agent = agent;
     }
 

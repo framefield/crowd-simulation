@@ -45,6 +45,8 @@ public class Agent : MonoBehaviour
     [SerializeField]
     float SocialInteractionRadiiAlpha;
 
+    public InterestCategory LockedInterest { get { return _lockedInterest; } }
+
     public void Init(AgentCategory category, Simulation simulation)
     {
         AgentCategory = category;
