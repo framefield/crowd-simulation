@@ -4,19 +4,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class AgentsPerSecond : Dictionary<AgentCategory, float>, ISerializationCallbackReceiver
+public class AgentCategoryDictionary : Dictionary<AgentCategory, float>, ISerializationCallbackReceiver
 {
     [SerializeField]
     AgentCategory[] m_keys;
+
     [SerializeField]
-    // [Range(0f, 1000f)]
     float[] m_values;
 
-    public AgentsPerSecond()
+    public AgentCategoryDictionary()
     {
     }
 
-    public AgentsPerSecond(IDictionary<AgentCategory, float> dict) : base(dict.Count)
+    public AgentCategoryDictionary(IDictionary<AgentCategory, float> dict) : base(dict.Count)
     {
         foreach (var kvp in dict)
         {

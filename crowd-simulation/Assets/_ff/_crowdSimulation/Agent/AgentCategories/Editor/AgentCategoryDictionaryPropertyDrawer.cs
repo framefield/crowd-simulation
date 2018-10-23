@@ -6,8 +6,8 @@ using System.Reflection;
 using System;
 using System.Linq;
 
-[CustomPropertyDrawer(typeof(AgentsPerSecond))]
-public class AgentsPerSecondPropertyDrawer : PropertyDrawer
+[CustomPropertyDrawer(typeof(AgentCategoryDictionary))]
+public class AgentCategoryDictionaryPropertyDrawer : PropertyDrawer
 {
     const string KeysFieldName = "m_keys";
     const string ValuesFieldName = "m_values";
@@ -267,7 +267,7 @@ public class AgentsPerSecondPropertyDrawer : PropertyDrawer
 
     static Dictionary<SerializedPropertyType, PropertyInfo> ms_serializedPropertyValueAccessorsDict;
 
-    static AgentsPerSecondPropertyDrawer()
+    static AgentCategoryDictionaryPropertyDrawer()
     {
         Dictionary<SerializedPropertyType, string> serializedPropertyValueAccessorsNameDict = new Dictionary<SerializedPropertyType, string>() {
             { SerializedPropertyType.Integer, "intValue" },
