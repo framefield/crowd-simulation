@@ -47,14 +47,11 @@ public class SimulationLog : MonoBehaviour
 
         foreach (var agent in LoggedAgents)
         {
-            Gizmos.color = agent.Agent.AgentCategory.Color;
             var slices = agent.LogDataSlices;
             for (int i = 0; i < slices.Count - 1; i++)
             {
                 var lockedInterest = slices[i + 1].LockedInterest;
-                if (lockedInterest != null)
-                    Gizmos.color = lockedInterest.Color;
-
+                Gizmos.color = lockedInterest != null ? lockedInterest.Color : agent.Agent.AgentCategory.Color;
                 Gizmos.DrawLine(slices[i].Position, slices[i + 1].Position);
             }
         }
@@ -68,7 +65,7 @@ public class SimulationLog : MonoBehaviour
 
     private static string GenerateHeader(List<InterestCategory> categories)
     {
-        var baseHeader = String.Format("agentID\tsimulationTimeInSeconds\tpositionX\tpositionY\tpositionZ\tAgentCategory\t");
+        var baseHeader = String.Format("agentID\tsimulationTimeInSeconds\tpositionX\tpositionY\tpositionZ\tAgentCategory\tLockedInterest\t");
 
         var interestsHeader = "";
         foreach (var category in categories)

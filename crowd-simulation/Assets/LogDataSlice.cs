@@ -32,6 +32,9 @@ public class LogDataSlice
         + Position.z + "\t"
         + _agent.AgentCategory.name + "\t";
 
+        var lockedInterest = LockedInterest != null ? LockedInterest.name : "-";
+        csvLine += lockedInterest + "\t";
+
         foreach (var category in interestCategories)
         {
             if (CurrentInterests.ContainsKey(category))
@@ -45,7 +48,7 @@ public class LogDataSlice
                 csvLine += CurrentSocialInterests[category] + "\t";
                 continue;
             }
-            csvLine += "0.0f" + "\t";
+            csvLine += "0.0" + "\t";
         }
         csvLine += "\n";
         return csvLine;
