@@ -37,7 +37,6 @@ public class AgentWalking : MonoBehaviour
 
     void Start()
     {
-        _agent = GetComponent<Agent>();
         _navMeshAgent = GetComponent<NavMeshAgent>();
         SetNewRandomDestination();
     }
@@ -45,25 +44,6 @@ public class AgentWalking : MonoBehaviour
     void Update()
     {
         LogPath();
-    }
-
-    void OnDrawGizmos()
-    {
-        // if (_drawPathToTarget)
-        // {
-        //     var navMeshPath = _navMeshAgent.path;
-        //     if (navMeshPath != null)
-        //     {
-        //         var path = navMeshPath.corners;
-        //         var color = _agent.AgentCategory.Color * new Color(1, 1, 1, _pathToTargetAlpha);
-        //         DrawPath(path, color);
-        //     }
-        // }
-        // if (_drawLoggedPath)
-        // {
-        //     var color = _agent.AgentCategory.Color * new Color(1, 1, 1, _loggedPathAlpha);
-        //     DrawPath(_loggedPath, color);
-        // }
     }
 
     private static void DrawPath(Vector3[] path, Color color)
@@ -163,6 +143,5 @@ public class AgentWalking : MonoBehaviour
 
     private List<Vector3> _loggedPath = new List<Vector3>();
     private NavMeshAgent _navMeshAgent;
-    private Agent _agent;
     private Vector3 _currentDestination;
 }
