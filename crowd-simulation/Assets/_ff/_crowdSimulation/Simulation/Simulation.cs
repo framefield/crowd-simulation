@@ -7,8 +7,8 @@ using UnityEngine.AI;
 
 public class Simulation : MonoBehaviour
 {
-    [HideInInspector]
-    public Dictionary<InterestCategory, List<AttractionZone>> PointsOfInterest = new Dictionary<InterestCategory, List<AttractionZone>>();
+    [SerializeField]
+    private bool _renderAgents = true;
 
     [Header("NAVMESH PARAMETERS")]
 
@@ -29,6 +29,9 @@ public class Simulation : MonoBehaviour
     [SerializeField]
     TMPro.TMP_Text Log;
 
+    [HideInInspector]
+    public Dictionary<InterestCategory, List<AttractionZone>> AttractionZones = new Dictionary<InterestCategory, List<AttractionZone>>();
+
     public event Action<Agent> OnAgentSpawned;
     public event Action<Agent> OnAgentRemoved;
 
@@ -47,6 +50,14 @@ public class Simulation : MonoBehaviour
     {
         NavMesh.pathfindingIterationsPerFrame = PathfindingIterationsPerFrame;
         NavMesh.avoidancePredictionTime = AvoidancePredictionTime;
+
+        foreach (var agentsByCategory in _agents)
+        {
+            foreach (var agent in agentsByCategory.Value)
+            {
+                agent.GetComponent<Renderer>().enabled = _renderAgents;
+            }
+        }
     }
 
     public void RemoveAgent(Agent agent)
