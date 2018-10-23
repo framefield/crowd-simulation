@@ -42,6 +42,25 @@ public class SimulationLog : MonoBehaviour
         }
     }
 
+    void OnDrawGizmos()
+    {
+
+        foreach (var agent in LoggedAgents)
+        {
+            Gizmos.color = agent.Agent.AgentCategory.Color;
+            var slices = agent.LogDataSlices;
+            for (int i = 0; i < slices.Count - 1; i++)
+            {
+                var lockedInterest = slices[i + 1].LockedInterest;
+                if (lockedInterest != null)
+                    Gizmos.color = lockedInterest.Color;
+
+                Gizmos.DrawLine(slices[i].Position, slices[i + 1].Position);
+            }
+        }
+    }
+
+
     public void HandleSpawnedAgent(Agent agent)
     {
         LoggedAgents.Add(new AgentLogData(agent));

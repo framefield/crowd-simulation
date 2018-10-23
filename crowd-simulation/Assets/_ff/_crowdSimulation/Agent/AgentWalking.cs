@@ -49,21 +49,21 @@ public class AgentWalking : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        if (_drawPathToTarget)
-        {
-            var navMeshPath = _navMeshAgent.path;
-            if (navMeshPath != null)
-            {
-                var path = navMeshPath.corners;
-                var color = _agent.AgentCategory.Color * new Color(1, 1, 1, _pathToTargetAlpha);
-                DrawPath(path, color);
-            }
-        }
-        if (_drawLoggedPath)
-        {
-            var color = _agent.AgentCategory.Color * new Color(1, 1, 1, _loggedPathAlpha);
-            DrawPath(_loggedPath, color);
-        }
+        // if (_drawPathToTarget)
+        // {
+        //     var navMeshPath = _navMeshAgent.path;
+        //     if (navMeshPath != null)
+        //     {
+        //         var path = navMeshPath.corners;
+        //         var color = _agent.AgentCategory.Color * new Color(1, 1, 1, _pathToTargetAlpha);
+        //         DrawPath(path, color);
+        //     }
+        // }
+        // if (_drawLoggedPath)
+        // {
+        //     var color = _agent.AgentCategory.Color * new Color(1, 1, 1, _loggedPathAlpha);
+        //     DrawPath(_loggedPath, color);
+        // }
     }
 
     private static void DrawPath(Vector3[] path, Color color)
