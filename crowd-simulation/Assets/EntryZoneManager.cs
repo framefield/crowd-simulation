@@ -7,10 +7,6 @@ using UnityEngine;
 [RequireComponent(typeof(Simulation))]
 public class EntryZoneManager : MonoBehaviour
 {
-
-    [SerializeField]
-    bool _spawnAgentOnMouseDown;
-
     [SerializeField]
     List<EntryZone> _entryZones;
 
@@ -24,24 +20,30 @@ public class EntryZoneManager : MonoBehaviour
     [ReadOnly]
     private int _globalMaxAgentNumber;
 
+    [SerializeField]
+    private AgentCategoryDictionary _numberOfActiveAgents = new AgentCategoryDictionary();
+
+    [SerializeField]
+    private AgentCategoryDictionary _numberOfAgentsThatLeft = new AgentCategoryDictionary();
+
     [Header("SPAWNING SPEED")]
     [SerializeField]
     private float _globalNewAgentsPerSecond = 1f;
 
     [SerializeField]
-    private AgentsPerSecond _newAgentsPerSecondPerCategory;
+    private AgentCategoryDictionary _newAgentsPerSecond;
+
+    private AgentCategoryDictionary _numberOfAgentsScheduledForSpawning = new AgentCategoryDictionary();
 
     [Space(15f)]
 
     [SerializeField]
     [ReadOnly]
-    private string _SecondsUntilAgentLimitReached;
+    private string _estimatedTimeUntilAgentLimitReached;
 
     [SerializeField]
     private Dictionary<AgentCategory, List<EntryZone>> _entryZoneLookUp;
 
-    [SerializeField]
-    private AgentsPerSecond _agentsScheduledForSpawning;
 
     [SerializeField]
     public List<AgentCategory> _agentCategories;
@@ -55,54 +57,41 @@ public class EntryZoneManager : MonoBehaviour
     void Start()
     {
         _entryZoneLookUp = InitEntryZoneLookUp(_entryZones);
-        // _numberOfAgentsSpawned = new Dictionary<AgentCategory, int>();
-        _agentsScheduledForSpawning = new AgentsPerSecond();
+        _simulation.OnAgentRemoved += (agent) =>
+        {
+            _numberOfAgentsThatLeft[agent.AgentCategory]++;
+            _numberOfActiveAgents[agent.AgentCategory]--;
+        };
+
+        _simulation.OnAgentSpawned += (agent) => _numberOfActiveAgents[agent.AgentCategory]++;
 
         foreach (var category in _agentCategories)
         {
-            if (!_agentsScheduledForSpawning.ContainsKey(category))
+            if (!_numberOfAgentsScheduledForSpawning.ContainsKey(category))
             {
-                _agentsScheduledForSpawning.Add(category, 0f);
-                // _numberOfAgentsSpawned.Add(category, 0);
+                _numberOfAgentsScheduledForSpawning.Add(category, 0f);
+                _numberOfActiveAgents.Add(category, 0f);
+                _numberOfAgentsThatLeft.Add(category, 0f);
             }
         }
     }
 
     void Update()
     {
-        if (Input.GetMouseButton(0) && _spawnAgentOnMouseDown)
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, 1000.0f))
-            {
-                _simulation.SpawnAgentAtPosition(hit.point, _agentPrefab, PickRandomCategory());
-            }
-        }
-
         foreach (var category in _agentCategories)
         {
-            _newAgentsPerSecondPerCategory = DeriveAgentsPerMinute(_globalMaxAgentNumber,
+            _newAgentsPerSecond = DeriveAgentsPerMinute(_globalMaxAgentNumber,
                                                                 _globalNewAgentsPerSecond,
                                                                 _maxNumberOfAgentsPerCategory);
 
-            _agentsScheduledForSpawning[category] += _newAgentsPerSecondPerCategory[category] * Time.deltaTime;
+            _numberOfAgentsScheduledForSpawning[category] += _newAgentsPerSecond[category] * Time.deltaTime;
 
-            var agentsToSpawnRightNow = Mathf.FloorToInt(_agentsScheduledForSpawning[category]);
+            var agentsToSpawnRightNow = Mathf.FloorToInt(_numberOfAgentsScheduledForSpawning[category]);
             for (int i = 0; i < agentsToSpawnRightNow && !HasReachedMaxAgents(category); i++)
             {
-                var numberOfZonesForCategory = _entryZoneLookUp[category].Count;
-                var randomIndex = Random.Range(0, numberOfZonesForCategory);
-                var randomEntryZone = _entryZoneLookUp[category][randomIndex];
-                _simulation.SpawnAgentAtPosition(randomEntryZone.transform.position, _agentPrefab, randomEntryZone.GetAgentCategory());
-                _agentsScheduledForSpawning[category]--;
+                SpawnAgent(category);
             }
         }
-    }
-
-    private bool HasReachedMaxAgents(AgentCategory category)
-    {
-        return _simulation.GetNumberOfAgentsInSimulation(category) >= _maxNumberOfAgentsPerCategory[category];
     }
 
     void OnValidate()
@@ -115,26 +104,44 @@ public class EntryZoneManager : MonoBehaviour
             DeriveDataFromEntryZones();
 
         _globalMaxAgentNumber = CalculateTotalMaxAgents();
-        _newAgentsPerSecondPerCategory = DeriveAgentsPerMinute(_globalMaxAgentNumber,
+        _newAgentsPerSecond = DeriveAgentsPerMinute(_globalMaxAgentNumber,
                                                                 _globalNewAgentsPerSecond,
                                                                 _maxNumberOfAgentsPerCategory);
 
-        _SecondsUntilAgentLimitReached = (_globalMaxAgentNumber / _globalNewAgentsPerSecond).ToString();
+        _estimatedTimeUntilAgentLimitReached = (_globalMaxAgentNumber / _globalNewAgentsPerSecond).ToString();
     }
 
-    void DeriveDataFromEntryZones()
+    private void SpawnAgent(AgentCategory category)
     {
-        Debug.Log("DeriveDataFromEntryZones");
+        var randomEntryZone = PickRandomEntryZone(category);
+        _simulation.SpawnAgentAtPosition(randomEntryZone.transform.position, _agentPrefab, randomEntryZone.GetAgentCategory());
+        _numberOfAgentsScheduledForSpawning[category]--;
+    }
+
+    private EntryZone PickRandomEntryZone(AgentCategory category)
+    {
+        var numberOfZonesForCategory = _entryZoneLookUp[category].Count;
+        var randomIndex = Random.Range(0, numberOfZonesForCategory);
+        return _entryZoneLookUp[category][randomIndex];
+    }
+
+    private bool HasReachedMaxAgents(AgentCategory category)
+    {
+        return _numberOfActiveAgents[category] >= _maxNumberOfAgentsPerCategory[category];
+    }
+
+    private void DeriveDataFromEntryZones()
+    {
         _agentCategories = new List<AgentCategory>();
-        _newAgentsPerSecondPerCategory = new AgentsPerSecond();
+        _newAgentsPerSecond = new AgentCategoryDictionary();
         _maxNumberOfAgentsPerCategory = new MaxNumberOfAgents();
         foreach (var entryZone in _entryZones)
         {
             var category = entryZone.GetAgentCategory();
-            if (!_newAgentsPerSecondPerCategory.ContainsKey(category))
+            if (!_newAgentsPerSecond.ContainsKey(category))
             {
                 _agentCategories.Add(category);
-                _newAgentsPerSecondPerCategory.Add(category, 0f);
+                _newAgentsPerSecond.Add(category, 0f);
                 _maxNumberOfAgentsPerCategory.Add(category, 100);
             }
         }
@@ -163,11 +170,11 @@ public class EntryZoneManager : MonoBehaviour
         return totalAgents;
     }
 
-    private static AgentsPerSecond DeriveAgentsPerMinute(int globalMaxAgentNumber,
+    private static AgentCategoryDictionary DeriveAgentsPerMinute(int globalMaxAgentNumber,
                                                            float globalNewAgentsPerMinute,
                                                            MaxNumberOfAgents maxAgentsPerCategory)
     {
-        var newValues = new AgentsPerSecond();
+        var newValues = new AgentCategoryDictionary();
         foreach (var kvp in maxAgentsPerCategory)
         {
             var newValue = 1f * maxAgentsPerCategory[kvp.Key] / globalMaxAgentNumber * globalNewAgentsPerMinute;
@@ -204,13 +211,6 @@ public class EntryZoneManager : MonoBehaviour
         }
         return false;
     }
-
-    private AgentCategory PickRandomCategory()
-    {
-        var iRandomCategory = Random.Range(0, _agentCategories.Count);
-        return _agentCategories[iRandomCategory];
-    }
-
 
     private Simulation _simulationCache;
     private Simulation _simulation

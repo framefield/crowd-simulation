@@ -223,7 +223,6 @@ public class Agent : MonoBehaviour
 
     private void Kill()
     {
-        Debug.Log("kill");
         _simulation.RemoveAgent(this);
         GameObject.Destroy(gameObject);
     }

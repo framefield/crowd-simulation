@@ -24,17 +24,13 @@ public class Simulation : MonoBehaviour
     [SerializeField]
     bool EnableSocialInteraction;
 
-    [Header("STATUS")]
-
-    [SerializeField]
-    private MaxNumberOfAgents _numberOfActiveAgents = new MaxNumberOfAgents();
-
     [Header("INTERNAL - DO NOT TOUCH")]
 
     [SerializeField]
     TMPro.TMP_Text Log;
 
     public event Action<Agent> OnAgentSpawned;
+    public event Action<Agent> OnAgentRemoved;
 
     void Start()
     {
@@ -47,37 +43,19 @@ public class Simulation : MonoBehaviour
         }
     }
 
-
     void Update()
     {
         NavMesh.pathfindingIterationsPerFrame = PathfindingIterationsPerFrame;
         NavMesh.avoidancePredictionTime = AvoidancePredictionTime;
-        // WriteStatusToPanel();
     }
-
-    public int GetNumberOfAgentsInSimulation(AgentCategory category)
-    {
-        if (!_agents.ContainsKey(category))
-            return 0;
-        return _agents[category].Count;
-    }
-
 
     public void RemoveAgent(Agent agent)
     {
         _agents[agent.AgentCategory].Remove(agent);
-        _numberOfActiveAgents[agent.AgentCategory]--;
+
+        if (OnAgentRemoved != null)
+            OnAgentRemoved(agent);
     }
-
-    private void WriteStatusToPanel()
-    {
-        var output = "";
-        foreach (var key in _agents.Keys)
-            output += key.name + " : " + _agents[key].Count + "         ";
-
-        Log.text = output;
-    }
-
 
     public void SpawnAgentAtPosition(Vector3 position, Agent agentPrefab, AgentCategory category)
     {
@@ -85,6 +63,7 @@ public class Simulation : MonoBehaviour
         var newAgent = newAgentGO.GetComponent<Agent>();
         newAgent.Init(category, this);
         AddAgent(newAgent);
+
         if (OnAgentSpawned != null)
             OnAgentSpawned(newAgent);
     }
@@ -130,10 +109,6 @@ public class Simulation : MonoBehaviour
         if (!_agents.ContainsKey(agent.AgentCategory))
             _agents.Add(agent.AgentCategory, new List<Agent>());
         _agents[agent.AgentCategory].Add(agent);
-
-        if (!_numberOfActiveAgents.ContainsKey(agent.AgentCategory))
-            _numberOfActiveAgents.Add(agent.AgentCategory, 0);
-        _numberOfActiveAgents[agent.AgentCategory]++;
     }
 
 
