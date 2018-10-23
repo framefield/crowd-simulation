@@ -40,6 +40,11 @@ public class SimulationLog : MonoBehaviour
 
     public Dictionary<Agent, AgentLogData> LoggedAgents = new Dictionary<Agent, AgentLogData>();
 
+    public void HandleSpawnedAgent(Agent agent)
+    {
+        LoggedAgents.Add(agent, new AgentLogData(agent));
+    }
+
     void Start()
     {
         _simulation.OnAgentSpawned += HandleSpawnedAgent;
@@ -74,20 +79,16 @@ public class SimulationLog : MonoBehaviour
         if (_gizmoFilter == GizmoFilter.Nothing)
             return;
 
-
+        if (_gizmoFilter == GizmoFilter.SelectedAgent && _agentSelectedInEditor == null)
+            return;
 
         var colorsByAgentCategory = GetGizmoColorsByAgentCategory(_gizmoAlpha, _gizmoSaturation, _agentCategoriesInProject);
         var colorsByInterest = GetGizmoColorsByInterest(_gizmoAlpha, _gizmoSaturation, _interestCategoriesInProject);
 
-        var isAgentSelected = Selection.activeGameObject != null && Selection.activeGameObject.GetComponent<Agent>() != null;
-        if (_gizmoFilter == GizmoFilter.SelectedAgent && !isAgentSelected)
-            return;
-
-        Agent selectedAgent = isAgentSelected ? Selection.activeGameObject.GetComponent<Agent>() : null;
-
         foreach (var kvp in LoggedAgents)
         {
-            if (_gizmoFilter == GizmoFilter.SelectedAgent && kvp.Key != selectedAgent)
+            var isThisAgentSelected = kvp.Key == _agentSelectedInEditor;
+            if (_gizmoFilter == GizmoFilter.SelectedAgent && !isThisAgentSelected)
                 continue;
 
             var agentLogData = kvp.Value;
@@ -101,7 +102,7 @@ public class SimulationLog : MonoBehaviour
                 var lockedInterest = slices[i + 1].LockedInterest;
 
                 if (_renderingStyle == RenderingStyle.ByCurrentInterest)
-                    Gizmos.color = lockedInterest != null ? colorsByInterest[lockedInterest] : Color.gray;
+                    Gizmos.color = lockedInterest != null ? colorsByInterest[lockedInterest] : _defaultGizmoColor;
 
 
 
@@ -110,40 +111,35 @@ public class SimulationLog : MonoBehaviour
         }
     }
 
-    private static Dictionary<AgentCategory, Color> GetGizmoColorsByAgentCategory(float gizmoAlpha, float gizmoSaturation, List<AgentCategory> agentCategories)
+    private static Dictionary<AgentCategory, Color> GetGizmoColorsByAgentCategory(
+        float gizmoAlpha,
+        float gizmoSaturation,
+        List<AgentCategory> agentCategories)
     {
         var colors = new Dictionary<AgentCategory, Color>();
         foreach (var category in agentCategories)
         {
             var color = category.Color;
-            float h, s, v;
-            Color.RGBToHSV(color, out h, out s, out v);
-            s *= gizmoSaturation;
-            color = Color.HSVToRGB(h, s, v);
-            color.a *= gizmoAlpha;
+            color = new Color(color.r, color.g, color.b, color.a * gizmoAlpha);
             colors.Add(category, color);
         }
         return colors;
     }
 
-    private static Dictionary<InterestCategory, Color> GetGizmoColorsByInterest(float gizmoAlpha, float gizmoSaturation, List<InterestCategory> interestCategories)
+    private static Dictionary<InterestCategory, Color> GetGizmoColorsByInterest(
+        float gizmoAlpha,
+        float gizmoSaturation,
+        List<InterestCategory> interestCategories)
     {
         var colors = new Dictionary<InterestCategory, Color>();
         foreach (var category in interestCategories)
         {
             var color = category.Color;
-            float h, s, v;
-            Color.RGBToHSV(color, out h, out s, out v);
-            s *= gizmoSaturation;
-            color = Color.HSVToRGB(h, s, v);
-            color.a *= gizmoAlpha;
+            color = new Color(color.r, color.g, color.b, color.a * gizmoAlpha);
             colors.Add(category, color);
         }
         return colors;
     }
-
-
-
 
     private static Color GetColor(
         RenderingStyle renderingStyle,
@@ -174,22 +170,35 @@ public class SimulationLog : MonoBehaviour
     }
 
 
-    public void HandleSpawnedAgent(Agent agent)
-    {
-        LoggedAgents.Add(agent, new AgentLogData(agent));
-    }
-
     private static string GenerateHeader(List<InterestCategory> categories)
     {
-        var baseHeader = String.Format("agentID\tsimulationTimeInSeconds\tpositionX\tpositionY\tpositionZ\tAgentCategory\tLockedInterest\t");
+        var header = "";
+        header += "AgentID\t";
+        header += "SimulationTimeInSeconds\t";
+        header += "PosX\t";
+        header += "PosY\t";
+        header += "PosZ\t";
+        header += "AgentCategory\t";
+        header += "LockedInterest\t";
 
-        var interestsHeader = "";
         foreach (var category in categories)
         {
-            interestsHeader += "Interest." + category.name + "\t";
+            header += "Interest." + category.name + "\t";
         }
-        return baseHeader + interestsHeader + "\n";
+        return header + "\n";
     }
+
+    private Agent _agentSelectedInEditor
+    {
+        get
+        {
+            if (Selection.activeGameObject == null)
+                return null;
+            return Selection.activeGameObject.GetComponent<Agent>();
+        }
+    }
+
+    private Color _defaultGizmoColor { get { return new Color(0.5f, 0.5f, 0.5f, _gizmoAlpha); } }
 
     private float _timeSinceLastLog;
 
