@@ -37,9 +37,9 @@ public class Simulation : MonoBehaviour
         var attractionsInScene = FindObjectsOfType<AttractionZone>();
         foreach (var a in attractionsInScene)
         {
-            if (!PointsOfInterest.ContainsKey(a.InterestCategory))
-                PointsOfInterest.Add(a.InterestCategory, new List<AttractionZone>());
-            PointsOfInterest[a.InterestCategory].Add(a);
+            if (!AttractionZones.ContainsKey(a.InterestCategory))
+                AttractionZones.Add(a.InterestCategory, new List<AttractionZone>());
+            AttractionZones[a.InterestCategory].Add(a);
         }
     }
 

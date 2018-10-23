@@ -450,10 +450,10 @@ public class Agent : MonoBehaviour
     {
         AttractionZone mostVisiblePointOfInterest = null;
         var maxFoundVisibility = 0f;
-        if (!_simulation.PointsOfInterest.ContainsKey(interestCategory))
+        if (!_simulation.AttractionZones.ContainsKey(interestCategory))
             return null;
 
-        foreach (var poi in _simulation.PointsOfInterest[interestCategory])
+        foreach (var poi in _simulation.AttractionZones[interestCategory])
         {
             var poiVisibility = poi.GetVisibilityAt(this.transform.position);
             if (poiVisibility > maxFoundVisibility)
