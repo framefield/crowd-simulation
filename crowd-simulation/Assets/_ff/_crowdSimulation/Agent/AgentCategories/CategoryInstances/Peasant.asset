@@ -18,7 +18,9 @@ MonoBehaviour:
     m_keys:
     - {fileID: 11400000, guid: c867882d83b144009b36f7b029c620c8, type: 2}
     - {fileID: 11400000, guid: f85f41bd29a454171aea87ccd37aec95, type: 2}
+    - {fileID: 11400000, guid: 4177b96b0e4d941a0b3e16a79ec90cb3, type: 2}
     m_values:
+    - 34.92
     - 34.92
     - 34.92
   SocialInterests:
