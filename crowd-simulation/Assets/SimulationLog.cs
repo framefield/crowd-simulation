@@ -169,13 +169,18 @@ public class SimulationLog : MonoBehaviour
         }
     }
 
+    private const string SUBFOLDER_PATH = "logs/";
+
     private static string _csvPath
     {
         get
         {
-            var subfolderPath = "logs/";
-            var filename = DateTime.Now.ToString();
-            return subfolderPath + filename + ".csv";
+            bool exists = System.IO.Directory.Exists(SUBFOLDER_PATH);
+            if (!exists)
+                System.IO.Directory.CreateDirectory(SUBFOLDER_PATH);
+
+            var filename = DateTime.Now.ToString("yyyyMMdd_hhmmss");
+            return SUBFOLDER_PATH + filename + ".csv";
         }
     }
 
