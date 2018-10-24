@@ -12,36 +12,46 @@ public class EntryZoneManager : MonoBehaviour
 
     [Space(15f)]
 
+    [Header("VISUALIZATION")]
+
+    [SerializeField]
+    bool _drawEntryZoneLabel = true;
+
+    [SerializeField]
+    bool _drawEntryZoneRadii = true;
+
+    [Space(15f)]
+
     [Header("NUMBER OF AGENTS")]
     [SerializeField]
-    private MaxNumberOfAgents _maxNumberOfAgentsPerCategory;
+    MaxNumberOfAgents _maxNumberOfAgentsPerCategory;
 
     [SerializeField]
     [ReadOnly]
-    private int _globalMaxAgentNumber;
+    int _globalMaxAgentNumber;
 
     [SerializeField]
-    private AgentCategoryDictionary _numberOfActiveAgents = new AgentCategoryDictionary();
+    AgentCategoryDictionary _numberOfActiveAgents = new AgentCategoryDictionary();
 
     [SerializeField]
-    private AgentCategoryDictionary _numberOfAgentsThatLeft = new AgentCategoryDictionary();
+    AgentCategoryDictionary _numberOfAgentsThatLeft = new AgentCategoryDictionary();
 
     [Header("SPAWNING")]
     [SerializeField]
-    private float _globalNewAgentsPerSecond = 1f;
+    float _globalNewAgentsPerSecond = 1f;
 
     [SerializeField]
-    private AgentCategoryDictionary _newAgentsPerSecond;
+    AgentCategoryDictionary _newAgentsPerSecond;
 
-    private AgentCategoryDictionary _numberOfAgentsScheduledForSpawning = new AgentCategoryDictionary();
 
     [SerializeField]
     [ReadOnly]
-    private string _estimatedTimeUntilAgentLimitReached;
+    string _estimatedTimeUntilAgentLimitReached;
 
     [Space(15f)]
 
     [Header("INTERNAL PREFAB REFERENCE - DO NOT TOUCH")]
+
     [SerializeField]
     Agent _agentPrefab;
 

@@ -22,9 +22,11 @@ public class Agent : MonoBehaviour
     [SerializeField]
     float PersistencyBonus;
 
-    [SerializeField] float MaxTimeToFollowPerson;
+    [SerializeField]
+    float MaxTimeToFollowPerson;
 
-    [SerializeField] float MinDistanceTraveledRecentlyBeforeGiveUp;
+    [SerializeField]
+    float MinDistanceTraveledRecentlyBeforeGiveUp;
 
 
     [Header("RADII FOR SOCIAL INTERACTION")]
@@ -32,18 +34,17 @@ public class Agent : MonoBehaviour
     [SerializeField]
     float SocialInteractionRadius;
 
-    [SerializeField] float SocialTransactionRadius;
-
+    [SerializeField]
+    float SocialTransactionRadius;
 
     [Header("VISUALIZATION")]
 
-    [SerializeField]
-    bool DrawIndicatorAboveAgent;
-    [SerializeField] bool DrawSocialInteractionRadii;
+    public bool DrawIndicatorAboveAgent;
+
+    public bool DrawSocialInteractionRadii;
 
     [Range(0f, 1f)]
-    [SerializeField]
-    float SocialInteractionRadiiAlpha;
+    public float SocialInteractionRadiiAlpha;
 
     public InterestCategory LockedInterest { get { return _lockedInterest; } }
 
@@ -230,7 +231,7 @@ public class Agent : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        if (DrawIndicatorAboveAgent && _lockedInterest != null || _isBored)
+        if (DrawIndicatorAboveAgent && (_lockedInterest != null || _isBored))
         {
             var spheresize = 0.3f;
             var frequency = 3;
