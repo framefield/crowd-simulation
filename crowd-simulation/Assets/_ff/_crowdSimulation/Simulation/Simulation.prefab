@@ -55,6 +55,7 @@ GameObject:
   - component: {fileID: 4634390696954982}
   - component: {fileID: 114044839411015996}
   - component: {fileID: 114415645970754762}
+  - component: {fileID: 114494156886305716}
   m_Layer: 0
   m_Name: Simulation
   m_TagString: Untagged
@@ -105,6 +106,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4343c463a2201f4ebdb05aa737bdb25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _drawAttractionZoneRadii: 1
+  _renderAgents: 1
+  _drawAgentSocialInteractionRadii: 0
+  _drawAgentIndicators: 1
+  _agentSocialInteractionRadiiAlpha: 0.1
   PathfindingIterationsPerFrame: 100000
   AvoidancePredictionTime: 0
   EnableSocialInteraction: 1
@@ -296,8 +302,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 455cf765d0eb04db291fb7af1e0f1de8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawnAgentOnMouseDown: 0
   _entryZones:
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -307,24 +314,48 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e, type: 2}
     - {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
     - {fileID: 11400000, guid: abe6b503dfa89dc4ab2d7e6206a4ad04, type: 2}
-    m_values: 640000005d00000064000000
-  _globalMaxAgentNumber: 293
-  _globalNewAgentsPerSecond: 0.48
-  _newAgentsPerSecondPerCategory:
+    m_values: 640000006400000064000000
+  _globalMaxAgentNumber: 300
+  _numberOfActiveAgents:
+    m_keys: []
+    m_values: []
+  _numberOfAgentsThatLeft:
+    m_keys: []
+    m_values: []
+  _globalNewAgentsPerSecond: 20
+  _newAgentsPerSecond:
     m_keys:
     - {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e, type: 2}
     - {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
     - {fileID: 11400000, guid: abe6b503dfa89dc4ab2d7e6206a4ad04, type: 2}
     m_values:
-    - 0.16382252
-    - 0.15235494
-    - 0.16382252
-  _SecondsUntilAgentLimitReached: 610.4167
-  _agentsScheduledForSpawning:
-    m_keys: []
-    m_values: []
+    - 6.6666665
+    - 6.6666665
+    - 6.6666665
+  _estimatedTimeUntilAgentLimitReached: 15
+  _drawEntryZoneLabel: 1
+  _drawEntryZoneRadii: 1
   _agentPrefab: {fileID: 114782175463676002, guid: c4c0a3b36562a5c418bdfe40410a2baf,
     type: 2}
+  _agentCategories:
+  - {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e, type: 2}
+  - {fileID: 11400000, guid: 1ecd2ca2de5ad8142bc491a96dc9bf5f, type: 2}
+  - {fileID: 11400000, guid: abe6b503dfa89dc4ab2d7e6206a4ad04, type: 2}
+--- !u!114 &114494156886305716
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1241452935955628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23a663a19d705406c99e43ce1d26b892, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _logRate: 0.5
+  _renderingStyle: 0
+  _gizmoFilter: 0
+  _gizmoAlpha: 1
 --- !u!222 &222008616246379980
 CanvasRenderer:
   m_ObjectHideFlags: 1

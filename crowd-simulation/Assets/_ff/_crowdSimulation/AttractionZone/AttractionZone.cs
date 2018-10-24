@@ -15,6 +15,7 @@ public class AttractionZone : MonoBehaviour
     [SerializeField]
     float OuterVisibilityRadius;
 
+    public bool DrawGizmos = true;
 
     [Header("INTERNAL - DO NOT TOUCH")]
 
@@ -47,6 +48,9 @@ public class AttractionZone : MonoBehaviour
 
     void OnDrawGizmos()
     {
+        if (!DrawGizmos)
+            return;
+
         Gizmos.color = InterestCategory.Color;
         GizmoHelper.DrawGizmoCircle(OuterVisibilityRadius, transform.position);
         GizmoHelper.DrawGizmoCircle(InnerSatisfactionRadius, transform.position);

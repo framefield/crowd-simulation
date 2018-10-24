@@ -7,8 +7,23 @@ using UnityEngine.AI;
 
 public class Simulation : MonoBehaviour
 {
+    [Header("VISUALIZATION")]
+
     [SerializeField]
-    private bool _renderAgents = true;
+    bool _drawAttractionZoneRadii = true;
+
+    [SerializeField]
+    bool _renderAgents = true;
+
+    [SerializeField]
+    bool _drawAgentSocialInteractionRadii = false;
+
+    [SerializeField]
+    bool _drawAgentIndicators = true;
+
+    [SerializeField]
+    [Range(0f, 1f)]
+    float _agentSocialInteractionRadiiAlpha = 0.1f;
 
     [Header("NAVMESH PARAMETERS")]
 
@@ -55,7 +70,18 @@ public class Simulation : MonoBehaviour
         {
             foreach (var agent in agentsByCategory.Value)
             {
+                agent.DrawIndicatorAboveAgent = _drawAgentIndicators;
+                agent.DrawSocialInteractionRadii = _drawAgentSocialInteractionRadii;
                 agent.GetComponent<Renderer>().enabled = _renderAgents;
+                agent.SocialInteractionRadiiAlpha = _agentSocialInteractionRadiiAlpha;
+            }
+        }
+
+        foreach (var attractionZoneList in AttractionZones.Values)
+        {
+            foreach (var attractionZone in attractionZoneList)
+            {
+                attractionZone.DrawGizmos = _drawAttractionZoneRadii;
             }
         }
     }

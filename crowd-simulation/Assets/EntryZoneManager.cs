@@ -100,6 +100,12 @@ public class EntryZoneManager : MonoBehaviour
                 SpawnAgent(category);
             }
         }
+
+        foreach (var entryZone in _entryZones)
+        {
+            entryZone.DrawGizmo = _drawEntryZoneRadii;
+            entryZone.DrawLabel = _drawEntryZoneLabel;
+        }
     }
 
     void OnValidate()
@@ -230,6 +236,8 @@ public class EntryZoneManager : MonoBehaviour
         }
         return false;
     }
+
+    AgentCategoryDictionary _numberOfAgentsScheduledForSpawning = new AgentCategoryDictionary();
 
     private Simulation _simulationCache;
     private Simulation _simulation

@@ -18,20 +18,20 @@ public class EntryZone : MonoBehaviour
     [SerializeField]
     TMPro.TextMeshPro Label;
 
+    public bool DrawGizmo = true;
+    public bool DrawLabel = true;
+
     public AgentCategory GetAgentCategory()
     {
         return _agentCategory;
     }
 
-
-    // public void SpawnAgent(Action<AgentCategory> OnExitSimulationCallback)
-    // {
-    //     Simulation.Instance.SpawnAgentAtPosition(transform.position, AgentPrefab, _agentCategory);
-
-    // }
-
     void OnDrawGizmos()
     {
+        Label.gameObject.SetActive(DrawLabel);
+        if (!DrawGizmo)
+            return;
+
         DrawGizmoCircle(RADIUS, _agentCategory.Color);
 
         var category = _agentCategory.name;

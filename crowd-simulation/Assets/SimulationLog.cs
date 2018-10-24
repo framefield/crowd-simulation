@@ -11,6 +11,8 @@ public class SimulationLog : MonoBehaviour
     [SerializeField]
     float _logRate = 1f;
 
+    [Header("Visualization")]
+
     [SerializeField]
     RenderingStyle _renderingStyle;
 
@@ -20,10 +22,6 @@ public class SimulationLog : MonoBehaviour
     [SerializeField]
     [Range(0f, 1f)]
     float _gizmoAlpha = 1f;
-
-    [SerializeField]
-    [Range(0f, 1f)]
-    float _gizmoSaturation = 1f;
 
     public enum GizmoFilter
     {
@@ -39,11 +37,6 @@ public class SimulationLog : MonoBehaviour
     }
 
     public Dictionary<Agent, AgentLogData> LoggedAgents = new Dictionary<Agent, AgentLogData>();
-
-    public void HandleSpawnedAgent(Agent agent)
-    {
-        LoggedAgents.Add(agent, new AgentLogData(agent));
-    }
 
     void Start()
     {
@@ -82,8 +75,8 @@ public class SimulationLog : MonoBehaviour
         if (_gizmoFilter == GizmoFilter.SelectedAgent && _agentSelectedInEditor == null)
             return;
 
-        var colorsByAgentCategory = GetGizmoColorsByAgentCategory(_gizmoAlpha, _gizmoSaturation, _agentCategoriesInProject);
-        var colorsByInterest = GetGizmoColorsByInterest(_gizmoAlpha, _gizmoSaturation, _interestCategoriesInProject);
+        var colorsByAgentCategory = GetGizmoColorsByCategory(_gizmoAlpha, _agentCategoriesInProject);
+        var colorsByInterest = GetGizmoColorsByCategory(_gizmoAlpha, _interestCategoriesInProject);
 
         foreach (var kvp in LoggedAgents)
         {
@@ -97,78 +90,55 @@ public class SimulationLog : MonoBehaviour
                 Gizmos.color = colorsByAgentCategory[agentLogData.Agent.AgentCategory];
 
             var slices = agentLogData.LogDataSlices;
-            for (int i = 0; i < slices.Count - 1; i++)
+            for (int i = 1; i < slices.Count; i++)
             {
-                var lockedInterest = slices[i + 1].LockedInterest;
+                var lockedInterest = slices[i].LockedInterest;
 
                 if (_renderingStyle == RenderingStyle.ByCurrentInterest)
-                    Gizmos.color = lockedInterest != null ? colorsByInterest[lockedInterest] : _defaultGizmoColor;
+                {
+                    Gizmos.color = lockedInterest != null
+                    ? colorsByInterest[lockedInterest] : _defaultGizmoColor;
+                }
 
-
-
-                Gizmos.DrawLine(slices[i].Position, slices[i + 1].Position);
+                Gizmos.DrawLine(slices[i - 1].Position, slices[i].Position);
             }
         }
     }
 
-    private static Dictionary<AgentCategory, Color> GetGizmoColorsByAgentCategory(
+    private void HandleSpawnedAgent(Agent agent)
+    {
+        LoggedAgents.Add(agent, new AgentLogData(agent));
+    }
+
+    private static Dictionary<AgentCategory, Color> GetGizmoColorsByCategory(
         float gizmoAlpha,
-        float gizmoSaturation,
         List<AgentCategory> agentCategories)
     {
         var colors = new Dictionary<AgentCategory, Color>();
         foreach (var category in agentCategories)
         {
-            var color = category.Color;
-            color = new Color(color.r, color.g, color.b, color.a * gizmoAlpha);
-            colors.Add(category, color);
+            colors.Add(category, GetColorForCategory(category, gizmoAlpha));
         }
         return colors;
     }
 
-    private static Dictionary<InterestCategory, Color> GetGizmoColorsByInterest(
+    private static Dictionary<InterestCategory, Color> GetGizmoColorsByCategory(
         float gizmoAlpha,
-        float gizmoSaturation,
         List<InterestCategory> interestCategories)
     {
         var colors = new Dictionary<InterestCategory, Color>();
         foreach (var category in interestCategories)
         {
-            var color = category.Color;
-            color = new Color(color.r, color.g, color.b, color.a * gizmoAlpha);
-            colors.Add(category, color);
+            colors.Add(category, GetColorForCategory(category, gizmoAlpha));
         }
         return colors;
     }
 
-    private static Color GetColor(
-        RenderingStyle renderingStyle,
-        InterestCategory lockedInterest,
-        Color agentCategoryColor,
-        float gizmoAlpha,
-        float gizmoSaturation)
+    private static Color GetColorForCategory(InterestCategory category, float alpha)
     {
-        Color color;
-        switch (renderingStyle)
-        {
-            case RenderingStyle.ByAgentCategory:
-                color = agentCategoryColor;
-                break;
-            case RenderingStyle.ByCurrentInterest:
-            default:
-                color = lockedInterest != null ? lockedInterest.Color : Color.grey;
-                break;
-        }
-
-        float h, s, v;
-        Color.RGBToHSV(color, out h, out s, out v);
-        s *= gizmoSaturation;
-        color = Color.HSVToRGB(h, s, v);
-        color.a *= gizmoAlpha;
-
-        return color;
+        var color = category.Color;
+        return new Color(color.r, color.g, color.b, color.a * alpha);
     }
-
 
     private static string GenerateHeader(List<InterestCategory> categories)
     {
