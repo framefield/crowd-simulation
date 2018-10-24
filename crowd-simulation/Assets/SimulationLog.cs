@@ -9,7 +9,7 @@ using UnityEngine;
 public class SimulationLog : MonoBehaviour
 {
     [SerializeField]
-    float _logRate = 1f;
+    float _logsPerSecond = 1f;
 
     [Header("Visualization")]
 
@@ -46,16 +46,17 @@ public class SimulationLog : MonoBehaviour
 
     private IEnumerator WriteTimeIntoFile()
     {
-        using (StreamWriter sw = new StreamWriter("log.csv"))
+
+        using (StreamWriter sw = new StreamWriter(_csvPath))
         {
             sw.Write(GenerateHeader(_interestCategoriesInProject));
 
             while (true)
             {
                 _timeSinceLastLog += Time.deltaTime;
-                if (_timeSinceLastLog > _logRate)
+                if (_timeSinceLastLog > _logsPerSecond)
                 {
-                    _timeSinceLastLog -= _logRate;
+                    _timeSinceLastLog -= _logsPerSecond;
                     foreach (var agentLogData in LoggedAgents.Values)
                     {
                         var csvLine = agentLogData.LogSlice(_interestCategoriesInProject);
@@ -165,6 +166,16 @@ public class SimulationLog : MonoBehaviour
             if (Selection.activeGameObject == null)
                 return null;
             return Selection.activeGameObject.GetComponent<Agent>();
+        }
+    }
+
+    private static string _csvPath
+    {
+        get
+        {
+            var subfolderPath = "logs/";
+            var filename = DateTime.Now.ToString();
+            return subfolderPath + filename + ".csv";
         }
     }
 

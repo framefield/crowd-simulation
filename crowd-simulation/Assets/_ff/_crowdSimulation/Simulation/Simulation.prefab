@@ -114,7 +114,6 @@ MonoBehaviour:
   PathfindingIterationsPerFrame: 100000
   AvoidancePredictionTime: 0
   EnableSocialInteraction: 1
-  Log: {fileID: 114058199138158444}
 --- !u!114 &114058199138158444
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -309,6 +308,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  _drawEntryZoneLabel: 1
+  _drawEntryZoneRadii: 1
   _maxNumberOfAgentsPerCategory:
     m_keys:
     - {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e, type: 2}
@@ -333,8 +334,6 @@ MonoBehaviour:
     - 6.6666665
     - 6.6666665
   _estimatedTimeUntilAgentLimitReached: 15
-  _drawEntryZoneLabel: 1
-  _drawEntryZoneRadii: 1
   _agentPrefab: {fileID: 114782175463676002, guid: c4c0a3b36562a5c418bdfe40410a2baf,
     type: 2}
   _agentCategories:
@@ -352,7 +351,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23a663a19d705406c99e43ce1d26b892, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _logRate: 0.5
+  _logsPerSecond: 1
   _renderingStyle: 0
   _gizmoFilter: 0
   _gizmoAlpha: 1

@@ -41,11 +41,9 @@ public class Simulation : MonoBehaviour
 
     [Header("INTERNAL - DO NOT TOUCH")]
 
-    [SerializeField]
-    TMPro.TMP_Text Log;
-
     [HideInInspector]
-    public Dictionary<InterestCategory, List<AttractionZone>> AttractionZones = new Dictionary<InterestCategory, List<AttractionZone>>();
+    public Dictionary<InterestCategory, List<AttractionZone>> AttractionZones
+        = new Dictionary<InterestCategory, List<AttractionZone>>();
 
     public event Action<Agent> OnAgentSpawned;
     public event Action<Agent> OnAgentRemoved;
@@ -140,14 +138,12 @@ public class Simulation : MonoBehaviour
         return new List<Agent>();
     }
 
-
     private void AddAgent(Agent agent)
     {
         if (!_agents.ContainsKey(agent.AgentCategory))
             _agents.Add(agent.AgentCategory, new List<Agent>());
         _agents[agent.AgentCategory].Add(agent);
     }
-
 
     private Dictionary<AgentCategory, List<Agent>> _agents = new Dictionary<AgentCategory, List<Agent>>();
 }

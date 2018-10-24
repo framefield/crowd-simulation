@@ -65,23 +65,11 @@ public class EntryZoneManager : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("Estimated time until agent limit reached:" + _estimatedTimeUntilAgentLimitReached);
         _entryZoneLookUp = InitializeEntryZoneLookUp(_entryZones);
         InitializeAllDictionariesWithCategories();
         _simulation.OnAgentRemoved += HandleRemovedAgent;
         _simulation.OnAgentSpawned += HandleSpawnedAgent;
-    }
-
-    private void InitializeAllDictionariesWithCategories()
-    {
-        foreach (var category in _agentCategories)
-        {
-            if (!_numberOfAgentsScheduledForSpawning.ContainsKey(category))
-            {
-                _numberOfAgentsScheduledForSpawning.Add(category, 0f);
-                _numberOfActiveAgents.Add(category, 0f);
-                _numberOfAgentsThatLeft.Add(category, 0f);
-            }
-        }
     }
 
     void Update()
@@ -123,6 +111,20 @@ public class EntryZoneManager : MonoBehaviour
                                                                 _maxNumberOfAgentsPerCategory);
 
         _estimatedTimeUntilAgentLimitReached = (_globalMaxAgentNumber / _globalNewAgentsPerSecond).ToString();
+    }
+
+
+    private void InitializeAllDictionariesWithCategories()
+    {
+        foreach (var category in _agentCategories)
+        {
+            if (!_numberOfAgentsScheduledForSpawning.ContainsKey(category))
+            {
+                _numberOfAgentsScheduledForSpawning.Add(category, 0f);
+                _numberOfActiveAgents.Add(category, 0f);
+                _numberOfAgentsThatLeft.Add(category, 0f);
+            }
+        }
     }
 
     private void HandleSpawnedAgent(Agent agent)
@@ -216,7 +218,7 @@ public class EntryZoneManager : MonoBehaviour
         {
             if (entryZone == null)
             {
-                Debug.Log("HaveEntryZonesChanged? undefined");
+                // Debug.Log("HaveEntryZonesChanged? undefined");
                 return false; //hack
             }
             var category = entryZone.GetAgentCategory();
@@ -225,13 +227,13 @@ public class EntryZoneManager : MonoBehaviour
 
             if (!_agentCategories.Contains(category))
             {
-                Debug.Log("HaveEntryZonesChanged? category not found");
+                // Debug.Log("HaveEntryZonesChanged? category not found");
                 return true;
             }
         }
         if (_agentCategories.Count != categoriesInScene.Count)
         {
-            Debug.Log("HaveEntryZonesChanged? count not equal");
+            // Debug.Log("HaveEntryZonesChanged? count not equal");
             return true;
         }
         return false;
