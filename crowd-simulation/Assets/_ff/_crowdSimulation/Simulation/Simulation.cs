@@ -95,6 +95,7 @@ public class Simulation : MonoBehaviour
     public void SpawnAgentAtPosition(Vector3 position, Agent agentPrefab, AgentCategory category)
     {
         var newAgentGO = Instantiate(agentPrefab, position, Quaternion.identity, this.transform);
+        newAgentGO.name = category.name + " - Agent";
         var newAgent = newAgentGO.GetComponent<Agent>();
         newAgent.Init(category, this);
         AddAgent(newAgent);
