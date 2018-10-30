@@ -1,9 +1,7 @@
 fileFormatVersion: 2
 guid: e4e23b80a2bb1c445b473d5db44c1096
-timeCreated: 1512657577
-licenseType: Free
 ModelImporter:
-  serializedVersion: 21
+  serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
     100002: Mesh1
@@ -24,10 +22,193 @@ ModelImporter:
     4300000: Mesh1_MeshPart0
     4300002: Mesh1_MeshPart1
     4300004: Mesh1_MeshPart2
+    2186277476908879412: ImportLogs
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: FrontColor
+    second: {fileID: 2100000, guid: 90418025f86aeeb429d87308075c6d1c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Black_
+    second: {fileID: 2100000, guid: d2af4e72d69d59643a380fa6c85f0146, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Concrete_Tile_
+    second: {fileID: 2100000, guid: b4668ec16744abe498b929acff07f863, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Coral_
+    second: {fileID: 2100000, guid: fe8226bb30de2d24a8be5b7bb911631f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _DarkRed_
+    second: {fileID: 2100000, guid: ebd13c9d8472fc647b5b8b997d14ba56, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _FireBrick_
+    second: {fileID: 2100000, guid: 4b9c90334e709ab41bd30b6cc1b5f892, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Gainsboro_
+    second: {fileID: 2100000, guid: 2846e68d333cde14fb9fc2ef43cd8855, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _GrassGreen_
+    second: {fileID: 2100000, guid: 47c10f07fa47d1b45b15967e76261594, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Grass_3
+    second: {fileID: 2100000, guid: e07edf63dfe56354cbfb4e87508d18b3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Khaki_
+    second: {fileID: 2100000, guid: 5c8448dfb6897fa41bed0b36a32a12a5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _LightGoldenrodYellow_
+    second: {fileID: 2100000, guid: 709ff0e05f569fd4ba3d395e093d5e33, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _LightGray_
+    second: {fileID: 2100000, guid: 18c838faefecb1f4da6bafa406db60eb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _LightSlateGray_
+    second: {fileID: 2100000, guid: 35d16db4eb4972b4cbc729eb574a0469, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Logs_
+    second: {fileID: 2100000, guid: 14ec6d74172ad6e41b96867e143a8887, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Marble_Tile_
+    second: {fileID: 2100000, guid: 3a264b00b8a20804dbd1d101f3963ab4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _MidnightBlue_
+    second: {fileID: 2100000, guid: e8185f2b9eb7f6e4499403646aa2199a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _NavajoWhite_
+    second: {fileID: 2100000, guid: 6cf35717f0fbe36419901f777722f390, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _PaleGoldenrod_
+    second: {fileID: 2100000, guid: 6f186b33403de70439b291a850bd61ba, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _SaddleBrown_
+    second: {fileID: 2100000, guid: 6a14cb63e7ef058449f491c912084492, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Smooth_Face_Concrete_Block_
+    second: {fileID: 2100000, guid: fe04ef3f41035ed4d931b006a5c65039, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Snow_
+    second: {fileID: 2100000, guid: 90d582fea2301ab4da4d7a3bedd39133, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Spanish_Tile_1
+    second: {fileID: 2100000, guid: fbab2ef43625a194a8330e87f486e9eb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Spanish_Tile_10
+    second: {fileID: 2100000, guid: abc641e71d908e744ac419b5624f5492, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Spanish_Tile_11
+    second: {fileID: 2100000, guid: 3ed48b7acdf836944ada72d9b1a89ebe, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Spanish_Tile_7
+    second: {fileID: 2100000, guid: 4acc1f6b30243f14a934daa3ef8c48da, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Spanish_Tile_8
+    second: {fileID: 2100000, guid: 6374902a04b2ad24ca27249b197ee80d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _StandingSeam_Green_
+    second: {fileID: 2100000, guid: 515c90ca32131ba4d9548f9f8345de9a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _StoneVein_1
+    second: {fileID: 2100000, guid: 113e1eb29bdb34a4992c0504e62bf0b1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Stone_01_
+    second: {fileID: 2100000, guid: f7e9610b5b1510f49865ec50d639f8fc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Stone_masonry_1
+    second: {fileID: 2100000, guid: bc4eededa83a77343992845497186e16, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Stone_masonry_2
+    second: {fileID: 2100000, guid: 956a5aeab0477a346b0359b94fad8968, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Stone_masonry_3
+    second: {fileID: 2100000, guid: 0d5531350ada8ff40965a5a0983193e9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Stone_rough_
+    second: {fileID: 2100000, guid: bfec569bd29671141a71a841dbb37f65, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Stone_rough_3
+    second: {fileID: 2100000, guid: aa031b7fb48f2d4418967601c8dfb9bd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _WhiteSmoke_
+    second: {fileID: 2100000, guid: 798bc799781bdf441b88d22002955c0d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _White_
+    second: {fileID: 2100000, guid: c7210893cae7b494cb438621a6fd6941, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -40,6 +221,8 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -64,11 +247,15 @@ ModelImporter:
     optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
+    previousCalculatedGlobalScale: 1
+    hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
