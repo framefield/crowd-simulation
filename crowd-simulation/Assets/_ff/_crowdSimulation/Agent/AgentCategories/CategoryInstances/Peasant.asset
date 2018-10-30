@@ -3,7 +3,7 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -11,21 +11,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8af57c7bab01b49468d9d3629df4a925, type: 3}
   m_Name: Peasant
   m_EditorClassIdentifier: 
-  Color: {r: 0.31833163, g: 0.32068965, b: 0.31996143, a: 1}
-  TransactionTime: 16.02
+  Color: {r: 0, g: 0.3207109, b: 1, a: 1}
+  TransactionTime: 10
   MaxTimeOnAgora: 600
   Interests:
     m_keys:
     - {fileID: 11400000, guid: c867882d83b144009b36f7b029c620c8, type: 2}
+    - {fileID: 11400000, guid: 9062a95ef903c4950941b1711519d58f, type: 2}
+    - {fileID: 11400000, guid: 11a53f62949c94920a4e6ef973ca6b59, type: 2}
+    - {fileID: 11400000, guid: dbcb2c04861b844cf980603a95afe893, type: 2}
     - {fileID: 11400000, guid: f85f41bd29a454171aea87ccd37aec95, type: 2}
-    - {fileID: 11400000, guid: 4177b96b0e4d941a0b3e16a79ec90cb3, type: 2}
     m_values:
-    - 34.92
-    - 34.92
-    - 34.92
+    - 1
+    - 0.2
+    - 0.5
+    - 1
+    - 0.2
   SocialInterests:
     m_keys:
-    - {fileID: 11400000, guid: 83dc0931531807743b1a322af35e045e, type: 2}
+    - {fileID: 11400000}
+    - {fileID: 11400000, guid: abe6b503dfa89dc4ab2d7e6206a4ad04, type: 2}
     m_values:
-    - 0.061
-  MotivationDepletionIfBored: -0.01
+    - 10
+    - 100
+  MotivationDepletionIfBored: -0.001

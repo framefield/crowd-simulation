@@ -3,7 +3,7 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -11,5 +11,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b919df4f82b168045b39dc0ebb06091d, type: 3}
   m_Name: Singing
   m_EditorClassIdentifier: 
-  Color: {r: 0.8096885, g: 0.8602941, b: 0, a: 1}
-  TransactionTime: 1
+  Color: {r: 0.94063926, g: 1, b: 0, a: 1}
+  TransactionTime: 10
