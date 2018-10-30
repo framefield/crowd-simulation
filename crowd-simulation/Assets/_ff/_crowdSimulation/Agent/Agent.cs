@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -15,7 +16,6 @@ public class Agent : MonoBehaviour
     public Interests CurrentInterests;
 
     public Interests CurrentSocialInterests;
-
 
     [Header("DECISION MAKING PARAMETERS")]
 
@@ -228,9 +228,11 @@ public class Agent : MonoBehaviour
         GameObject.Destroy(gameObject);
     }
 
-
     void OnDrawGizmos()
     {
+        if (_isAnotherAgentSelectedInEditor)
+            return;
+
         if (DrawIndicatorAboveAgent && (_lockedInterest != null || _isBored))
         {
             var spheresize = 0.3f;
@@ -330,6 +332,19 @@ public class Agent : MonoBehaviour
         return distanceToInterlocutor < SocialTransactionRadius;
     }
 
+    private bool _isAnotherAgentSelectedInEditor
+    {
+        get
+        {
+            var selectedGO = Selection.activeGameObject;
+            if (selectedGO == null)
+                return false;
+            var selectedAgent = selectedGO.GetComponent<Agent>();
+            if (selectedAgent == null)
+                return false;
+            return selectedAgent.id != id;
+        }
+    }
 
     private bool HasSatisfiedAllInterests()
     {
