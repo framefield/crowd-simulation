@@ -23,28 +23,12 @@ public class AgentWalking : MonoBehaviour
     [SerializeField]
     float _pathToTargetAlpha;
 
-    [Header("LOGGED PATH VISUALIZATION")]
-
-    [SerializeField]
-    bool _drawLoggedPath;
-
-    [Range(0f, 1f)]
-    [SerializeField]
-    float _loggedPathAlpha;
-
-    [SerializeField]
-    float _minDistanceBetweenLockedPositions;
-
     void Start()
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
         SetNewRandomDestination();
     }
 
-    void Update()
-    {
-        LogPath();
-    }
 
     private static void DrawPath(Vector3[] path, Color color)
     {
@@ -126,22 +110,6 @@ public class AgentWalking : MonoBehaviour
         return closestDestinationOnNavMesh;
     }
 
-    private void LogPath()
-    {
-        if (_loggedPath.Count == 0)
-        {
-            _loggedPath.Add(transform.position);
-            return;
-        }
-
-        var distanceToLastLockedPosition = Vector3.Distance(transform.position, _loggedPath[_loggedPath.Count - 1]);
-        if (distanceToLastLockedPosition < _minDistanceBetweenLockedPositions)
-            return;
-
-        _loggedPath.Add(transform.position);
-    }
-
-    private List<Vector3> _loggedPath = new List<Vector3>();
     private NavMeshAgent _navMeshAgent;
     private Vector3 _currentDestination;
 }
