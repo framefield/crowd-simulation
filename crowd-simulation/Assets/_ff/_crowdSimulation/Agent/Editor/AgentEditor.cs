@@ -117,22 +117,23 @@ public class AgentEditor : Editor
 
     void RenderBuffer(Rect r, Dictionary<InterestCategory, float[]> dictionary)
     {
-        foreach (KeyValuePair<InterestCategory, float[]> pair in dictionary)
+        foreach (var kvp in dictionary)
         {
             GL.Begin(GL.LINES);
-            GL.Color(pair.Key.Color);
+            GL.Color(kvp.Key.Color);
 
-            var buffer = pair.Value;
+            var buffer = kvp.Value;
             for (int i = 0; i < _bufferSize - 1; i++)
             {
                 var x0 = i * r.width / _bufferSize;
                 var x1 = (i + 1) * r.width / _bufferSize;
 
-                var y0 = r.height * (1 - buffer[(i + _arrayPointer) % _bufferSize]);
-                var y1 = r.height * (1 - buffer[(i + _arrayPointer + 1) % _bufferSize]);
+                var y0 = r.height * Mathf.Clamp((1 - buffer[(i + _arrayPointer) % _bufferSize]), 0, 1);
+                var y1 = r.height * Mathf.Clamp((1 - buffer[(i + _arrayPointer + 1) % _bufferSize]), 0, 1);
 
                 GL.Vertex3(x0, y0, 0);
                 GL.Vertex3(x1, y1, 0);
+
             }
         }
         GL.End();

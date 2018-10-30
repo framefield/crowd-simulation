@@ -9,7 +9,7 @@ using UnityEngine;
 public class SimulationLog : MonoBehaviour
 {
     [SerializeField]
-    float _logsPerSecond = 1f;
+    float _logRate = 1f;
 
     [Header("Visualization")]
 
@@ -54,9 +54,9 @@ public class SimulationLog : MonoBehaviour
             while (true)
             {
                 _timeSinceLastLog += Time.deltaTime;
-                if (_timeSinceLastLog > _logsPerSecond)
+                if (_timeSinceLastLog > _logRate)
                 {
-                    _timeSinceLastLog -= _logsPerSecond;
+                    _timeSinceLastLog -= _logRate;
                     foreach (var agentLogData in LoggedAgents.Values)
                     {
                         var csvLine = agentLogData.LogSlice(_interestCategoriesInProject);
