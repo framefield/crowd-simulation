@@ -11,5 +11,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b919df4f82b168045b39dc0ebb06091d, type: 3}
   m_Name: Debate
   m_EditorClassIdentifier: 
-  Color: {r: 0.2721153, g: 0.6603774, b: 0, a: 1}
+  Color: {r: 0, g: 0.49056602, b: 0.36936733, a: 1}
   TransactionTime: 10

@@ -11,5 +11,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b919df4f82b168045b39dc0ebb06091d, type: 3}
   m_Name: Pottery
   m_EditorClassIdentifier: 
-  Color: {r: 0.19339621, g: 1, b: 0.8416946, a: 1}
+  Color: {r: 1, g: 0.19215685, b: 0.25656158, a: 1}
   TransactionTime: 3

@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8af57c7bab01b49468d9d3629df4a925, type: 3}
   m_Name: Aristocrat
   m_EditorClassIdentifier: 
-  Color: {r: 0.9254298, g: 1, b: 0, a: 1}
+  Color: {r: 0, g: 0.58781576, b: 1, a: 1}
   TransactionTime: 10
   MaxTimeOnAgora: 600
   Interests:
